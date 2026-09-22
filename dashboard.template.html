@@ -347,6 +347,7 @@
 
 <script>
 const DATA = /*__DATA__*/null;
+let space = "mrm";
 const ALL_ITEMS = DATA.items;
 const inSpace = i => i.space === space || i.space === "shared";
 let ITEMS = ALL_ITEMS.filter(inSpace);
@@ -376,7 +377,6 @@ const SPACES = {
     ],
   },
 };
-let space = "mrm";
 
 const esc = s => String(s ?? "").replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
 
@@ -740,7 +740,14 @@ document.getElementById("poolSearch").addEventListener("input", e => {
   renderPool();
 });
 document.getElementById("showExcluded").addEventListener("change", renderPool);
-renderHome(); renderSources(); renderPool();
-setSpace("mrm");
-showTab("home");
+try {
+  renderHome(); renderSources(); renderPool();
+  setSpace("mrm");
+  showTab("home");
+} catch (err) {
+  document.getElementById("spaceCards").innerHTML =
+    `<p class="tier-empty">This page failed to render: ${esc(err && err.message)}. ` +
+    `Rebuild with <code>python3 build.py</code>.</p>`;
+  throw err;
+}
 </script>

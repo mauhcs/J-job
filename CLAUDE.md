@@ -17,7 +17,13 @@ evidence — a finding about alt data vendors does not belong to the validation 
 **Git is the database.** Every organisation, person, venue, task and finding is one Markdown
 file with YAML front-matter. `dashboard.html` is a generated read model, never edited by hand.
 
-    python3 build.py        # rebuild dashboard.html; validates the tree, 0 warnings expected
+    python3 build.py                   # rebuild dashboard.html; validates the tree, 0 warnings expected
+    python3 tools/check_dashboard.py   # static-check the page BEFORE publishing the artifact
+
+**Always run the checker before publishing.** A JavaScript error blanks every view at once
+and the page still looks like a valid HTML file — it happened when a top-level `let` was used
+before its declaration. The checker catches syntax errors, missing element ids, and
+use-before-declaration.
 
 Read `SCHEMA.md` for fields and `INTAKE.md` for the company pipeline.
 
