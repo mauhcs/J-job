@@ -1,0 +1,749 @@
+<title>J-job Workbench</title>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Zen+Kaku+Gothic+New:wght@400;500;700&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+  :root{
+    --ground:#F4F6F9; --surface:#FFFFFF; --surface-2:#EDF0F5; --sunken:#E5E9F0;
+    --ink:#141820; --ink-2:#4A5361; --ink-3:#78818F;
+    --line:#DCE1E9; --line-2:#C6CDD9;
+    --accent:#1F3A6E; --accent-soft:#E7ECF6; --accent-ink:#1F3A6E;
+    --alert:#B03A2E; --alert-soft:#FAEAE7;
+    --warn:#8A6516; --warn-soft:#FAF1DE;
+    --good:#1F6B4D; --good-soft:#E4F1EA;
+    --ui:"Zen Kaku Gothic New",-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+    --prose:"Source Serif 4",Georgia,"Times New Roman",serif;
+    --mono:"IBM Plex Mono",ui-monospace,SFMono-Regular,Menlo,monospace;
+    --radius:6px;
+  }
+  @media (prefers-color-scheme:dark){
+    :root:not([data-theme="light"]){
+      --ground:#0E1116; --surface:#161B23; --surface-2:#1D232D; --sunken:#11151B;
+      --ink:#E6EAF1; --ink-2:#A3ACBA; --ink-3:#737D8C;
+      --line:#262E3A; --line-2:#36404F;
+      --accent:#8AA9E0; --accent-soft:#1A2335; --accent-ink:#A8C0EC;
+      --alert:#E0776A; --alert-soft:#2C1A18;
+      --warn:#D6A94E; --warn-soft:#2A2214;
+      --good:#67B893; --good-soft:#132620;
+    }
+  }
+  :root[data-theme="dark"]{
+    --ground:#0E1116; --surface:#161B23; --surface-2:#1D232D; --sunken:#11151B;
+    --ink:#E6EAF1; --ink-2:#A3ACBA; --ink-3:#737D8C;
+    --line:#262E3A; --line-2:#36404F;
+    --accent:#8AA9E0; --accent-soft:#1A2335; --accent-ink:#A8C0EC;
+    --alert:#E0776A; --alert-soft:#2C1A18;
+    --warn:#D6A94E; --warn-soft:#2A2214;
+    --good:#67B893; --good-soft:#132620;
+  }
+
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--ground);color:var(--ink);font-family:var(--ui);font-size:14px;line-height:1.5}
+  a{color:var(--accent-ink)}
+  button{font:inherit;color:inherit}
+  :focus-visible{outline:2px solid var(--accent);outline-offset:2px;border-radius:3px}
+  @media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+
+  /* ---- masthead ---- */
+  .masthead{display:flex;align-items:baseline;gap:14px;flex-wrap:wrap;
+    padding-block:18px 14px;padding-inline:24px;background:var(--surface);border-bottom:1px solid var(--line)}
+  .wordmark{font-weight:700;font-size:17px;letter-spacing:-.01em;margin:0}
+  .wordmark span{color:var(--accent-ink)}
+  .masthead p{margin:0;color:var(--ink-3);font-size:12.5px;max-width:60ch}
+  .built{margin-left:auto;font-family:var(--mono);font-size:11px;color:var(--ink-3);white-space:nowrap}
+
+  /* ---- tabs ---- */
+  .tabs{display:flex;gap:2px;padding-inline:24px;background:var(--surface);border-bottom:1px solid var(--line);overflow-x:auto}
+  .tab{appearance:none;background:none;border:0;border-bottom:2px solid transparent;
+    padding:9px 12px;cursor:pointer;color:var(--ink-2);font-size:13px;font-weight:500;white-space:nowrap}
+  .tab[aria-selected="true"]{color:var(--accent-ink);border-bottom-color:var(--accent)}
+  .tab:hover{color:var(--ink)}
+
+  .view{padding-block:20px 48px;padding-inline:24px}
+  .view[hidden]{display:none!important}
+
+  /* ---- home ---- */
+  .wordmark{appearance:none;background:none;border:0;padding:0;cursor:pointer;
+    font-family:var(--ui);font-weight:700;font-size:17px;letter-spacing:-.01em;color:var(--ink)}
+  .wordmark:hover span{text-decoration:underline}
+  .spaces{display:grid;gap:18px;grid-template-columns:repeat(auto-fit,minmax(340px,1fr));max-width:1300px}
+  .spacecard{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);
+    padding:22px 24px 20px;display:flex;flex-direction:column;gap:12px;text-align:left;cursor:pointer;width:100%}
+  .spacecard:hover{border-color:var(--accent)}
+  .spacecard .eyebrow{font-family:var(--mono);font-size:10.5px;text-transform:uppercase;
+    letter-spacing:.09em;color:var(--ink-3)}
+  .spacecard h2{margin:0;font-size:21px;line-height:1.25;text-wrap:balance}
+  .spacecard .lede{margin:0;font-family:var(--prose);font-size:14.5px;line-height:1.6;color:var(--ink-2)}
+  .spacecard ul{margin:0;padding-left:1.05em;font-family:var(--prose);font-size:13.5px;
+    line-height:1.55;color:var(--ink-2);display:grid;gap:5px}
+  .spacecard li strong{color:var(--ink);font-weight:600}
+  .spacecard .counts{display:flex;gap:6px;flex-wrap:wrap;margin-top:auto;padding-top:6px}
+  .spacecard .enter{font-family:var(--mono);font-size:11px;color:var(--accent-ink)}
+  .home-foot{font-family:var(--prose);font-size:13.5px;color:var(--ink-3);max-width:70ch;margin:26px 0 0}
+  .spacebadge{font-family:var(--mono);font-size:10px;text-transform:uppercase;letter-spacing:.07em;
+    padding:2px 7px;border-radius:3px;background:var(--accent-soft);color:var(--accent-ink)}
+
+  /* ---- do next ---- */
+  .nextlist{list-style:none;counter-reset:step;margin:0;padding:0;display:grid;gap:12px;max-width:820px}
+  .nextlist li{counter-increment:step;background:var(--surface);border:1px solid var(--line);
+    border-left:3px solid var(--accent);border-radius:var(--radius);padding:15px 18px 14px;
+    display:grid;gap:7px;position:relative}
+  .nextlist li.later{border-left-color:var(--line-2);opacity:.82}
+  .nextlist .step{font-family:var(--mono);font-size:10.5px;color:var(--ink-3);
+    text-transform:uppercase;letter-spacing:.08em}
+  .nextlist .step::before{content:counter(step) " \00b7 "}
+  .nextact{appearance:none;background:none;border:0;padding:0;text-align:left;cursor:pointer;
+    font-family:var(--ui);font-size:15.5px;font-weight:700;line-height:1.3;color:var(--ink)}
+  .nextact:hover{color:var(--accent-ink);text-decoration:underline}
+  .nextdec{font-family:var(--prose);font-size:14px;line-height:1.55;color:var(--ink-2);margin:0}
+  .nextdec b{color:var(--ink);font-weight:600}
+  .nextmeta{display:flex;gap:6px;flex-wrap:wrap}
+
+  /* ---- streams ---- */
+  .stream-grid{display:grid;gap:14px;grid-template-columns:repeat(auto-fit,minmax(290px,1fr));max-width:1400px}
+  .stream{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);
+    padding:16px 18px 14px;display:flex;flex-direction:column;gap:9px;text-align:left;cursor:pointer;width:100%}
+  .stream:hover{border-color:var(--line-2)}
+  .stream h3{margin:0;font-size:15px;font-weight:700;text-wrap:balance}
+  .stream .q{margin:0;font-family:var(--prose);font-size:13.5px;color:var(--ink-2);line-height:1.55}
+  .stream footer{display:flex;gap:6px;flex-wrap:wrap;margin-top:auto;padding-top:4px}
+
+  .digest{max-width:70ch;margin-block:28px 0}
+  .digest h2{font-size:12px;text-transform:uppercase;letter-spacing:.09em;color:var(--ink-3);margin:0 0 10px;font-weight:500}
+  .digest ol{margin:0;padding-left:1.1em;font-family:var(--prose);font-size:14.5px;line-height:1.65;color:var(--ink-2)}
+  .digest li{margin-bottom:9px}
+  .digest li strong{color:var(--ink);font-weight:600}
+
+  /* ---- browse ---- */
+  .browse{display:grid;grid-template-columns:200px minmax(300px,1.1fr) minmax(0,1.5fr);gap:18px;align-items:start;max-width:1600px}
+  .facets{display:flex;flex-direction:column;gap:16px;position:sticky;top:12px}
+  .facet h4{margin:0 0 6px;font-size:11px;text-transform:uppercase;letter-spacing:.09em;color:var(--ink-3);font-weight:500}
+  .facet-opts{display:flex;flex-wrap:wrap;gap:4px}
+  .chip{appearance:none;border:1px solid var(--line);background:var(--surface);border-radius:100px;
+    padding:2.5px 9px;font-size:11.5px;cursor:pointer;color:var(--ink-2);font-family:var(--mono)}
+  .chip:hover{border-color:var(--line-2);color:var(--ink)}
+  .chip[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:#fff}
+  .chip .n{opacity:.6;margin-left:4px}
+
+  .search{width:100%;padding:8px 11px;border:1px solid var(--line-2);border-radius:var(--radius);
+    background:var(--surface);color:var(--ink);font-family:var(--ui);font-size:13.5px;margin-bottom:10px}
+  .search::placeholder{color:var(--ink-3)}
+  .resultmeta{font-family:var(--mono);font-size:11px;color:var(--ink-3);margin:0 0 8px;display:flex;justify-content:space-between;gap:8px}
+  .linkbtn{appearance:none;background:none;border:0;padding:0;cursor:pointer;color:var(--accent-ink);
+    font-family:var(--mono);font-size:11px;text-decoration:underline}
+
+  .rows{display:flex;flex-direction:column;border:1px solid var(--line);border-radius:var(--radius);
+    background:var(--surface);overflow:hidden}
+  .row{appearance:none;background:none;border:0;border-bottom:1px solid var(--line);border-left:3px solid transparent;
+    padding:9px 12px;cursor:pointer;display:grid;gap:3px;text-align:left;width:100%}
+  .row:last-child{border-bottom:0}
+  .row:hover{background:var(--surface-2)}
+  .row[aria-current="true"]{background:var(--accent-soft);border-left-color:var(--accent)}
+  .row.p1{border-left-color:var(--alert)}
+  .row.p1[aria-current="true"]{border-left-color:var(--accent)}
+  .row .rname{font-size:13.5px;font-weight:500;line-height:1.35}
+  .row .rmeta{font-family:var(--mono);font-size:10.5px;color:var(--ink-3);display:flex;gap:7px;flex-wrap:wrap}
+  .empty{padding:24px 12px;color:var(--ink-3);font-size:13px;text-align:center}
+
+  /* ---- detail ---- */
+  .detail{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);
+    padding:20px 24px 26px;position:sticky;top:12px;max-height:calc(100vh - 24px);overflow-y:auto}
+  .detail .eyebrow{font-family:var(--mono);font-size:11px;color:var(--ink-3);margin:0 0 4px}
+  .detail h2{margin:0 0 3px;font-size:19px;line-height:1.28;text-wrap:balance}
+  .detail .ja{margin:0 0 10px;color:var(--ink-2);font-size:14px}
+  .badges{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:16px}
+  .badge{font-family:var(--mono);font-size:10.5px;padding:2px 7px;border-radius:3px;
+    background:var(--surface-2);color:var(--ink-2);border:1px solid var(--line)}
+  .badge.alert{background:var(--alert-soft);color:var(--alert);border-color:transparent}
+  .badge.warn{background:var(--warn-soft);color:var(--warn);border-color:transparent}
+  .badge.good{background:var(--good-soft);color:var(--good);border-color:transparent}
+  .badge.accent{background:var(--accent-soft);color:var(--accent-ink);border-color:transparent}
+
+  .prose{font-family:var(--prose);font-size:15px;line-height:1.66;color:var(--ink-2);max-width:66ch}
+  .prose p{margin:0 0 .85em}
+  .prose strong{color:var(--ink);font-weight:600}
+  .prose h2{font-family:var(--ui);font-size:12px;text-transform:uppercase;letter-spacing:.09em;
+    color:var(--ink-3);font-weight:500;margin:1.7em 0 .6em;padding-top:.8em;border-top:1px solid var(--line)}
+  .prose h3{font-family:var(--ui);font-size:14px;font-weight:700;color:var(--ink);margin:1.4em 0 .4em}
+  .prose ul{margin:0 0 .9em;padding-left:1.15em}
+  .prose li{margin-bottom:.32em}
+  .prose code{font-family:var(--mono);font-size:.85em;background:var(--sunken);padding:1px 4px;border-radius:3px;color:var(--ink)}
+  .prose em{font-style:italic}
+
+  .subhead{font-size:11px;text-transform:uppercase;letter-spacing:.09em;color:var(--ink-3);
+    font-weight:500;margin:22px 0 8px;padding-top:12px;border-top:1px solid var(--line)}
+  .linklist{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:5px}
+  .linklist a{font-size:13px;text-decoration:none;border-bottom:1px solid var(--line-2)}
+  .linklist a:hover{border-bottom-color:var(--accent)}
+  .rels{display:flex;flex-wrap:wrap;gap:5px}
+  .rel{appearance:none;border:1px solid var(--line);background:var(--surface-2);border-radius:var(--radius);
+    padding:3px 8px;font-size:12px;cursor:pointer;color:var(--ink-2);text-align:left}
+  .rel:hover{border-color:var(--accent);color:var(--accent-ink)}
+  .rel b{font-family:var(--mono);font-size:10px;font-weight:500;color:var(--ink-3);margin-right:5px;text-transform:uppercase}
+  .srcpath{font-family:var(--mono);font-size:11px;color:var(--ink-3);margin-top:20px;
+    padding-top:12px;border-top:1px solid var(--line)}
+
+  /* ---- targets ---- */
+  .pipe{display:flex;flex-wrap:wrap;gap:1px;margin:0 0 14px;border:1px solid var(--line);
+    border-radius:var(--radius);overflow:hidden;background:var(--line);max-width:1500px}
+  .pipe-step{background:var(--surface);padding:9px 14px;display:grid;gap:1px;flex:1 1 110px}
+  .pipe-step .n{font-family:var(--mono);font-size:18px;font-variant-numeric:tabular-nums;line-height:1.1}
+  .pipe-step .l{font-family:var(--mono);font-size:10px;text-transform:uppercase;letter-spacing:.07em;color:var(--ink-3)}
+  .pipe-step.on .n{color:var(--accent-ink)}
+  .pipe-step.off .n{color:var(--ink-3)}
+  .tiers-controls{display:flex;gap:16px;flex-wrap:wrap;margin:0 0 22px}
+  .toggle{display:flex;align-items:center;gap:6px;font-family:var(--mono);font-size:11px;color:var(--ink-2);cursor:pointer}
+  .target.is-retired{opacity:.55}
+  .target.is-retired .tname{text-decoration:line-through}
+  .target.is-candidate{border-top-color:var(--line);border-style:dashed}
+  .treason{font-family:var(--prose);font-size:12px;color:var(--ink-3);font-style:italic;line-height:1.45}
+  .ladder-intro{font-family:var(--prose);font-size:15px;line-height:1.6;color:var(--ink-2);
+    max-width:68ch;margin:0 0 26px}
+  .tier{margin-bottom:26px;max-width:1500px}
+  .tier-head{display:flex;align-items:baseline;gap:12px;flex-wrap:wrap;margin-bottom:4px}
+  .tier-rank{font-family:var(--mono);font-size:11px;color:var(--ink-3);
+    border:1px solid var(--line-2);border-radius:3px;padding:1px 6px}
+  .tier-head h3{margin:0;font-size:16px;font-weight:700}
+  .tier-head .who{font-family:var(--mono);font-size:11px;color:var(--ink-3)}
+  .tier-why{margin:0 0 12px;font-family:var(--prose);font-size:13.5px;color:var(--ink-2);max-width:72ch}
+  .tier-why b{color:var(--ink);font-weight:600}
+  .targets{display:grid;gap:10px;grid-template-columns:repeat(auto-fill,minmax(270px,1fr))}
+  .target{background:var(--surface);border:1px solid var(--line);
+    border-top:3px solid var(--line-2);border-radius:var(--radius);padding:12px 13px;
+    display:grid;gap:7px;align-content:start}
+  .target:hover{border-color:var(--line-2)}
+  .target.p1{border-top-color:var(--alert)}
+  .target.p2{border-top-color:var(--warn)}
+  .target .tname{appearance:none;background:none;border:0;padding:0;justify-self:start;
+    text-align:left;cursor:pointer;font-family:var(--ui);font-size:13.5px;font-weight:500;
+    line-height:1.35;color:var(--ink)}
+  .target .tname:hover{color:var(--accent-ink);text-decoration:underline}
+  .target .tsite{font-family:var(--mono);font-size:11px;justify-self:start;
+    color:var(--accent-ink);text-decoration:none;border-bottom:1px solid var(--line-2);
+    max-width:100%;overflow-wrap:anywhere}
+  .target .tsite:hover{border-bottom-color:var(--accent)}
+  .target .tja{font-family:var(--mono);font-size:10.5px;color:var(--ink-3)}
+  .target .tpitch{font-family:var(--prose);font-size:12.5px;line-height:1.5;color:var(--ink-2)}
+  .target .tfoot{display:flex;gap:5px;flex-wrap:wrap}
+  .tier-empty{font-size:12.5px;color:var(--ink-3);font-style:italic}
+
+  /* ---- pool ---- */
+  .srcgrid{display:grid;gap:10px;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));
+    margin-bottom:22px;max-width:1500px}
+  .src{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:11px 12px;display:grid;gap:6px}
+  .src.unharvested{border-style:dashed;opacity:.72}
+  .src h4{margin:0;font-size:13px;font-weight:500;line-height:1.35}
+  .src .kind{font-family:var(--mono);font-size:10px;text-transform:uppercase;letter-spacing:.07em}
+  .src .kind.register{color:var(--good)}
+  .src .kind.association{color:var(--accent-ink)}
+  .src .kind.award,.src .kind.database{color:var(--warn)}
+  .src .kind.editorial{color:var(--alert)}
+  .src .meta{font-family:var(--mono);font-size:10.5px;color:var(--ink-3)}
+  .pool-controls{display:flex;gap:16px;align-items:center;flex-wrap:wrap;max-width:1500px}
+  .pool-controls .search{margin-bottom:0;max-width:360px}
+  .poolwrap{overflow-x:auto;max-width:1500px;margin-top:12px;border:1px solid var(--line);border-radius:var(--radius)}
+  .pooltable{border-collapse:collapse;width:100%;background:var(--surface)}
+  .pooltable th{font-family:var(--mono);font-size:10px;text-transform:uppercase;letter-spacing:.07em;
+    color:var(--ink-3);text-align:left;font-weight:500;padding:8px 12px;border-bottom:1px solid var(--line);white-space:nowrap}
+  .pooltable td{padding:7px 12px;border-bottom:1px solid var(--line);font-size:12.5px;vertical-align:top}
+  .pooltable tr:last-child td{border-bottom:0}
+  .pooltable tr.excluded td{color:var(--ink-3)}
+  .pooltable tr.excluded .pname{text-decoration:line-through}
+  .pooltable .pname{font-weight:500}
+  .pooltable .purl{font-family:var(--mono);font-size:11px;color:var(--accent-ink);text-decoration:none;overflow-wrap:anywhere}
+  .pooltable .preason{font-family:var(--prose);font-size:12px;font-style:italic;max-width:38ch}
+  .pooltable .pstate{font-family:var(--mono);font-size:10px;text-transform:uppercase;letter-spacing:.06em}
+  .pooltable .pstate.carded{color:var(--good)}
+  .pooltable .pstate.excluded{color:var(--ink-3)}
+
+  /* ---- board ---- */
+  .board{display:grid;gap:14px;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));max-width:1600px;align-items:start}
+  .col{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:12px}
+  .col h3{margin:0 0 10px;font-size:11px;text-transform:uppercase;letter-spacing:.09em;color:var(--ink-3);font-weight:500;
+    display:flex;justify-content:space-between}
+  .cards{display:flex;flex-direction:column;gap:8px}
+  .card{appearance:none;background:var(--surface-2);border:1px solid var(--line);border-left:3px solid var(--line-2);
+    border-radius:4px;padding:9px 10px;text-align:left;cursor:pointer;display:grid;gap:5px;width:100%}
+  .card:hover{border-color:var(--line-2)}
+  .card.p1{border-left-color:var(--alert)}
+  .card.p2{border-left-color:var(--warn)}
+  .card .cname{font-size:13px;font-weight:500;line-height:1.35}
+  .card .cmeta{font-family:var(--mono);font-size:10.5px;color:var(--ink-3);display:flex;gap:8px;flex-wrap:wrap;font-variant-numeric:tabular-nums}
+
+  @media (max-width:1000px){
+    .browse{grid-template-columns:1fr}
+    .facets,.detail{position:static;max-height:none}
+    .rows{max-height:340px;overflow-y:auto}
+  }
+  @media (max-width:520px){
+    .masthead,.tabs,.view{padding-inline:16px}
+    .built{margin-left:0}
+  }
+</style>
+
+<header class="masthead">
+  <h1 class="wordmark" id="projTitle"></h1>
+  <p id="projLede"></p>
+  <span class="built" id="built"></span>
+</header>
+
+<nav class="tabs" role="tablist" id="tabs">
+  <button class="tab" role="tab" id="tab-next" aria-selected="true" aria-controls="view-next">Do next</button>
+  <button class="tab" role="tab" id="tab-streams" aria-selected="false" aria-controls="view-streams">Streams</button>
+  <button class="tab" role="tab" id="tab-browse" aria-selected="false" aria-controls="view-browse">Browse</button>
+  <button class="tab" role="tab" id="tab-targets" aria-selected="false" aria-controls="view-targets">Targets</button>
+  <button class="tab" role="tab" id="tab-pool" aria-selected="false" aria-controls="view-pool">Pool</button>
+  <button class="tab" role="tab" id="tab-board" aria-selected="false" aria-controls="view-board">Task board</button>
+</nav>
+
+<section class="view" id="view-next" role="tabpanel" aria-labelledby="tab-next">
+  <p class="ladder-intro" id="nextIntro"></p>
+  <ol class="nextlist" id="nextList"></ol>
+  <p class="home-foot" id="nextRest"></p>
+</section>
+
+<section class="view" id="view-streams" role="tabpanel" aria-labelledby="tab-streams" hidden>
+  <div class="stream-grid" id="streamGrid"></div>
+  <div class="digest">
+    <h2>Where this stands</h2>
+    <ol>
+      <li><strong>Regulation is the demand engine, and it has fired twice.</strong> JFSA's 2021 Principles built internal teams at the top of the market; the 2025&ndash;26 AI guidance from JFSA, MAS and the BoJ created a second wave at institutions that never built one. This part is sourced and quotable.</li>
+      <li><strong>Hong Kong gives explicit permission.</strong> HKMA SPM CA-G-4 states independent review may be performed by external parties with relevant experience, and the eight licensed digital banks are the best-defined target set in the plan.</li>
+      <li><strong>Demand at the SME tier is unverified.</strong> The wedge assumed warehouse lenders, securitisation investors and VCs ask for independent model review. No instance of a Japanese fintech actually being asked has been found. Treat it as a hypothesis.</li>
+      <li><strong>The engagement fees were withdrawn.</strong> They were a triangulated day rate times a guessed day count. Effort is the missing factor and no published data on validation duration exists &mdash; so it has to be observed before anything is quoted.</li>
+      <li><strong>Positioning is worth roughly ten times the rate.</strong> A quantitative risk contractor bills &pound;215/day; a niche independent expert bills $300&ndash;500/hour for the same skill. That gap is real and sourced, and it is what the academic affiliation and publishing buy.</li>
+      <li><strong>Sales is the binding constraint, so start where no selling is required.</strong> Deliver for firms that already hold the mandates &mdash; Big 4 subcontractor panels, domestic risk boutiques &mdash; and take inbound from expert networks.</li>
+      <li><strong>Companies do buy research, and it is sized like a marketing budget.</strong> &yen;97.7bn a year flows from Japanese companies into university joint research, average contract &yen;3.3m, 85% under &yen;3m. That buyer is marketing or the CEO, not risk or procurement &mdash; and the work is the publication record, paid for. Blocked on whether TUJ can sign a &#x5171;&#x540C;&#x7814;&#x7A76;&#x5951;&#x7D04;.</li>
+      <li><strong>Sell in this order: paid research, then model building, then validation.</strong> The plan started at validation, which is the one that needs a credential, independence and a demand premise none of which existed yet.</li>
+      <li><strong>What a startup buys from a university is a name, grant access and capability &mdash; not scrutiny.</strong> The Japanese literature is blunt that a professor's name is indispensable when a company competes on technical strength, and that partnering unlocks subsidies a company cannot reach alone.</li>
+      <li><strong>Monetise the credential, not a consultancy.</strong> Expert-witness work, benchmark oversight under IOSCO Principle 5, an outside-director seat, and paid teaching through &#x304D;&#x3093;&#x3056;&#x3044; all share the property this plan needs: the counterparty initiates.</li>
+    </ol>
+  </div>
+</section>
+
+<section class="view" id="view-browse" role="tabpanel" aria-labelledby="tab-browse" hidden>
+  <div class="browse">
+    <aside class="facets" id="facets"></aside>
+    <div>
+      <input class="search" id="search" type="search" placeholder="Search names, tags, prose…" aria-label="Search all entries">
+      <p class="resultmeta"><span id="count"></span><button class="linkbtn" id="clear" type="button">clear filters</button></p>
+      <div class="rows" id="rows"></div>
+    </div>
+    <article class="detail" id="detail"></article>
+  </div>
+</section>
+
+<section class="view" id="view-targets" role="tabpanel" aria-labelledby="tab-targets" hidden>
+  <p class="ladder-intro">Work upward. At the bottom the purchase is forced by warehouse lenders,
+  securitisation investors and VCs in diligence — decisions made in weeks. At the top it is forced by the
+  supervisor — decisions made in quarters. Each tier's reference case is what makes the next one possible.</p>
+  <div class="pipe" id="pipe"></div>
+  <div class="tiers-controls">
+    <label class="toggle"><input type="checkbox" id="showRetired"> show retired</label>
+  </div>
+  <div id="tiers"></div>
+</section>
+
+<section class="view" id="view-pool" role="tabpanel" aria-labelledby="tab-pool" hidden>
+  <p class="ladder-intro">Harvested rows, not companies we have judged. A row becomes a card
+  only when someone looks at it and forms a view — which is why the pool lives in
+  <code>intake/*.tsv</code> and the repo is not full of entries nobody has read.
+  Promote with <code>tools/intake.py &lt;source&gt; --promote &lt;host&gt;</code>.</p>
+  <div id="sourceList"></div>
+  <div class="pool-controls">
+    <input class="search" id="poolSearch" type="search" placeholder="Search the pool…" aria-label="Search pool rows">
+    <label class="toggle"><input type="checkbox" id="showExcluded"> show excluded</label>
+  </div>
+  <div class="poolwrap"><table class="pooltable" id="poolTable"></table></div>
+</section>
+
+<section class="view" id="view-board" role="tabpanel" aria-labelledby="tab-board" hidden>
+  <div class="board" id="board"></div>
+</section>
+
+<script>
+const DATA = {"built": "2026-09-22", "repo": "https://github.com/mauhcs/J-job/blob/main/", "project": {"slug": "data-signal", "title": "Data Signal Research", "lede": "Scoping the trading value of a dataset for the people who own it, so they can sell it."}, "items": [{"id": "org-battlefin", "type": "org", "name": "BattleFin", "role": "channel", "country": "GLOBAL", "industry": ["asset-mgmt"], "status": "idea", "priority": 2, "confidence": "med", "tags": ["altdata", "events", "channel", "distribution"], "rel": ["note-altdata-action-plan", "note-altdata-offer-design", "org-eagle-alpha", "org-neudata", "stream-data-market", "stream-data-offer", "task-altdata-attend-discovery-day"], "links": [{"label": "BattleFin", "url": "https://www.battlefin.com/"}, {"label": "Best AI & alternative data analytics platforms for alpha signal", "url": "https://www.battlefin.com/the-ai-inflection-point/11-best-ai-alternative-data-analytics-platforms-for-alpha-signal"}], "updated": "2026-09-22", "body": "The events layer of the ecosystem. **Discovery Days** deliver pre-scheduled 1:1 meetings\nbetween qualified data buyers and vetted providers, live demos of differentiated datasets, and\na curated base of institutional investors actively sourcing data.\n\n**Relevant to the distribution half of the idea.** The plan included offering data sellers \"a\nsmall distribution channel with some folks looking to buy data.\" BattleFin *is* that channel,\nprofessionalised, with the buyers already in the room. Competing on distribution against it is\nnot sensible; **being the researcher whose report a vendor brings to a Discovery Day is.**\n\nAlso the cheapest way to meet both sides of this market at once — attend before building\nanything.", "path": "data-signal/entities/org/battlefin.md"}, {"id": "org-eagle-alpha", "type": "org", "name": "Eagle Alpha", "role": "channel", "country": "GLOBAL", "industry": ["asset-mgmt"], "status": "researching", "priority": 1, "confidence": "med", "tags": ["altdata", "broker", "scout", "competitor", "channel"], "rel": ["note-altdata-evaluation-gap", "note-altdata-market-size", "note-altdata-offer-design", "org-battlefin", "org-exabel", "org-neudata", "stream-data-market"], "links": [{"label": "Eagle Alpha", "url": "https://www.eaglealpha.com/"}, {"label": "Alternative data provider — complete guide to selling", "url": "https://www.eaglealpha.com/alternative-data-provider-complete-guide/"}, {"label": "Evaluating alternative data — Exabel partnership", "url": "https://www.eaglealpha.com/2022/09/07/the-end-to-end-challenges-of-evaluating-alternative-data-and-how-exabel-and-eagle-alpha-have-partnered-to-solve-them/"}], "updated": "2026-09-22", "body": "Data discovery firm with a catalogue of **1,200+ sources**, forecasting **5,000 sources\navailable within two years**. Runs conferences, a directory, and advisory for both sides.\n\nTwo facts that matter to this venture:\n\n- **They employ data scientists** to clean and structure raw datasets into a state where\n  actionable insight can be extracted. So part of the proposed offer is already staffed\n  in-house at the largest broker.\n- **They partnered with Exabel** specifically to solve the end-to-end problem of *evaluating*\n  alternative data. The two biggest names in the chain agreed the evaluation problem was worth\n  a joint product — which is strong confirmation the problem is real, and strong warning that\n  the obvious solution is taken.\n\nTheir supply forecast is the most useful number in the sweep: if sources go from 1,200 to\n5,000, the scarce thing stops being data and becomes **a credible reason to believe any\nparticular dataset matters**.", "path": "data-signal/entities/org/eagle-alpha.md"}, {"id": "org-exabel", "type": "org", "name": "Exabel", "role": "seller", "country": "GLOBAL", "industry": ["asset-mgmt"], "status": "researching", "priority": 1, "confidence": "high", "tags": ["altdata", "competitor", "platform", "evaluation", "direct-competitor"], "rel": ["note-altdata-action-plan", "note-altdata-evaluation-gap", "note-altdata-offer-design", "org-eagle-alpha", "stream-data-market", "stream-data-offer"], "links": [{"label": "Exabel", "url": "https://www.exabel.com/"}, {"label": "The end-to-end challenges of evaluating alternative data", "url": "https://www.exabel.com/blog/the-end-to-end-challenges-of-evaluating-alternative-data/"}, {"label": "Exabel for data vendors", "url": "https://www.exabel.com/solutions/alternative-data-vendors/"}], "updated": "2026-09-22", "body": "**The direct competitor, and it should be read before anything else in this space is built.**\n\nExabel is a platform for exactly the proposed workflow: aligning alternative data signals to\ncompany KPIs, testing predictive power, **signal alpha testing and strategy backtesting**. For\nbuy-side subscribers it shows **backtest summary results against Visible Alpha ground truth —\nat dataset, company or watchlist level — before a dataset is even trialled.** It runs a\n**vendor partnership programme** turning datasets into embedded long-term assets for managers,\nand markets itself on mapping data to KPIs and building predictive signals **in days**.\n\nThat is the proposed business, productised and funded.\n\n**What is left, honestly.** A platform optimises for scale and standardisation; it maps to\nequity KPIs against consensus ground truth. What it does not do:\n\n- **Non-equity and non-KPI data** — rates, FX, commodities, credit, crypto — where there is no\n  Visible Alpha consensus to test against.\n- **Bespoke depth.** Platform backtests are standardised. Regime conditioning, shock and stress\n  analysis, transaction costs, capacity, and the *incremental* value against a book already\n  running are not platform features.\n- **Japan.** Japanese-language datasets, Japanese vendors, Japanese corporate relationships.\n- **The vendor who is not ready for a platform** — a corporate with raw exhaust data who does\n  not yet know whether there is a product in it at all.\n\nWhether those gaps are a business or a rounding error is the central question of\n`note-altdata-offer-design`.", "path": "data-signal/entities/org/exabel.md"}, {"id": "org-jpx-data", "type": "org", "name": "JPX (J-Quants / JPX Data Cloud)", "name_ja": "日本取引所グループ", "role": "seller", "country": "JP", "industry": ["asset-mgmt", "securities"], "status": "researching", "priority": 2, "confidence": "high", "tags": ["altdata", "japan", "exchange", "infrastructure"], "rel": ["note-altdata-japan", "org-nowcast", "stream-data-market", "task-altdata-01-build-harness"], "links": [{"label": "J-Quants API", "url": "https://www.jpx.co.jp/markets/other-data-services/j-quants-api/index.html"}, {"label": "J-Quants Pro (corporate data delivery)", "url": "https://www.jpx.co.jp/corporate/news/news-releases/6020/20240215-01.html"}, {"label": "JPxData Portal — data catalogue", "url": "https://www.jpx.co.jp/markets/data-catalog/index.html"}], "updated": "2026-09-22", "body": "The exchange operator is itself a data seller, through JPX Research: **J-Quants** (retail\nAPI), **J-Quants Pro** (corporate delivery by API, CSV and **Snowflake**), **J-Quants\nDataCube** (purchase rather than subscription), and the **JPxData Portal**, a catalogue\nspanning JPX group companies *and partner companies*.\n\nTwo things follow. **The plumbing exists** — Snowflake delivery means Japanese market data is\nalready distributed the way global funds expect to consume it, removing a technical objection.\nAnd the partner-company catalogue is **a published list of firms already selling data into\nJapanese finance**, which is a target list worth harvesting into the pool.\n\nJ-Quants is also the cheapest credible source of Japanese market data for building the\nbacktesting infrastructure the offer depends on.", "path": "data-signal/entities/org/jpx-data.md"}, {"id": "org-neudata", "type": "org", "name": "Neudata", "role": "channel", "country": "GLOBAL", "industry": ["asset-mgmt"], "status": "researching", "priority": 1, "confidence": "med", "tags": ["altdata", "broker", "scout", "competitor", "channel"], "rel": ["note-altdata-evaluation-gap", "note-altdata-market-size", "org-battlefin", "org-eagle-alpha", "stream-data-market", "task-altdata-vendor-interviews"], "links": [{"label": "Neudata", "url": "https://www.neudata.co/"}, {"label": "Data monetisation — the authoritative guide", "url": "https://www.neudata.co/blog/data-monetisation-the-authoritative-guide"}, {"label": "How to sell alternative data to investment managers", "url": "https://www.neudata.co/education/how-to-sell-alternative-data-to-investment-managers"}, {"label": "State of the alternative data market 2026", "url": "https://www.neudata.co/blog/state-of-the-alternative-data-market-2026"}], "updated": "2026-09-22", "body": "Data scouting and intelligence firm sitting **between buyers and sellers** — introducing data\nvendors to relevant buyers and supplying market intelligence to funds about what exists.\n\n**Read their own education material first.** Neudata publishes the most useful public writing\non data monetisation and on how to sell data to investment managers — which is simultaneously\nthe best available primer on this venture and a statement of what they already do for free.\nAnything sold here has to be something their guides tell vendors to go and get.\n\n**Competitor or channel.** They do introductions and intelligence, not deep signal research on\na specific dataset. A vendor that Neudata has introduced to twenty funds and that still has\nnot closed needs a *reason to buy*, which is a different deliverable. Worth approaching as a\nreferral partner rather than assuming rivalry.", "path": "data-signal/entities/org/neudata.md"}, {"id": "org-nikkei-altdata", "type": "org", "name": "日経オルタナティブデータ (Nikkei)", "name_ja": "日本経済新聞社", "role": "seller", "country": "JP", "industry": ["asset-mgmt", "securities"], "status": "idea", "priority": 3, "confidence": "med", "tags": ["altdata", "japan", "media", "vendor"], "rel": ["note-altdata-japan", "stream-data-market"], "links": [{"label": "日経オルタナティブデータ", "url": "https://nkbb.nikkei.co.jp/alternative/"}, {"label": "日経 — オルタナティブデータ、市場規模3年で4倍 (2019)", "url": "https://www.nikkei.com/article/DGXMZO49967470Z10C19A9M11900/"}], "updated": "2026-09-22", "body": "Nikkei sells alternative data as a business line, and has covered the market editorially since\nat least 2019, when it reported the market quadrupling in three years.\n\nRelevant less as a customer than as evidence of **who in Japan already understands this\ncategory**: a media and information group with a data sales operation, an audience of exactly\nthe corporates who own sellable data, and the convening power to introduce them. A Nikkei-\nadjacent route into Japanese data owners is worth mapping.", "path": "data-signal/entities/org/nikkei-altdata.md"}, {"id": "org-nowcast", "type": "org", "name": "ナウキャスト (Nowcast)", "name_ja": "株式会社ナウキャスト", "role": "seller", "country": "JP", "industry": ["asset-mgmt"], "status": "researching", "priority": 1, "confidence": "med", "tags": ["altdata", "japan", "vendor", "comparable", "target"], "rel": ["note-altdata-action-plan", "note-altdata-japan", "org-jpx-data", "stream-data-market", "task-altdata-03-vendor-interviews", "task-altdata-vendor-interviews"], "links": [{"label": "ナウキャスト", "url": "https://nowcast.co.jp/"}, {"label": "AlternaData launch (2021)", "url": "https://nowcast.co.jp/news/20210907/"}, {"label": "MoF seminar — embedded finance and the alternative data market", "url": "https://www.mof.go.jp/pri/research/seminar/fy2022/lm20220727.pdf"}], "updated": "2026-09-22", "body": "Japan's most visible alternative data company, part of the Finatext group. Launched\n**AlternaData**, billed as Japan's first investment analysis platform combining multiple\nalternative datasets — supermarket and drugstore **POS data** and **payment data** analysable\non one platform. Reported growing inquiries from domestic and overseas hedge funds, with POS\nanalysis used to read company performance ahead of reported results.\n\n**Three ways to read this card.**\n\n1. **Comparable** — the shape of a successful Japanese alt data business.\n2. **Customer** — a vendor whose datasets need independent evidence of alpha to sell to\n   overseas funds, which is precisely the proposition.\n3. **Competitor** — they aggregate and analyse, so they may already do in-house what would be\n   sold to them.\n\nTheir MoF seminar material is worth reading in full: it is a Japanese insider's account of\nwhere this market is going, presented to the Ministry of Finance.", "path": "data-signal/entities/org/nowcast.md"}, {"id": "note-altdata-action-plan", "type": "note", "name": "What to actually do about alt data", "status": "confirmed", "priority": 1, "confidence": "med", "tags": ["altdata", "decision", "plan", "action"], "rel": ["org-battlefin", "org-exabel", "org-nowcast", "stream-data-market", "stream-data-offer", "task-altdata-01-build-harness", "task-altdata-02-publish-worked-example", "task-altdata-03-vendor-interviews", "task-altdata-04-productise"], "updated": "2026-09-22", "body": "Four steps, in order. Nothing else in this space matters until these are done.\n\n## 1. Build the harness on free data — by end November\n\nData integrity checks, signal construction with multiple-testing correction, orthogonalisation\nagainst standard factors, backtest **with and without** the dataset, shock and regime analysis,\ncapacity and costs. Output is a fixed report template. J-Quants supplies the market data.\nWeekends, not months.\n\n## 2. Publish one worked example — by end December\n\nRun it on a public dataset, publish the result including the negatives, with the academic\naffiliation on the byline. Choose a **non-equity or Japanese** dataset, where the platform\ncompetition does not reach.\n\n## 3. Take it to three vendors — by end January\n\nAsk what proving their data costs them today, and whether a desk would discount a report they\npaid for. Start with Nowcast.\n\n## 4. Decide the unit of sale — after, not before\n\n## Why this order, and not the other one\n\nEverything here is sequenced so that **the first two steps need no client, no introduction, no\nentity and no permission.** That is deliberate. The previous venture stalled because every path\nran through someone who had to agree first — a 顧問, a buyer, a regulator's view of\nindependence. This one starts with work you can do alone, on free data, and the output is what\nmakes step three a demonstration instead of a pitch.\n\nIt also front-loads the honest test. If building the harness is not enjoyable and the published\nexample is not good, the answer arrives in two months at a cost of some weekends, rather than\nin two years at the cost of a business.\n\n## What to ignore for now\n\n- Distribution. `org-battlefin` already runs the meetings; be the researcher whose report gets\n  brought to one, not a rival channel.\n- Market sizing. The forecasts are junk (`note-altdata-market-size`) and the demand surveys\n  already say enough.\n- Japan as a standalone market. It is the differentiator on the way to selling to global\n  vendors, not the market itself.\n- The other venture. It is parked, not deleted.\n\n## The one thing that would change this plan\n\nIf step three finds that vendors already pay `org-exabel` and are satisfied, the gap is\nnarrower than it looks and the right move is to sell **into** that ecosystem — the bespoke,\nnon-equity, incremental-value work a platform cannot do — rather than beside it. That is not a\nfailure; it is a smaller and more defensible position, reached in three months instead of\nguessed at now.", "path": "data-signal/notes/altdata-action-plan.md"}, {"id": "note-altdata-evaluation-gap", "type": "note", "name": "The evaluation bottleneck — real, expensive, and already being attacked", "status": "confirmed", "priority": 1, "confidence": "high", "tags": ["altdata", "opportunity", "competition", "thesis"], "rel": ["note-altdata-market-size", "note-altdata-offer-design", "org-eagle-alpha", "org-exabel", "org-neudata", "stream-data-market", "stream-data-offer", "task-altdata-vendor-interviews"], "updated": "2026-09-22", "body": "## The bottleneck is real and it is documented\n\nEvaluating a dataset properly means aligning its signals to target KPIs, testing predictive\npower, running signal alpha tests, and backtesting a strategy. Exabel — who sell the solution —\ndescribe the problem as **end-to-end**, and market their product on making evaluation\n\"rapid, low-risk and cost-effective **at scale**\", which is an admission that by default it is\nslow, risky and expensive.\n\nThe strongest evidence is structural rather than rhetorical: **Eagle Alpha and Exabel formed a\npartnership specifically to solve the evaluation problem.** The largest data broker and a\nspecialist analytics platform each concluded this was worth a joint product. The problem is\nreal.\n\n## The squeeze that creates the demand\n\n- Buyers subscribe to **~20 datasets** on average and can only evaluate a few at a time.\n- Supply is heading from **1,200 to a forecast 5,000 sources**.\n- Every vendor needs to clear an evaluation gate that is the buyer's scarcest resource.\n\nSo the vendor's problem is not distribution — brokers and Discovery Days exist — it is\n**producing evidence good enough to be worth a fund's evaluation slot.**\n\n## Why the vendor pays, not the fund\n\nThe fund has its own quants and will not outsource an investment decision. The vendor, though,\nis trying to make a sale, and evidence of alpha is the sales collateral. **This is a pre-sales\nand marketing spend**, which is a materially easier budget to reach than a research budget —\nthe same structural insight that worked in the other space, applied to a better-fitting market.\n\n## But the obvious solution is taken\n\n`org-exabel` already sells backtest-based proof of value, shows results against Visible Alpha\nground truth before a dataset is trialled, and runs a vendor partnership programme. Eagle Alpha\nkeeps data scientists on staff to do the cleaning and structuring.\n\n**So the question is not \"is there a gap\" — there is — but \"is there room beside a funded\nplatform, and where exactly\".** That is `note-altdata-offer-design`, and it is the thing to\nsettle before anything is built.\n\n## Sources\n\n- [Exabel: the end-to-end challenges of evaluating alternative data](https://www.exabel.com/blog/the-end-to-end-challenges-of-evaluating-alternative-data/)\n- [Integrity Research on the Exabel–Eagle Alpha partnership](https://www.integrity-research.com/the-end-to-end-challenges-of-evaluating-alternative-data-and-how-exabel-and-eagle-alpha-have-partnered-to-solve-them/)\n- [Exabel for data vendors](https://www.exabel.com/solutions/alternative-data-vendors/)", "path": "data-signal/notes/altdata-evaluation-gap.md"}, {"id": "note-altdata-japan", "type": "note", "name": "Japan — small, fast-growing, under-served, and behind", "status": "researching", "priority": 1, "confidence": "med", "tags": ["altdata", "japan", "differentiation"], "rel": ["note-altdata-market-size", "note-altdata-offer-design", "org-jpx-data", "org-nikkei-altdata", "org-nowcast", "stream-data-market", "task-altdata-02-publish-worked-example"], "links": [{"label": "IMARC — Japan alternative data market", "url": "https://www.imarcgroup.com/japan-alternative-data-market"}, {"label": "BoJ — alternative data analysis", "url": "https://www.boj.or.jp/research/bigdata/index.htm"}, {"label": "世界から取り残される日本のAlternative data市場", "url": "https://note.com/haruki_ohsawa/n/n95f22e5e9c9a"}], "updated": "2026-09-22", "body": "**Size, with the same health warning as the global figures.** One forecast puts Japan at\n**$525.7m in 2024 growing to $7.9bn by 2033, a 35.2% CAGR**. Treat the level as unreliable and\nthe direction as plausible. Nikkei reported the market quadrupling in three years as early as\n2019.\n\n**The ecosystem is real but thin.** `org-nowcast` (POS and payment data, Finatext group) is the\nflagship, reporting growing interest from domestic and overseas hedge funds. `org-jpx-data`\nsells through J-Quants and publishes a catalogue including partner companies.\n`org-nikkei-altdata` sells data and has covered the category since 2019. The **Bank of Japan\nruns its own alternative data analysis programme**, which legitimises the category with the\nmost conservative institution in the country.\n\nAt least one Japanese practitioner has published under the title *\"Japan's alternative data\nmarket, left behind by the world\"* — worth reading as the insider critique of what is missing.\n\n## Why being behind is the opportunity\n\n- **Data owners are less sophisticated about monetisation.** Japanese corporates sit on POS,\n  location, payment, logistics and telematics data, and most have not considered it saleable.\n  The value proposition *\"there may be a product in your exhaust data\"* is novel here in a way\n  it is not in New York.\n- **Overseas funds want Japanese data and cannot assess it.** Japanese datasets carry\n  language, calendar, corporate-structure and market-microstructure quirks that a London data\n  team cannot evaluate. A bilingual quant who can is genuinely scarce.\n- **The platforms are not localised.** Exabel's ground truth is Visible Alpha consensus; the\n  brokers' catalogues are English-language and US-equity-centric.\n\n## The honest counter\n\nSmall market, small budgets, slow corporate decision-making, and the same access problem that\ndogged the other venture — a Japanese corporate does not hand its data to an unknown foreign\nresearcher without an introduction. The Japan angle is a **differentiator for selling to global\nvendors and funds**, and it is not obviously a standalone market yet.\n\n## Open questions\n\n- Who else sells Japanese alternative data? Harvest the JPxData Portal partner catalogue.\n- Do overseas funds buying Japanese data complain about evaluation difficulty? That complaint,\n  if it exists, is the entire pitch.\n- What does the BoJ's programme actually consume, and does it publish a vendor list?", "path": "data-signal/notes/altdata-japan.md"}, {"id": "note-altdata-market-size", "type": "note", "name": "Market size — the forecasts are junk, the demand surveys are not", "status": "confirmed", "priority": 1, "confidence": "med", "tags": ["altdata", "sizing", "evidence"], "rel": ["note-altdata-evaluation-gap", "note-altdata-japan", "org-eagle-alpha", "org-neudata", "stream-data-market"], "updated": "2026-09-22", "body": "## Ignore the market-size reports\n\nPublished global alternative data forecasts, all found in one sweep:\n\n| source | 2026 | terminal |\n|---|---|---|\n| A | $29.6bn | $276.9bn by 2033 (37.6% CAGR) |\n| B | $31.86bn | **$1,696.89bn by 2034** |\n| C | — | ~$23.1bn by 2030 |\n\n**These disagree by roughly two orders of magnitude.** One forecast has the market reaching\n1.7 trillion dollars, which would make alternative data larger than the entire global asset\nmanagement fee pool. Vendor-sponsored market-sizing reports are marketing collateral. **Do not\nquote any of these numbers**, and be suspicious of anyone who does.\n\n## Use the demand-side surveys instead\n\nThese are specific, recent and attributable, and they say something useful:\n\n- A survey of firms managing about **$2.4 trillion in AUM** found **94% expect to increase\n  alternative data spending in 2026**, and **18% expect a substantial rise**.\n- **54% said their budgets for buying and managing alternative data grew by 50% or more over\n  the past two years.**\n- Firms subscribe to an average of **~20 alternative datasets**.\n- Hedge fund operators were the largest end-user segment at **67.66% of revenue share** in 2025.\n\nThat is a market where the buyers are committed and spending is compounding — which is what\nmatters, rather than the absolute size.\n\n## The supply-side number that actually shapes the opportunity\n\nEagle Alpha catalogues **1,200+ sources** and forecasts **5,000 within two years**.\n\n**This is the single most important fact in this space.** If supply roughly quadruples while\nbuyers subscribe to ~20 datasets each, then the binding constraint stops being the existence of\ndata and becomes **attention and proof**. Thousands of vendors will be competing for evaluation\nslots at funds that can only assess a handful of datasets a quarter.\n\nIn that world the scarce good is a **credible, independent reason to believe a specific dataset\nmatters** — which is the product. The supply glut is the business case, and it is better\nevidence than any market-size forecast.\n\n## Sources\n\n- [Neudata: state of the alternative data market 2026](https://www.neudata.co/blog/state-of-the-alternative-data-market-2026)\n- [Hedgeweek: hedge fund alt data spending set to surge](https://www.hedgeweek.com/hedge-fund-alt-data-spending-set-to-surge-says-new-research/)\n- [Alternative Fund Insight: alternative data spend set to rise in 2026](https://alternativefundinsight.com/alternative-data-spend-set-to-rise-in-2026/)\n- [Grand View Research: alternative data market](https://www.grandviewresearch.com/industry-analysis/alternative-data-market)\n- [Eagle Alpha guide to selling alternative data](https://www.eaglealpha.com/alternative-data-provider-complete-guide/)", "path": "data-signal/notes/altdata-market-size.md"}, {"id": "note-altdata-offer-design", "type": "note", "name": "Offer design — where there is room beside Exabel", "status": "researching", "priority": 1, "confidence": "low", "tags": ["altdata", "offer", "positioning", "differentiation"], "rel": ["note-altdata-evaluation-gap", "note-altdata-japan", "org-battlefin", "org-eagle-alpha", "org-exabel", "stream-data-offer", "task-altdata-01-build-harness", "task-altdata-04-productise", "task-altdata-vendor-interviews"], "updated": "2026-09-22", "body": "The proposition — *\"give me access to your data and I will find something meaningful\"*, sold\nto the data owner as sales collateral — is sound in its economics and **already productised**\nby `org-exabel`. This note is about whether anything is left, and it is deliberately\nunflattering before it is encouraging.\n\n## Where a platform structurally cannot go\n\n1. **Beyond equities and consensus KPIs.** Exabel's proof of value is benchmarked against\n   Visible Alpha ground truth — i.e. equity revenue and KPI consensus. Datasets relevant to\n   **rates, FX, commodities, credit and crypto** have no such ground truth, so the platform\n   approach does not transfer. **This is the strongest gap, and it happens to be the\n   profile's home ground.**\n2. **Incremental value against an existing book.** A platform answers \"does this dataset\n   predict something\". A trading desk asks a harder question: *\"does it add anything to what I\n   already run?\"* Orthogonality to existing factors, marginal contribution to a live strategy,\n   capacity, turnover and transaction costs are bespoke analysis, not a product feature.\n   **This is the stated methodology — with and without the dataset — and it is the correct\n   question.**\n3. **Shock and regime analysis.** Whether a signal survives a crisis, a regime change, or a\n   liquidity shock is exactly what a desk's risk officer will ask and exactly what a\n   standardised backtest does not show. An HFT and risk-modelling background is the credential\n   for that conversation, and it is a scarce one.\n4. **Vendors upstream of a platform.** A corporate with raw exhaust data does not know whether\n   there is a product in it at all. That is a discovery question, not an evaluation question,\n   and it is unsuited to a self-serve platform.\n5. **Japan.** Japanese-language data, Japanese vendors, Japanese corporate relationships, and a\n   local shortage of people who can do the work. See `note-altdata-japan`.\n\n## What the offer could therefore be\n\n**\"Independent scoping of a dataset's trading value, for owners who want to sell it.\"**\n\nA fixed-scope engagement producing a report the vendor can hand to a desk:\n\n- What is in the data, its coverage, history, latency, point-in-time integrity and survivorship\n  properties — the things that kill a dataset before any signal test.\n- Candidate signals, constructed and tested honestly, with the multiple-testing problem\n  addressed rather than ignored.\n- **A strategy backtest with and without the dataset**, with risk parameters, drawdown, and\n  shock and regime conditioning.\n- An honest statement of capacity, decay and what the dataset does *not* do.\n\n**The credibility of the negative is the product.** A report that says \"this adds nothing to a\nmomentum book but is genuinely orthogonal for a consumer-sector desk\" is worth more to a buyer,\nand therefore to the vendor, than a promotional backtest — and it is the thing a platform\noptimising for vendor satisfaction is least able to say.\n\n## The distribution half, honestly\n\nThe idea of offering data sellers a small buyer network runs straight into `org-battlefin`,\nwhich already runs curated Discovery Days with pre-scheduled one-to-one meetings between vetted\nvendors and institutional buyers, and into Neudata and Eagle Alpha, who do introductions as\ntheir core business.\n\n**Do not compete on distribution.** Be the researcher whose report a vendor brings *to* those\nmeetings. Referral in the other direction is the realistic relationship: brokers have vendors\nwho cannot close, and those vendors need evidence.\n\n## What has to be true for this to work\n\n- Data vendors have a pre-sales budget and spend it on outside research. **Unknown.**\n- They will pay enough to cover weeks of quant work. **Unknown, and the same trap as the last\n  venture — do not assume a price.**\n- An independent report from an unknown researcher carries weight with a desk. This is where\n  the academic affiliation does real work, and it is worth more here than in model validation.\n- The work is repeatable enough to compound: a reusable evaluation harness, applied to many\n  datasets, rather than bespoke every time. **This is the difference between a business and a\n  job**, and it should be built into the first engagement.\n\n## The thing to do first\n\nNot build the harness. **Talk to three data vendors and ask what they currently do to prove\ntheir data works, what it costs them, and what happens when a fund says no.** That is\n`task-altdata-vendor-interviews`, and it is the same lesson as last time: verify the demand\nbefore designing the product.", "path": "data-signal/notes/altdata-offer-design.md"}, {"id": "task-altdata-01-build-harness", "type": "task", "name": "1 — Build the evaluation harness once, on free data", "status": "idea", "priority": 1, "decides": "Whether you can produce, at a quality a desk respects, the one artefact this whole venture sells.", "owner": "mau", "due": "2026-11-30", "confidence": "high", "tags": ["altdata", "build", "foundation", "sequence"], "rel": ["note-altdata-action-plan", "note-altdata-offer-design", "org-jpx-data", "stream-data-offer", "task-altdata-02-publish-worked-example"], "links": [{"label": "J-Quants API (Japanese market data)", "url": "https://www.jpx.co.jp/markets/other-data-services/j-quants-api/index.html"}], "updated": "2026-09-22", "body": "**Start here, before talking to anyone.** The product is a report. You do not have one, and\nnothing else in this space can happen until you do.\n\nBuild the pipeline once, properly, against **free data** — J-Quants for Japanese prices and\nfundamentals, plus any public alternative dataset. The point is not the finding; it is the\n**harness**, which is reused on every paid engagement afterwards and is the only thing that\nmakes the second job cheaper than the first.\n\nWhat it must do, in this order:\n\n1. **Data integrity before signal.** Coverage, history length, latency, point-in-time\n   correctness, revision history, survivorship. Most datasets die here, and saying so credibly\n   is a large part of the value.\n2. **Signal construction**, with the multiple-testing problem handled explicitly — deflated\n   Sharpe or equivalent — not ignored.\n3. **Orthogonalisation** against standard factors. A signal that is momentum in disguise is\n   worth nothing to a desk that already runs momentum.\n4. **Backtest with and without the dataset.** The incremental information ratio is the number\n   the whole offer rests on.\n5. **Risk and shock analysis.** Drawdown, regime conditioning, behaviour through a crisis and a\n   liquidity event.\n6. **Capacity and costs.** Turnover, transaction costs, the AUM at which the signal dies.\n\n**Output: a template report**, with the sections fixed, so that a paid engagement is filling in\na known structure rather than inventing one under time pressure.\n\nBudget it in weekends, not months. If it takes more than about six, the offer is too heavy to\nsell at any plausible price.", "path": "data-signal/tasks/altdata-01-build-harness.md"}, {"id": "task-altdata-02-publish-worked-example", "type": "task", "name": "2 — Publish one worked example as the calling card", "status": "idea", "priority": 1, "decides": "Whether the work stands up in public, and whether it brings anyone to you without outbound.", "owner": "mau", "due": "2026-12-31", "confidence": "high", "tags": ["altdata", "publishing", "credential", "marketing", "sequence"], "rel": ["note-altdata-action-plan", "note-altdata-japan", "stream-data-offer", "task-altdata-01-build-harness", "task-altdata-03-vendor-interviews"], "updated": "2026-09-22", "body": "Run the harness on one public dataset and **publish the result** — a preprint, a long post, or\nboth — including the negative findings.\n\n**Why this is the single highest-leverage item in the venture.** It is simultaneously the\ncredential, the marketing, the sales collateral and the proof you can do the work. It requires\nno client, no introduction, no entity and no permission. And it inverts the sales problem that\nsank the other venture: a vendor who reads it and recognises their own problem contacts you.\n\n**Pick the subject so it does double duty.** A Japanese dataset, or a non-equity one — rates,\nFX, crypto — where `org-exabel`'s consensus-ground-truth approach does not reach. That choice\nis itself the positioning statement in `note-altdata-offer-design`.\n\n**Lead with the negative.** A published evaluation that concludes \"this dataset does not add\nanything to a standard book, and here is exactly why\" establishes independence more powerfully\nthan any promotional result, and independence is the entire reason a desk would read a\nvendor-commissioned report at all.\n\nThe academic affiliation goes on the byline. It is worth more here than anywhere else in this\nrepo.", "path": "data-signal/tasks/altdata-02-publish-worked-example.md"}, {"id": "task-altdata-03-vendor-interviews", "type": "task", "name": "3 — Take it to three vendors and ask the killer question", "status": "idea", "priority": 1, "decides": "Whether vendors pay for this, what they pay, and whether a desk discounts a report the vendor commissioned.", "owner": "mau", "due": "2027-01-31", "confidence": "high", "tags": ["altdata", "demand", "falsification", "sequence"], "rel": ["note-altdata-action-plan", "org-nowcast", "task-altdata-02-publish-worked-example", "task-altdata-04-productise", "task-altdata-vendor-interviews"], "updated": "2026-09-22", "body": "With the published example in hand, the conversation is \"here is what I do\" rather than \"here\nis what I could do\" — which is the difference between a pitch and a demonstration.\n\nFive questions, detailed in `task-altdata-vendor-interviews`. The one that can kill the idea:\n**would a trading desk discount your report because you paid for it?**\n\nIf the answer is yes across three vendors, the model has to change rather than the pitch:\npre-registered methodology agreed before results are seen; publication of negative findings as\na standing policy; or being retained by the buy side instead. Better to learn that now than\nafter building a practice on it.\n\nStart with `org-nowcast` — Japanese, reachable, sells to overseas funds, and therefore has the\nexact problem of proving Japanese data to people who cannot assess it.", "path": "data-signal/tasks/altdata-03-vendor-interviews.md"}, {"id": "task-altdata-04-productise", "type": "task", "name": "4 — Decide the unit of sale, only after the first three", "status": "idea", "priority": 2, "owner": "mau", "due": "2027-03-31", "confidence": "low", "tags": ["altdata", "pricing", "product", "sequence"], "rel": ["note-altdata-action-plan", "note-altdata-offer-design", "task-altdata-03-vendor-interviews"], "updated": "2026-09-22", "body": "Deliberately last, and deliberately unpriced until the first three are done — the previous\nventure invented a fee table before knowing either the effort or the demand, and it did not\nsurvive contact.\n\nOnce the harness exists and the effort is measured, decide between:\n\n- **Fixed-scope report per dataset.** Simple, repeatable, and the harness makes it cheaper each\n  time.\n- **A tiered screen.** A cheap first-pass integrity-and-viability screen, with a full evaluation\n  only if it survives — which matches how vendors actually triage and lowers the entry price.\n- **Retainer for a vendor with many datasets.** Recurring, which is the shape this profile most\n  needs.\n- **Scorecard or subscription**, rated consistently across datasets. Compounds hardest,\n  competes most directly with `org-exabel`.\n\nPrice it from observed effort × the day rate in `note-unit-economics`, and not before.", "path": "data-signal/tasks/altdata-04-productise.md"}, {"id": "task-altdata-attend-discovery-day", "type": "task", "name": "Attend a BattleFin Discovery Day — meet both sides in one room", "status": "idea", "priority": 2, "owner": "mau", "due": "2026-12-31", "confidence": "med", "tags": ["altdata", "network", "research", "quickwin"], "rel": ["org-battlefin", "stream-data-market", "stream-data-offer", "task-altdata-vendor-interviews"], "links": [{"label": "BattleFin", "url": "https://www.battlefin.com/"}], "updated": "2026-09-22", "body": "Discovery Days put vetted data providers and institutional buyers in pre-scheduled one-to-one\nmeetings. For the price of a ticket and a flight it is possible to meet more vendors and more\nbuy-side data teams in two days than months of outreach would produce — and to watch how a\ndataset is actually pitched and rejected.\n\nGo as a researcher, not a vendor. The goal is `task-altdata-vendor-interviews` plus a read on\nwhether the evaluation complaint is as loud in person as it is in Exabel's marketing.\n\nCheck which editions cover Asia, and whether Japanese vendors attend.", "path": "data-signal/tasks/altdata-attend-discovery-day.md"}, {"id": "task-altdata-vendor-interviews", "type": "task", "name": "The five questions to ask a data vendor", "status": "idea", "priority": 2, "decides": "Whether data vendors pay outsiders to prove their data works, and whether a desk discounts a vendor-paid report.", "owner": "mau", "due": "2026-10-31", "confidence": "high", "tags": ["altdata", "validation", "demand", "falsification"], "rel": ["note-altdata-evaluation-gap", "note-altdata-offer-design", "org-neudata", "org-nowcast", "stream-data-offer", "task-altdata-03-vendor-interviews", "task-altdata-attend-discovery-day"], "updated": "2026-09-22", "body": "**Do this before designing anything.** The previous venture built a tier model, a pricing\ntable and a strategy on an unverified demand premise. The equivalent premise here is that data\nvendors pay outsiders to prove their datasets work, and it is equally unverified.\n\nFive questions, to three or more vendors:\n\n1. What do you currently do to show a fund your data predicts something?\n2. Who does that work — in-house, a platform, a consultant — and what does it cost you?\n3. What happens when a fund says no? Do you learn why?\n4. Would an independent report change the conversation, or would a desk dismiss it because you\n   paid for it?\n5. What is your pre-sales budget, and who signs it off?\n\n**Question 4 is the one that can kill the idea**, and it should be asked plainly. A report\ncommissioned by the vendor has an obvious conflict; the answer determines whether the\ndeliverable must be structured differently — for instance commissioned by the vendor but\nmethodologically pre-registered, or paid on a basis that survives the conflict question.\n\nTargets: `org-nowcast` in Japan, plus vendors met through `org-battlefin` Discovery Days or\nintroduced by `org-neudata` and `org-eagle-alpha`. Attending one Discovery Day is likely the\ncheapest way to have all three conversations in a day.", "path": "data-signal/tasks/altdata-vendor-interviews.md"}, {"id": "stream-data-market", "type": "stream", "name": "The alternative data market — who sells, who buys, who evaluates", "status": "researching", "priority": 1, "confidence": "med", "tags": ["altdata", "market", "sizing"], "rel": ["note-altdata-action-plan", "note-altdata-evaluation-gap", "note-altdata-japan", "note-altdata-market-size", "org-battlefin", "org-eagle-alpha", "org-exabel", "org-jpx-data", "org-neudata", "org-nikkei-altdata", "org-nowcast", "stream-data-offer", "task-altdata-attend-discovery-day"], "updated": "2026-09-22", "body": "## Question\n\nHow big is the market for alternative data, who are the buyers and sellers, how is a dataset\nactually bought, and where in that chain does an independent quant researcher get paid?\n\n## The chain, as it actually works\n\n**Data owner** (a company with exhaust data) → **broker / scout** (Neudata, Eagle Alpha,\nBattleFin, Amass Insights) → **buy-side evaluator** (a fund's data team) → **purchase**.\n\nThe interesting structural fact is that the chain has a bottleneck in the middle: the buyer\nmust decide whether a dataset predicts anything before paying for it, and doing that properly\nis slow and expensive. That bottleneck is `note-altdata-evaluation-gap`, and it is where this\nventure's proposition sits.\n\n## Geography\n\nGlobal first, because the buyers are global and the Japanese market is small but growing very\nfast and is under-served. Japan is the differentiated position rather than the main market —\nJapanese-language data, Japanese corporate relationships, and a local shortage of people who\ncan do this work.\n\n## Current state\n\nFirst sweep done. Market-size estimates are unreliable and the demand-side surveys are not;\nthe competitive picture is clear; the Japan picture is thin and needs its own pass.", "path": "data-signal/streams/data-market.md"}, {"id": "stream-data-offer", "type": "stream", "name": "The offer — signal research as proof of value", "status": "researching", "priority": 1, "confidence": "low", "tags": ["altdata", "offer", "positioning"], "rel": ["note-altdata-action-plan", "note-altdata-evaluation-gap", "note-altdata-offer-design", "org-battlefin", "org-exabel", "stream-data-market", "task-altdata-01-build-harness", "task-altdata-02-publish-worked-example", "task-altdata-attend-discovery-day", "task-altdata-vendor-interviews"], "updated": "2026-09-22", "body": "## Question\n\nWhat exactly is sold, to whom, for how much — and is it defensible against the platforms that\nalready do a version of it?\n\n## The proposition being tested\n\n*\"Give me access to your data and I will find something meaningful\"* — sold to the **data\nowner**, not the fund. The deliverable is a research report a vendor can put in front of a\ntrading desk as the reason to buy.\n\nWith a methodological core that is the actual product: **run strategies over history with and\nwithout the dataset**, with risk parameters and shock analysis, to scope the dataset's\n*incremental* value rather than its standalone appeal.\n\n## Why the buyer is the data owner\n\nBecause it is a **pre-sales and marketing spend**, not a research spend. A vendor with an\nunproven dataset cannot get a fund to spend evaluation resources on it; a credible independent\nreport removes that objection. The same logic that made research-as-marketing work in the\nother space applies here, with a much better profile fit.\n\n## The uncomfortable part, up front\n\n**A version of this already exists as a product** — see `org-exabel`. The question is not\nwhether the idea is good but whether there is room beside a funded platform. See\n`note-altdata-offer-design`.\n\n## Open questions\n\n- Do data vendors actually pay for this today, and who do they pay?\n- What does a vendor's pre-sales budget look like?\n- Is \"incremental value against an existing book\" a deliverable buyers recognise, or a\n  methodology only quants care about?", "path": "data-signal/streams/data-offer.md"}], "sources": [], "pool": []};
+const ITEMS = DATA.items;
+const BY_ID = Object.fromEntries(ITEMS.map(i => [i.id, i]));
+const TYPE_LABEL = {org:"Org", person:"Person", venue:"Venue", artifact:"Artifact", note:"Note", task:"Task", stream:"Stream"};
+const STATUS_ORDER = ["idea","researching","contacted","confirmed","active","parked","done"];
+
+const esc = s => String(s ?? "").replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+
+/* minimal markdown: headings, lists, bold/italic, links, inline code */
+function md(src){
+  const inline = t => esc(t)
+    .replace(/`([^`]+)`/g, (_,c) => `<code>${c}</code>`)
+    .replace(/\[([^\]]+)\]\(([^)\s]+)\)/g, (_,t2,u) => `<a href="${u}" target="_blank" rel="noopener">${t2}</a>`)
+    .replace(/\*\*([^*]+)\*\*/g, "<strong>$1</strong>")
+    .replace(/(^|[^*])\*([^*\n]+)\*/g, "$1<em>$2</em>");
+  const out = [];
+  let list = null, para = [];
+  const flushP = () => { if (para.length) { out.push(`<p>${inline(para.join(" "))}</p>`); para = []; } };
+  const flushL = () => { if (list) { out.push(`<ul>${list.map(x => `<li>${inline(x)}</li>`).join("")}</ul>`); list = null; } };
+  for (const raw of src.split("\n")) {
+    const line = raw.trimEnd();
+    const h = line.match(/^(#{2,3})\s+(.*)$/);
+    const li = line.match(/^[-*]\s+(.*)$/);
+    if (h) { flushP(); flushL(); out.push(`<h${h[1].length}>${inline(h[2])}</h${h[1].length}>`); }
+    else if (li) { flushP(); (list ??= []).push(li[1]); }
+    else if (!line.trim()) { flushP(); flushL(); }
+    else if (list) { list[list.length - 1] += " " + line.trim(); }
+    else { para.push(line.trim()); }
+  }
+  flushP(); flushL();
+  return out.join("\n");
+}
+
+const CONF_CLASS = {high:"good", med:"warn", low:"alert"};
+function badges(it){
+  const b = [];
+  b.push(`<span class="badge accent">${TYPE_LABEL[it.type] || it.type}</span>`);
+  if (it.decides) b.push(`<span class="badge good">decides something</span>`);
+  if (it.role) b.push(`<span class="badge">${esc(it.role)}</span>`);
+  b.push(`<span class="badge">${esc(it.status)}</span>`);
+  if (it.priority) b.push(`<span class="badge${it.priority === 1 ? " alert" : ""}">P${it.priority}</span>`);
+  if (it.confidence) b.push(`<span class="badge ${CONF_CLASS[it.confidence] || ""}">confidence: ${esc(it.confidence)}</span>`);
+  if (it.size) b.push(`<span class="badge accent">tier: ${esc(it.size)}</span>`);
+  if (it.country) b.push(`<span class="badge">${esc(it.country)}</span>`);
+  if (it.owner) b.push(`<span class="badge">owner: ${esc(it.owner)}</span>`);
+  if (it.due) b.push(`<span class="badge">due ${esc(it.due)}</span>`);
+  if (it.retired_on) b.push(`<span class="badge alert">retired ${esc(it.retired_on)}</span>`);
+  return b.join("");
+}
+
+/* ---------- detail ---------- */
+let selected = null;
+function select(id){
+  selected = id;
+  const it = BY_ID[id];
+  const d = document.getElementById("detail");
+  if (!it) { d.innerHTML = `<p class="prose">Select an entry to read it.</p>`; return; }
+  const links = (it.links || []).map(l => `<li><a href="${esc(l.url)}" target="_blank" rel="noopener">${esc(l.label || l.url)}</a></li>`).join("");
+  const rels = (it.rel || []).map(r => {
+    const t = BY_ID[r];
+    return `<button class="rel" type="button" data-goto="${esc(r)}"><b>${TYPE_LABEL[t?.type] || "?"}</b>${esc(t?.name || r)}</button>`;
+  }).join("");
+  const repo = DATA.repo ? `<a href="${esc(DATA.repo)}${esc(it.path)}" target="_blank" rel="noopener">${esc(it.path)}</a>` : esc(it.path);
+  d.innerHTML = `
+    <p class="eyebrow">${esc(it.id)} · updated ${esc(it.updated)}</p>
+    <h2>${esc(it.name)}</h2>
+    ${it.name_ja ? `<p class="ja">${esc(it.name_ja)}</p>` : ""}
+    <div class="badges">${badges(it)}</div>
+    <div class="prose">${md(it.body || "_No body yet._")}</div>
+    ${links ? `<h3 class="subhead">Links</h3><ul class="linklist">${links}</ul>` : ""}
+    ${rels ? `<h3 class="subhead">Connected</h3><div class="rels">${rels}</div>` : ""}
+    <p class="srcpath">
+      file · ${repo}${it.source ? `<br>harvested from · ${esc(it.source)}` : ""}${
+        it.first_seen ? ` · first seen ${esc(it.first_seen)}` : ""}${
+        it.site ? `<br>company · <a href="${esc(it.site)}" target="_blank" rel="noopener">${esc(it.site)}</a>` : ""}
+    </p>`;
+  d.scrollTop = 0;
+  document.querySelectorAll("#rows .row").forEach(r =>
+    r.setAttribute("aria-current", String(r.dataset.id === id)));
+}
+
+/* ---------- facets ---------- */
+const FACETS = [
+  {key:"type", label:"Type"},
+  {key:"status", label:"Status"},
+  {key:"country", label:"Geography"},
+  {key:"size", label:"Target tier"},
+  {key:"source", label:"Harvested from"},
+  {key:"priority", label:"Priority", fmt:v => "P" + v},
+  {key:"confidence", label:"Confidence"},
+  {key:"tags", label:"Tag", multi:true},
+];
+const active = {};
+let query = "";
+
+function values(key, multi){
+  const c = new Map();
+  for (const it of ITEMS) {
+    const vs = multi ? (it[key] || []) : (it[key] == null ? [] : [it[key]]);
+    for (const v of vs) c.set(v, (c.get(v) || 0) + 1);
+  }
+  return [...c.entries()].sort((a, b) => b[1] - a[1] || String(a[0]).localeCompare(String(b[0])));
+}
+
+function matches(it){
+  for (const f of FACETS) {
+    const sel = active[f.key];
+    if (!sel) continue;
+    const vs = f.multi ? (it[f.key] || []) : (it[f.key] == null ? [] : [it[f.key]]);
+    if (!vs.map(String).includes(String(sel))) return false;
+  }
+  if (query) {
+    const hay = [it.name, it.name_ja, it.id, it.body, (it.tags || []).join(" ")].join(" ").toLowerCase();
+    if (!hay.includes(query)) return false;
+  }
+  return true;
+}
+
+function renderFacets(){
+  document.getElementById("facets").innerHTML = FACETS.map(f => {
+    const opts = values(f.key, f.multi).slice(0, f.key === "tags" ? 18 : 99).map(([v, n]) =>
+      `<button class="chip" type="button" data-facet="${f.key}" data-value="${esc(v)}"
+        aria-pressed="${String(active[f.key]) === String(v)}">${esc(f.fmt ? f.fmt(v) : v)}<span class="n">${n}</span></button>`).join("");
+    return opts ? `<div class="facet"><h4>${f.label}</h4><div class="facet-opts">${opts}</div></div>` : "";
+  }).join("");
+}
+
+function renderRows(){
+  const list = ITEMS.filter(matches).sort((a, b) =>
+    (a.priority || 9) - (b.priority || 9) ||
+    a.type.localeCompare(b.type) ||
+    a.name.localeCompare(b.name));
+  document.getElementById("count").textContent = `${list.length} of ${ITEMS.length} entries`;
+  document.getElementById("rows").innerHTML = list.length ? list.map(it => `
+    <button class="row ${it.priority === 1 ? "p1" : ""}" type="button" data-id="${esc(it.id)}"
+      aria-current="${it.id === selected}">
+      <span class="rname">${esc(it.name)}</span>
+      <span class="rmeta"><span>${TYPE_LABEL[it.type] || it.type}</span>${it.country ? `<span>${esc(it.country)}</span>` : ""}<span>${esc(it.status)}</span>${it.priority ? `<span>P${it.priority}</span>` : ""}</span>
+    </button>`).join("") : `<p class="empty">Nothing matches. Clear a filter.</p>`;
+}
+
+function renderStreams(){
+  const streams = ITEMS.filter(i => i.type === "stream");
+  document.getElementById("streamGrid").innerHTML = streams.map(s => {
+    const q = (s.body.match(/##\s*Question\s*\n+([\s\S]*?)(\n##|$)/) || [, ""])[1].trim().split("\n").join(" ");
+    const linked = (s.rel || []).length;
+    const tasks = ITEMS.filter(i => i.type === "task" && (i.rel || []).includes(s.id)).length;
+    return `<button class="stream" type="button" data-goto="${esc(s.id)}">
+      <h3>${esc(s.name)}</h3>
+      <p class="q">${esc(q.slice(0, 210))}${q.length > 210 ? "…" : ""}</p>
+      <footer>
+        <span class="badge${s.priority === 1 ? " alert" : ""}">P${s.priority ?? "–"}</span>
+        <span class="badge ${CONF_CLASS[s.confidence] || ""}">confidence: ${esc(s.confidence || "–")}</span>
+        <span class="badge">${linked} linked</span>
+        ${tasks ? `<span class="badge">${tasks} tasks</span>` : ""}
+      </footer></button>`;
+  }).join("");
+}
+
+const TIERS = [
+  {key:"startup", label:"Startup", who:"founder / CTO decides",
+   why:"Not under the Principles, so the buyer is the <b>warehouse lender, the securitisation investor or the VC in diligence</b>. Sell cheaper capital and faster due diligence, not compliance. Smallest fees, fastest yes, and the first reference case."},
+  {key:"sme", label:"SME &amp; regulated small institutions", who:"president / compliance head decides",
+   why:"Licensed, model-dependent, and structurally unable to staff the function — the FSA's own internal-audit work says small institutions cannot resource it, and its suggested remedies (parent-group resources, peer cooperation) are unavailable to an independent firm. <b>Buy rather than build is the only option left.</b>"},
+  {key:"mid", label:"Mid — regional banks, mid insurers", who:"risk or audit function decides",
+   why:"AI moved into core customer-facing operations over the past year while governance and third-party risk management lagged. Real supervisory pressure, <b>no internal MRM bench</b>, and priced out of a Big 4 governance programme."},
+  {key:"large", label:"Large — HK authorized institutions, trust banks, major insurers", who:"procurement, with a sponsor",
+   why:"Internal models under supervision. In Hong Kong, <b>HKMA CA-G-4 explicitly permits external validators</b> — the strongest single sentence available to this business, and the reason HK is likely the first sale despite the tier."},
+  {key:"mega", label:"Mega — megabanks, global banks", who:"procurement, slowly",
+   why:"They built MRM teams after the 2021 Principles, so they do not need capability — only <b>independence and specialist depth at the margin</b>. Longest cycle, 顧問 non-optional. Year two, warmed by the publishing stream."},
+];
+
+const PIPE_STEPS = ["researching", "qualified", "contacted", "engaged", "client", "retired"];
+
+function renderPipe(companies){
+  const counts = Object.fromEntries(PIPE_STEPS.map(k => [k, 0]));
+  for (const c of companies) counts[c.status] = (counts[c.status] || 0) + 1;
+  document.getElementById("pipe").innerHTML = PIPE_STEPS.map(k =>
+    `<div class="pipe-step ${counts[k] ? "on" : "off"}"><span class="n">${counts[k] || 0}</span><span class="l">${k}</span></div>`
+  ).join("");
+}
+
+function renderTiers(){
+  if (!document.getElementById("tiers")) return;
+  const buyers = ITEMS.filter(i => i.role === "buyer" && i.scope !== "segment");
+  renderPipe(buyers);
+  const showRetired = document.getElementById("showRetired")?.checked;
+  document.getElementById("tiers").innerHTML = TIERS.map((t, idx) => {
+    const inTier = buyers.filter(b => b.size === t.key)
+      .filter(b => b.status !== "retired" || showRetired)
+      .sort((a, b) => PIPE_STEPS.indexOf(a.status) - PIPE_STEPS.indexOf(b.status)
+                   || (a.priority || 9) - (b.priority || 9)
+                   || a.name.localeCompare(b.name));
+    const hiddenCount = buyers.filter(b => b.size === t.key).length - inTier.length;
+    const cards = inTier.length ? inTier.map(b => {
+      const url = b.site || ((b.links || [])[0] || {}).url || "";
+      const host = url.replace(/^https?:\/\//, "").replace(/\/$/, "");
+      const state = b.status === "retired" ? " is-retired" : "";
+      return `
+      <div class="target p${b.priority || 3}${state}">
+        <button class="tname" type="button" data-goto="${esc(b.id)}">${esc(b.name)}</button>
+        ${b.name_ja ? `<span class="tja">${esc(b.name_ja)}</span>` : ""}
+        ${b.pitch ? `<span class="tpitch">${esc(b.pitch)}</span>` : ""}
+        ${b.retired_reason ? `<span class="treason">${esc(b.retired_reason)}</span>` : ""}
+        ${url ? `<a class="tsite" href="${esc(url)}" target="_blank" rel="noopener">${esc(host)}</a>` : ""}
+        <span class="tfoot">
+          <span class="badge${b.status === "retired" ? "" : b.priority === 1 ? " alert" : ""}">${
+            b.status === "retired" ? "retired" : "P" + (b.priority || "–")}</span>
+          ${b.country ? `<span class="badge">${esc(b.country)}</span>` : ""}
+          <span class="badge">${esc(b.status)}</span>
+        </span>
+      </div>`;
+    }).join("") : `<p class="tier-empty">No targets carded in this tier yet.</p>`;
+    return `<section class="tier">
+      <div class="tier-head">
+        <span class="tier-rank">${idx + 1}</span><h3>${t.label}</h3>
+        <span class="who">${t.who}</span><span class="who">· ${inTier.length} shown</span>
+      </div>
+      <p class="tier-why">${t.why}</p>
+      <div class="targets">${cards}</div>
+      ${hiddenCount > 0 ? `<p class="tier-empty">${hiddenCount} retired, hidden.</p>` : ""}
+    </section>`;
+  }).join("");
+}
+
+function renderSources(){
+  if (!document.getElementById("sourceList")) return;
+  const rows = DATA.sources.map(src => {
+    const harvested = src.harvested && src.harvested !== "None";
+    return `<div class="src${harvested ? "" : " unharvested"}">
+      <span class="kind ${esc(src.kind)}">${esc(src.kind)}</span>
+      <h4>${esc(src.name)}</h4>
+      ${src.purpose === "evidence" ? `<span class="meta">evidence source \u2014 not prospects</span>` : ""}
+      <span class="meta">${harvested
+        ? `${src.harvested_rows} rows · harvested ${esc(src.harvested)}`
+        : "not yet harvested"} · ${esc(src.jurisdiction || "")}</span>
+      <a class="tsite" href="${esc(src.url)}" target="_blank" rel="noopener">${
+        esc(src.url.replace(/^https?:\/\//, "").replace(/\/$/, "").slice(0, 48))}</a>
+    </div>`;
+  }).join("");
+  document.getElementById("sourceList").innerHTML = rows
+    ? `<div class="srcgrid">${rows}</div>`
+    : `<p class="tier-empty">No sources harvested for this venture yet.</p>`;
+}
+
+let poolQuery = "";
+function renderPool(){
+  if (!document.getElementById("poolTable")) return;
+  const showExcluded = document.getElementById("showExcluded")?.checked;
+  const rows = DATA.pool
+    .filter(r => showExcluded || r.state !== "excluded")
+    .filter(r => !poolQuery || (r.name + r.name_ja + r.url + r.note).toLowerCase().includes(poolQuery))
+    .sort((a, b) => (a.state || "pool").localeCompare(b.state || "pool") || a.name.localeCompare(b.name));
+  const body = rows.map(r => {
+    const state = r.state || "pool";
+    const host = (r.url || "").replace(/^https?:\/\//, "").replace(/\/$/, "");
+    return `<tr class="${esc(state)}">
+      <td class="pname">${esc(r.name)}${r.name_ja && r.name_ja !== r.name ? `<br><span class="meta">${esc(r.name_ja)}</span>` : ""}</td>
+      <td>${host ? `<a class="purl" href="${esc(r.url)}" target="_blank" rel="noopener">${esc(host)}</a>` : "—"}</td>
+      <td class="pstate ${esc(state)}">${esc(state)}</td>
+      <td class="preason">${state === "carded"
+        ? `<button class="rel" type="button" data-goto="${esc(r.card)}">${esc(r.card)}</button>`
+        : esc(r.reason || r.note || "")}</td>
+    </tr>`;
+  }).join("");
+  document.getElementById("poolTable").innerHTML =
+    `<thead><tr><th>Company</th><th>Site</th><th>State</th><th>Reason / card</th></tr></thead>` +
+    `<tbody>${body || `<tr><td colspan="4" class="tier-empty">Nothing matches.</td></tr>`}</tbody>`;
+}
+
+function renderNext(){
+  const tasks = ITEMS.filter(i => i.type === "task" && i.status !== "done" && i.status !== "parked");
+  const live = tasks.filter(t => t.priority === 1)
+    .sort((a, b) => String(a.name).localeCompare(String(b.name)));
+  const later = tasks.filter(t => t.priority === 2)
+    .sort((a, b) => String(a.due).localeCompare(String(b.due)));
+  document.getElementById("nextIntro").textContent = live.length
+    ? "Everything else in this space is background. These are the live threads, in order \u2014 each one states what it settles."
+    : "No live threads in this space. It is parked; the research stays valid but nothing here is active work.";
+  document.getElementById("nextList").innerHTML = live.concat(later).map(t => `
+    <li class="${t.priority === 1 ? "" : "later"}">
+      <span class="step">${t.priority === 1 ? "now" : "after"} \u00b7 ${esc(t.owner || "\u2014")}${t.due ? " \u00b7 by " + esc(t.due) : ""}</span>
+      <button class="nextact" type="button" data-goto="${esc(t.id)}">${esc(t.name)}</button>
+      ${t.decides ? `<p class="nextdec"><b>Settles:</b> ${esc(t.decides)}</p>` : ""}
+    </li>`).join("") || `<li class="later"><span class="step">nothing live</span></li>`;
+  const rest = ITEMS.length - live.length - later.length;
+  document.getElementById("nextRest").textContent =
+    `${rest} other items in this space \u2014 notes, organisations and parked tasks \u2014 are background for these decisions, not actions in themselves. Browse them only when one of the above needs them.`;
+}
+
+function renderBoard(){
+  const tasks = ITEMS.filter(i => i.type === "task");
+  const cols = STATUS_ORDER.filter(s => tasks.some(t => t.status === s));
+  document.getElementById("board").innerHTML = cols.map(s => {
+    const inCol = tasks.filter(t => t.status === s)
+      .sort((a, b) => (a.priority || 9) - (b.priority || 9) || String(a.due).localeCompare(String(b.due)));
+    return `<div class="col"><h3><span>${esc(s)}</span><span>${inCol.length}</span></h3><div class="cards">${
+      inCol.map(t => `<button class="card p${t.priority || 3}" type="button" data-goto="${esc(t.id)}">
+        <span class="cname">${esc(t.name)}</span>
+        <span class="cmeta">${t.owner ? `<span>${esc(t.owner)}</span>` : ""}${t.due ? `<span>due ${esc(t.due)}</span>` : ""}<span>P${t.priority || "–"}</span></span>
+      </button>`).join("")}</div></div>`;
+  }).join("");
+}
+
+/* ---------- wiring ---------- */
+
+
+function showTab(name){
+  for (const n of TABS) {
+    document.getElementById("tab-" + n).setAttribute("aria-selected", String(n === name));
+    document.getElementById("view-" + n).hidden = n !== name;
+  }
+}
+document.querySelectorAll(".tab").forEach(t =>
+  t.addEventListener("click", () => showTab(t.id.replace("tab-", ""))));
+
+document.getElementById("facets").addEventListener("click", e => {
+  const b = e.target.closest("[data-facet]");
+  if (!b) return;
+  const { facet, value } = b.dataset;
+  active[facet] = String(active[facet]) === value ? undefined : value;
+  renderFacets(); renderRows();
+});
+document.getElementById("rows").addEventListener("click", e => {
+  const r = e.target.closest("[data-id]");
+  if (r) select(r.dataset.id);
+});
+document.getElementById("search").addEventListener("input", e => {
+  query = e.target.value.trim().toLowerCase();
+  renderRows();
+});
+document.getElementById("clear").addEventListener("click", () => {
+  for (const k of Object.keys(active)) delete active[k];
+  query = ""; document.getElementById("search").value = "";
+  renderFacets(); renderRows();
+});
+document.body.addEventListener("click", e => {
+  const g = e.target.closest("[data-goto]");
+  if (!g) return;
+  showTab("browse");
+  select(g.dataset.goto);
+  document.querySelector(`#rows [data-id="${g.dataset.goto}"]`)?.scrollIntoView({block:"nearest"});
+});
+
+document.getElementById("showRetired")?.addEventListener("change", renderTiers);
+document.getElementById("built").textContent = "built " + DATA.built;
+document.getElementById("poolSearch")?.addEventListener("input", e => {
+  poolQuery = e.target.value.trim().toLowerCase();
+  renderPool();
+});
+document.getElementById("showExcluded")?.addEventListener("change", renderPool);
+const TABS = ["next", "streams", "browse", "targets", "pool", "board"];
+
+try {
+  document.getElementById("projTitle").innerHTML =
+    `J-job <span>${esc(DATA.project.title)}</span>`;
+  document.getElementById("projLede").textContent = DATA.project.lede;
+  document.title = `${DATA.project.title} \u00b7 J-job`;
+
+  // A tab with nothing behind it is clutter, so it is removed rather than left empty.
+  const has = {
+    next: true, streams: true, browse: true,
+    targets: ITEMS.some(i => i.role === "buyer"),
+    pool: DATA.pool.length > 0,
+    board: ITEMS.some(i => i.type === "task"),
+  };
+  for (const t of TABS) {
+    if (!has[t]) {
+      document.getElementById("tab-" + t).remove();
+      document.getElementById("view-" + t).remove();
+    }
+  }
+
+  renderStreams(); renderFacets(); renderRows(); renderBoard();
+  if (has.targets) renderTiers();
+  if (has.pool) { renderSources(); renderPool(); }
+  showTab("next");
+  const first = ITEMS.find(i => i.type === "stream") || ITEMS[0];
+  if (first) select(first.id);
+} catch (err) {
+  document.getElementById("nextList").innerHTML =
+    `<li class="later">This page failed to render: ${esc(err && err.message)}. ` +
+    `Rebuild with <code>python3 build.py</code>.</li>`;
+  throw err;
+}
+</script>

@@ -1,10 +1,12 @@
 #!/usr/bin/env python3
 """The company pool: browse a harvested source, and promote rows into cards.
 
-    python3 tools/intake.py                         # pool status across all sources
-    python3 tools/intake.py shotan-kyokai           # list that source's pool rows
-    python3 tools/intake.py shotan-kyokai --promote kenko-nenrei.co.jp
-    python3 tools/intake.py shotan-kyokai --exclude ribon.com "pet cover only, no model"
+    python3 tools/intake.py <project>                       # pool status
+    python3 tools/intake.py <project> shotan-kyokai         # list that source's pool rows
+    python3 tools/intake.py <project> shotan-kyokai --promote kenko-nenrei.co.jp
+    python3 tools/intake.py <project> shotan-kyokai --exclude ribon.com "pet cover only"
+
+<project> is model-validation or data-signal. They are separate databases.
 
 A harvested row is NOT a card. `intake/<source-id>.tsv` is the pool — the full universe
 from a source, committed to git, browsable in the dashboard. A file under entities/org/
@@ -32,9 +34,20 @@ from pathlib import Path
 import yaml
 
 ROOT = Path(__file__).resolve().parent.parent
-ORG = ROOT / "entities" / "org"
-INTAKE = ROOT / "intake"
-SOURCES = INTAKE / "sources.yaml"
+PROJECTS = ("model-validation", "data-signal")
+# Set by main() once the project is known. The two projects are separate databases:
+# intake never reads or writes outside the project it was given.
+ORG = INTAKE = SOURCES = None
+
+
+def use(project):
+    global ORG, INTAKE, SOURCES
+    root = ROOT / project
+    if not root.is_dir():
+        sys.exit(f"unknown project {project!r}; expected one of {', '.join(PROJECTS)}")
+    ORG = root / "entities" / "org"
+    INTAKE = root / "intake"
+    SOURCES = INTAKE / "sources.yaml"
 FIELDS = ["name", "name_ja", "url", "country", "industry", "size", "captive", "note",
           "state", "reason", "card"]
 TLDS = (".co.jp", ".or.jp", ".ne.jp", ".com.hk", ".com.tw", ".co.uk",
@@ -188,11 +201,14 @@ def report(source_id=None):
                 extra = r["card"] if r["state"] == "carded" else r["reason"][:60]
                 print(f"  {mark} {r['name'][:40]:<42}{host(r['url']):<28}{extra}")
     if not source_id:
-        print("\npython3 tools/intake.py <source-id>  to list one source's pool")
+        print("\npython3 tools/intake.py <project> <source-id>  to list one source's pool")
 
 
 def main():
     args = [a for a in sys.argv[1:]]
+    if not args:
+        sys.exit(__doc__)
+    use(args.pop(0))
     if not args:
         return report()
     source_id = args[0]

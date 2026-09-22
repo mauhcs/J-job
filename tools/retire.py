@@ -17,7 +17,9 @@ ROOT = Path(__file__).resolve().parent.parent
 def yaml_scalar(text):
     """Quote a reason so colons, hashes and quotes survive YAML parsing."""
     return '"' + text.replace("\\", "\\\\").replace('"', '\\"') + '"' 
-SEARCH = ["entities/org", "entities/person", "entities/venue", "entities/artifact"]
+SEARCH = [f"{proj}/entities/{kind}"
+          for proj in ("model-validation", "data-signal")
+          for kind in ("org", "person", "venue", "artifact")]
 
 
 def main():

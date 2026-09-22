@@ -11,11 +11,12 @@ import re
 import sys
 from pathlib import Path
 
-HTML = Path(__file__).resolve().parent.parent / "dashboard.html"
+ROOT = Path(__file__).resolve().parent.parent
+PAGES = sorted(ROOT.glob("*/dashboard.html"))
 
 
-def main():
-    html = HTML.read_text(encoding="utf-8")
+def check(path):
+    html = path.read_text(encoding="utf-8")
     js = html[html.index("<script>") + 8 : html.rindex("</script>")]
     problems = []
 
@@ -44,10 +45,18 @@ def main():
                             f"declaration at {pos} — temporal dead zone")
 
     for p in problems:
-        print(f"  FAIL  {p}")
-    if problems:
-        sys.exit(f"{len(problems)} problem(s) — do not publish")
-    print(f"dashboard.html OK ({len(js.splitlines())} lines of script)")
+        print(f"  FAIL  {path.parent.name}: {p}")
+    if not problems:
+        print(f"{path.parent.name}/dashboard.html OK ({len(js.splitlines())} lines of script)")
+    return len(problems)
+
+
+def main():
+    if not PAGES:
+        sys.exit("no built dashboards — run python3 build.py first")
+    bad = sum(check(p) for p in PAGES)
+    if bad:
+        sys.exit(f"{bad} problem(s) — do not publish")
 
 
 if __name__ == "__main__":

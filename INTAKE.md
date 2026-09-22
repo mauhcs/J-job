@@ -8,7 +8,7 @@ How companies enter this repo, and how they leave it.
 micro-insurers, 39 alternative lenders, eight digital banks. Most of them we will never
 approach, and until someone has looked at one there is nothing to say about it.
 
-So the universe lives in `intake/<source-id>.tsv`, committed to git and browsable in the
+So the universe lives in `<project>/intake/<source-id>.tsv`, committed to git and browsable in the
 dashboard's **Pool** tab. A file under `entities/org/` means something stronger: a human
 looked at this company and formed a judgement worth writing down.
 

@@ -17,17 +17,26 @@ import yaml
 
 ROOT = Path(__file__).parent
 SOURCES = ["entities", "notes", "tasks", "streams"]
-INTAKE = ROOT / "intake"
 TEMPLATE = ROOT / "dashboard.template.html"
-OUTPUT = ROOT / "dashboard.html"
+
+# Two projects, two separate databases. Nothing crosses between them: separate trees,
+# separate intake, separate dashboards, separate published artifacts.
+PROJECTS = {
+    "model-validation": {
+        "title": "Model Verification",
+        "lede": "Independent external verification of quantitative models "
+                "\u2014 Japan, Hong Kong, East Asia.",
+    },
+    "data-signal": {
+        "title": "Data Signal Research",
+        "lede": "Scoping the trading value of a dataset for the people who own it, "
+                "so they can sell it.",
+    },
+}
 MARKER = "/*__DATA__*/null"
 REPO_BLOB = "https://github.com/mauhcs/J-job/blob/main/"
 
 TYPES = {"org", "person", "venue", "artifact", "note", "task", "stream"}
-# Three fully separate spaces. They do not bleed into each other: an item belongs to
-# exactly one, so a finding about data vendors can never be read as evidence for the
-# validation thesis. "profile" holds what is true of the principal regardless of venture.
-SPACES = {"mrm", "data", "profile"}
 # General lifecycle, used by everything except buyer companies.
 STATUSES = {"idea", "researching", "confirmed", "contacted", "active", "parked", "done"}
 # Buyer companies run a sales pipeline instead. See INTAKE.md.
@@ -47,10 +56,10 @@ def parse(path):
     return meta, m.group(2).strip()
 
 
-def collect():
+def collect(root):
     items, problems = [], []
     for src in SOURCES:
-        for path in sorted((ROOT / src).rglob("*.md")):
+        for path in sorted((root / src).rglob("*.md")):
             rel = path.relative_to(ROOT).as_posix()
             parsed = parse(path)
             if parsed is None:
@@ -62,8 +71,6 @@ def collect():
                     problems.append(f"{rel}: missing required field '{field}'")
             if meta.get("type") not in TYPES:
                 problems.append(f"{rel}: unknown type {meta.get('type')!r}")
-            if meta.get("space") not in SPACES:
-                problems.append(f"{rel}: space {meta.get('space')!r} not in {sorted(SPACES)}")
             pipeline = meta.get("role") == "buyer" and meta.get("scope") != "segment"
             allowed = PIPELINE if pipeline else STATUSES
             if meta.get("status") not in allowed:
@@ -113,19 +120,22 @@ def link_graph(items):
     return dangling
 
 
-def pool():
+def pool(root):
     """Harvested rows that are not cards.
 
     The pool is the universe a source gives us; a card is a company someone has formed a
     judgement about. Keeping the pool in TSV rather than minting a stub per row is what
     stops entities/org filling with entries nobody has read.
     """
-    registry = yaml.safe_load((INTAKE / "sources.yaml").read_text(encoding="utf-8"))["sources"]
+    intake = root / "intake"
+    if not (intake / "sources.yaml").exists():
+        return [], []
+    registry = yaml.safe_load((intake / "sources.yaml").read_text(encoding="utf-8"))["sources"]
     rows, sources = [], []
     for source in registry:
         # Some sources are evidence for a research question, not lists of prospects.
         # They keep a source card but their rows never enter the prospect pool.
-        tsv = INTAKE / f"{source['id']}.tsv"
+        tsv = intake / f"{source['id']}.tsv"
         sources.append({k: str(v) for k, v in source.items() if k != "note"}
                        | {"note": source.get("note", ""), "harvested_rows": 0})
         if not tsv.exists():
@@ -136,12 +146,14 @@ def pool():
             continue
         for r in parsed:
             rows.append({k: (v or "").strip() for k, v in r.items()}
-                        | {"source": source["id"], "space": source.get("space", "mrm")})
+                        | {"source": source["id"]})
     return sources, rows
 
 
-def main():
-    items, problems = collect()
+def build(slug, meta):
+    """Build one project's dashboard from its own tree. Projects never see each other."""
+    root = ROOT / slug
+    items, problems = collect(root)
     problems += link_graph(items)
 
     seen = {}
@@ -153,45 +165,45 @@ def main():
     for p in problems:
         print(f"  warn  {p}", file=sys.stderr)
 
-    if not TEMPLATE.exists():
-        sys.exit(f"missing template: {TEMPLATE}")
-    html = TEMPLATE.read_text(encoding="utf-8")
-    if MARKER not in html:
-        sys.exit(f"template has no {MARKER} marker to inject into")
-
-    sources, pool_rows = pool()
+    sources, pool_rows = pool(root)
     payload = {
         "built": date.today().isoformat(),
         "repo": REPO_BLOB,
+        "project": {"slug": slug, **meta},
         "items": items,
         "sources": sources,
         "pool": pool_rows,
     }
     blob = json.dumps(payload, ensure_ascii=False).replace("</", "<\\/")
-    OUTPUT.write_text(html.replace(MARKER, blob), encoding="utf-8")
+    html = TEMPLATE.read_text(encoding="utf-8")
+    if MARKER not in html:
+        sys.exit(f"template has no {MARKER} marker to inject into")
+    out = root / "dashboard.html"
+    out.write_text(html.replace(MARKER, blob), encoding="utf-8")
 
     counts = {}
     for item in items:
         counts[item.get("type")] = counts.get(item.get("type"), 0) + 1
     summary = ", ".join(f"{v} {k}" for k, v in sorted(counts.items()))
-    spaces = {}
-    for item in items:
-        spaces[item.get("space")] = spaces.get(item.get("space"), 0) + 1
-    print(f"built {OUTPUT.name}: {len(items)} items ({summary}), {len(problems)} warnings")
-    print("spaces: " + " | ".join(f"{k} {v}" for k, v in sorted(spaces.items())))
+    live = [i for i in items
+            if i.get("type") == "task" and i.get("priority") == 1
+            and i.get("status") not in ("done", "parked")]
+    print(f"{slug}: {len(items)} items ({summary}), {len(live)} live tasks, "
+          f"{len(problems)} warnings -> {out.relative_to(ROOT)}")
+    if len(live) > 4:
+        print(f"  warn  {len(live)} priority-1 tasks — that is a reading list, not a plan",
+              file=sys.stderr)
+    return len(problems)
 
-    pipe = {}
-    for item in items:
-        if item.get("role") == "buyer" and item.get("scope") != "segment":
-            pipe[item["status"]] = pipe.get(item["status"], 0) + 1
-    if pipe:
-        order = ["qualified", "contacted", "engaged", "client", "retired"]
-        print("pipeline: " + " | ".join(f"{s} {pipe[s]}" for s in order if s in pipe))
-    states = {}
-    for r in pool_rows:
-        states[r.get("state") or "pool"] = states.get(r.get("state") or "pool", 0) + 1
-    if states:
-        print("pool: " + " | ".join(f"{k} {v}" for k, v in sorted(states.items())))
+
+def main():
+    if not TEMPLATE.exists():
+        sys.exit(f"missing template: {TEMPLATE}")
+    total = 0
+    for slug, meta in PROJECTS.items():
+        total += build(slug, meta)
+    if total:
+        print(f"\n{total} warnings total", file=sys.stderr)
 
 
 if __name__ == "__main__":

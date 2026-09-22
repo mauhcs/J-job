@@ -2,7 +2,11 @@
 
 One entity per file. YAML front-matter, then free Markdown prose for the body.
 
-    entities/org/      organisations: regulators, sellers, buyers, channels
+**Which project a card belongs to is decided by which directory it is in** — there is no
+`space` field. `model-validation/` and `data-signal/` are separate databases and a `rel` edge
+across them is dropped at build time.
+
+    <project>/entities/org/      organisations: regulators, sellers, buyers, channels
     entities/person/   advisor (顧問) candidates, contacts, archetypes
     entities/venue/    conferences, journals, seminars, media
     entities/artifact/ things we produce: papers, decks, whitepapers
@@ -16,7 +20,6 @@ One entity per file. YAML front-matter, then free Markdown prose for the body.
 |-------|----------|--------|
 | `id` | yes | unique slug, prefixed by type: `org-`, `person-`, `venue-`, `artifact-`, `note-`, `task-`, `stream-` |
 | `type` | yes | `org` `person` `venue` `artifact` `note` `task` `stream` |
-| `space` | yes | `mrm` · `data` · `profile` — exactly one; spaces never bleed |
 | `decides` | P1 tasks | one sentence on what answering this settles. Required on priority-1 tasks |
 | `name` | yes | display name |
 | `name_ja` | no | Japanese name |

@@ -281,14 +281,13 @@
 </style>
 
 <header class="masthead">
-  <button class="wordmark" id="homeBtn" type="button">J-job <span>Workbench</span></button>
-  <p id="spaceBlurb">Two ventures, one repo. Git is the database; this is the read model.</p>
+  <h1 class="wordmark" id="projTitle"></h1>
+  <p id="projLede"></p>
   <span class="built" id="built"></span>
 </header>
 
 <nav class="tabs" role="tablist" id="tabs">
-  <button class="tab" role="tab" id="tab-home" aria-selected="true" aria-controls="view-home">Home</button>
-  <button class="tab" role="tab" id="tab-next" aria-selected="false" aria-controls="view-next">Do next</button>
+  <button class="tab" role="tab" id="tab-next" aria-selected="true" aria-controls="view-next">Do next</button>
   <button class="tab" role="tab" id="tab-streams" aria-selected="false" aria-controls="view-streams">Streams</button>
   <button class="tab" role="tab" id="tab-browse" aria-selected="false" aria-controls="view-browse">Browse</button>
   <button class="tab" role="tab" id="tab-targets" aria-selected="false" aria-controls="view-targets">Targets</button>
@@ -296,14 +295,7 @@
   <button class="tab" role="tab" id="tab-board" aria-selected="false" aria-controls="view-board">Task board</button>
 </nav>
 
-<section class="view" id="view-home" role="tabpanel" aria-labelledby="tab-home">
-  <div class="spaces" id="spaceCards"></div>
-  <p class="home-foot">Everything below the surface is one Markdown file per fact, validated by
-  <code>build.py</code>. Shared material — affiliations, capacity, sales constraints — belongs to
-  both ventures and appears in either.</p>
-</section>
-
-<section class="view" id="view-next" role="tabpanel" aria-labelledby="tab-next" hidden>
+<section class="view" id="view-next" role="tabpanel" aria-labelledby="tab-next">
   <p class="ladder-intro" id="nextIntro"></p>
   <ol class="nextlist" id="nextList"></ol>
   <p class="home-foot" id="nextRest"></p>
@@ -370,46 +362,10 @@
 
 <script>
 const DATA = /*__DATA__*/null;
-let space = "mrm";
-const ALL_ITEMS = DATA.items;
-const inSpace = i => i.space === space;
-let ITEMS = ALL_ITEMS.filter(inSpace);
-const BY_ID = Object.fromEntries(ALL_ITEMS.map(i => [i.id, i]));
+const ITEMS = DATA.items;
+const BY_ID = Object.fromEntries(ITEMS.map(i => [i.id, i]));
 const TYPE_LABEL = {org:"Org", person:"Person", venue:"Venue", artifact:"Artifact", note:"Note", task:"Task", stream:"Stream"};
 const STATUS_ORDER = ["idea","researching","contacted","confirmed","active","parked","done"];
-
-const SPACES = {
-  mrm: {
-    label: "Model verification",
-    eyebrow: "Venture 1",
-    lede: "Independent external verification of quantitative models \u2014 Japan, Hong Kong, East Asia.",
-    points: [
-      "<strong>Regulation is the demand engine</strong>, and HKMA CA-G-4 explicitly permits external validators.",
-      "<strong>Sales is the binding constraint</strong> \u2014 so start where no selling is required.",
-      "<strong>Sell research first, then model building, then validation.</strong> The plan started at the hardest one.",
-    ],
-  },
-  profile: {
-    label: "Profile & constraints",
-    eyebrow: "Applies to both",
-    lede: "What is true of the principal whatever the venture \u2014 affiliations, capacity, and the routes that need no selling.",
-    points: [
-      "<strong>Two days a week, ~70\u201380 billable days a year.</strong> A solo operator cannot bill full time and also run business development.",
-      "<strong>Positioning is worth ~10x the rate</strong> \u2014 \u00a3215/day as a contractor against $300\u2013500/hour as a named expert.",
-      "<strong>Four routes where the counterparty initiates:</strong> expert witness, benchmark oversight, an outside-director seat, teaching through \u304d\u3093\u3056\u3044.",
-    ],
-  },
-  data: {
-    label: "Data signal research",
-    eyebrow: "Venture 2",
-    lede: "Scoping the trading value of a dataset for the people who own it \u2014 so they can sell it.",
-    points: [
-      "<strong>Supply is going from 1,200 to a forecast 5,000 sources</strong> while buyers subscribe to ~20 each. Proof becomes the scarce good.",
-      "<strong>The vendor pays, not the fund</strong> \u2014 it is a pre-sales spend, not a research budget.",
-      "<strong>Exabel already productised the obvious version.</strong> The room left is non-equity data, incremental value against a live book, shock analysis, and Japan.",
-    ],
-  },
-};
 
 const esc = s => String(s ?? "").replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
 
@@ -442,7 +398,6 @@ const CONF_CLASS = {high:"good", med:"warn", low:"alert"};
 function badges(it){
   const b = [];
   b.push(`<span class="badge accent">${TYPE_LABEL[it.type] || it.type}</span>`);
-  if (it.space !== space) b.push(`<span class="badge warn">${esc(it.space)} space</span>`);
   if (it.decides) b.push(`<span class="badge good">decides something</span>`);
   if (it.role) b.push(`<span class="badge">${esc(it.role)}</span>`);
   b.push(`<span class="badge">${esc(it.status)}</span>`);
@@ -589,9 +544,10 @@ function renderPipe(companies){
 }
 
 function renderTiers(){
+  if (!document.getElementById("tiers")) return;
   const buyers = ITEMS.filter(i => i.role === "buyer" && i.scope !== "segment");
   renderPipe(buyers);
-  const showRetired = document.getElementById("showRetired").checked;
+  const showRetired = document.getElementById("showRetired")?.checked;
   document.getElementById("tiers").innerHTML = TIERS.map((t, idx) => {
     const inTier = buyers.filter(b => b.size === t.key)
       .filter(b => b.status !== "retired" || showRetired)
@@ -631,7 +587,8 @@ function renderTiers(){
 }
 
 function renderSources(){
-  const rows = DATA.sources.filter(src => (src.space || "mrm") === space).map(src => {
+  if (!document.getElementById("sourceList")) return;
+  const rows = DATA.sources.map(src => {
     const harvested = src.harvested && src.harvested !== "None";
     return `<div class="src${harvested ? "" : " unharvested"}">
       <span class="kind ${esc(src.kind)}">${esc(src.kind)}</span>
@@ -651,9 +608,9 @@ function renderSources(){
 
 let poolQuery = "";
 function renderPool(){
-  const showExcluded = document.getElementById("showExcluded").checked;
+  if (!document.getElementById("poolTable")) return;
+  const showExcluded = document.getElementById("showExcluded")?.checked;
   const rows = DATA.pool
-    .filter(r => (r.space || "mrm") === space)
     .filter(r => showExcluded || r.state !== "excluded")
     .filter(r => !poolQuery || (r.name + r.name_ja + r.url + r.note).toLowerCase().includes(poolQuery))
     .sort((a, b) => (a.state || "pool").localeCompare(b.state || "pool") || a.name.localeCompare(b.name));
@@ -709,43 +666,10 @@ function renderBoard(){
 }
 
 /* ---------- wiring ---------- */
-function renderHome(){
-  document.getElementById("spaceCards").innerHTML = Object.entries(SPACES).map(([key, sp]) => {
-    const items = ALL_ITEMS.filter(i => i.space === key);
-    const n = t => items.filter(i => i.type === t).length;
-    return `<button class="spacecard" type="button" data-space="${key}">
-      <span class="eyebrow">${sp.eyebrow}</span>
-      <h2>${sp.label}</h2>
-      <p class="lede">${sp.lede}</p>
-      <ul>${sp.points.map(p => `<li>${p}</li>`).join("")}</ul>
-      <span class="counts">
-        <span class="badge">${n("stream")} streams</span>
-        <span class="badge">${n("note")} notes</span>
-        <span class="badge">${n("org")} orgs</span>
-        <span class="badge">${n("task")} tasks</span>
-      </span>
-      <span class="enter">open \u2192</span>
-    </button>`;
-  }).join("");
-}
 
-function setSpace(key){
-  space = key;
-  ITEMS = ALL_ITEMS.filter(inSpace);
-  for (const k of Object.keys(active)) delete active[k];
-  query = "";
-  const box = document.getElementById("search");
-  if (box) box.value = "";
-  document.getElementById("spaceBlurb").innerHTML =
-    `<span class="spacebadge">${esc(SPACES[key].label)}</span> ${esc(SPACES[key].lede)}`;
-  renderStreams(); renderFacets(); renderRows(); renderTiers(); renderBoard();
-  renderSources(); renderPool(); renderNext();
-  const first = ITEMS.find(i => i.type === "stream") || ITEMS[0];
-  if (first) select(first.id);
-}
 
 function showTab(name){
-  for (const n of ["home", "next", "streams", "browse", "targets", "pool", "board"]) {
+  for (const n of TABS) {
     document.getElementById("tab-" + n).setAttribute("aria-selected", String(n === name));
     document.getElementById("view-" + n).hidden = n !== name;
   }
@@ -774,34 +698,52 @@ document.getElementById("clear").addEventListener("click", () => {
   renderFacets(); renderRows();
 });
 document.body.addEventListener("click", e => {
-  const sp = e.target.closest("[data-space]");
-  if (sp) { setSpace(sp.dataset.space); showTab("next"); return; }
   const g = e.target.closest("[data-goto]");
   if (!g) return;
-  const target = BY_ID[g.dataset.goto];
-  if (target && target.space !== space) setSpace(target.space);
   showTab("browse");
   select(g.dataset.goto);
   document.querySelector(`#rows [data-id="${g.dataset.goto}"]`)?.scrollIntoView({block:"nearest"});
 });
 
-for (const id of ["showRetired"])
-  document.getElementById(id).addEventListener("change", renderTiers);
-document.getElementById("homeBtn").addEventListener("click", () => showTab("home"));
+document.getElementById("showRetired")?.addEventListener("change", renderTiers);
 document.getElementById("built").textContent = "built " + DATA.built;
-document.getElementById("poolSearch").addEventListener("input", e => {
+document.getElementById("poolSearch")?.addEventListener("input", e => {
   poolQuery = e.target.value.trim().toLowerCase();
   renderPool();
 });
-document.getElementById("showExcluded").addEventListener("change", renderPool);
+document.getElementById("showExcluded")?.addEventListener("change", renderPool);
+const TABS = ["next", "streams", "browse", "targets", "pool", "board"];
+
 try {
-  renderHome(); renderSources(); renderPool();
-  setSpace("mrm");
-  showTab("home");
+  document.getElementById("projTitle").innerHTML =
+    `J-job <span>${esc(DATA.project.title)}</span>`;
+  document.getElementById("projLede").textContent = DATA.project.lede;
+  document.title = `${DATA.project.title} \u00b7 J-job`;
+
+  // A tab with nothing behind it is clutter, so it is removed rather than left empty.
+  const has = {
+    next: true, streams: true, browse: true,
+    targets: ITEMS.some(i => i.role === "buyer"),
+    pool: DATA.pool.length > 0,
+    board: ITEMS.some(i => i.type === "task"),
+  };
+  for (const t of TABS) {
+    if (!has[t]) {
+      document.getElementById("tab-" + t).remove();
+      document.getElementById("view-" + t).remove();
+    }
+  }
+
+  renderStreams(); renderFacets(); renderRows(); renderBoard();
+  if (has.targets) renderTiers();
+  if (has.pool) { renderSources(); renderPool(); }
+  showTab("next");
+  const first = ITEMS.find(i => i.type === "stream") || ITEMS[0];
+  if (first) select(first.id);
 } catch (err) {
-  document.getElementById("spaceCards").innerHTML =
-    `<p class="tier-empty">This page failed to render: ${esc(err && err.message)}. ` +
-    `Rebuild with <code>python3 build.py</code>.</p>`;
+  document.getElementById("nextList").innerHTML =
+    `<li class="later">This page failed to render: ${esc(err && err.message)}. ` +
+    `Rebuild with <code>python3 build.py</code>.</li>`;
   throw err;
 }
 </script>

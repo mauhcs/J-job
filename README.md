@@ -1,46 +1,39 @@
-# J-job — two ventures, one workbench
+# J-job — two projects, two databases
 
-Working repo for two separate business ideas, kept in one system because they share a
-principal, a network and a set of constraints.
+Two separate business ideas. They share a principal and nothing else: separate trees,
+separate intake, separate dashboards, separate published artifacts. Nothing crosses between
+them, by construction — `build.py` reads one project's directory at a time, and a `rel` edge
+pointing outside its own project is dropped.
 
-- **`mrm`** — independent external verification of quantitative models; Japan, Hong Kong,
-  East Asia.
-- **`data`** — signal research on alternative datasets, sold to the data owner as the
-  evidence a trading desk needs before buying.
-- **`shared`** — profile-level material bearing on both.
+    model-validation/    independent external verification of quantitative models (Japan, HK, East Asia)
+    data-signal/         scoping the trading value of a dataset for the people who own it
+    tools/               intake, retirement, dashboard checks
+    build.py             builds BOTH dashboards, one per project
+    dashboard.template.html   shared template; the data decides which project it renders
 
-Principal: Mauricio — Chief Scientist, IPOR Labs; Adjunct Assistant Professor, Temple
-University Japan. Background in HFT, quant trading and risk modelling.
+Each project directory holds its own complete database:
 
-## How this repo works
+    <project>/entities/{org,person,venue,artifact}/
+    <project>/notes/
+    <project>/tasks/
+    <project>/streams/
+    <project>/intake/        harvested pools (model-validation only, so far)
+    <project>/dashboard.html generated — never edit by hand
 
-Git is the database. Every fact, organisation, person, venue, task and finding is one
-Markdown file with YAML front-matter. `build.py` walks the tree, validates it, and
-inlines the whole graph into `dashboard.html` for browsing.
+## Working on it
 
-    python3 build.py          # rebuild dashboard.html from entities/, notes/, tasks/, streams/
+    python3 build.py                   # rebuild both dashboards
+    python3 tools/check_dashboard.py   # static-check them before publishing
 
-See `SCHEMA.md` for the field definitions.
+See `SCHEMA.md` for the card fields and `INTAKE.md` for how companies enter a project.
 
-## Workstreams
+## The rule that keeps it usable
 
-**data**
+Each dashboard opens on **Do next**: about three live (priority-1) tasks, in order, each
+stating what it settles. Everything else is background for those decisions. A project with
+fifteen priority-1 tasks is a reading list, not a plan, and `build.py` warns when it drifts.
 
-| id | stream | question it answers |
-|----|--------|---------------------|
-| `stream-data-market` | Market | Who sells, who buys, who evaluates, and where does a quant get paid? |
-| `stream-data-offer` | Offer | What exactly is sold, and is it defensible beside Exabel? |
+## Current focus
 
-**mrm**
-
-| id | stream | question it answers |
-|----|--------|---------------------|
-| `stream-market` | Market | Who sells this service, who buys it, and at what price? |
-| `stream-advisor` | 顧問 | Who opens doors, and how do we reach them? |
-| `stream-publishing` | Publishing | Where do we publish/present, what is the state of the art, what do we write? |
-| `stream-positioning` | Positioning | What exactly are we selling, under which vehicle? |
-
-## Status
-
-Bootstrap pass, 2026-09-22. Seeded from a first research sweep; every claim carries its
-source. Entries marked `confidence: low` are hypotheses, not findings.
+`data-signal`. `model-validation` is parked — its regulatory research and named target lists
+stay valid, but nothing in it is live work.

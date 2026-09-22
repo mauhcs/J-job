@@ -1,34 +1,27 @@
 # J-job — working instructions
 
-**Two independent ventures share this repo.** Principal for both: Chief Scientist at IPOR
-Labs, Adjunct Assistant Professor at Temple University Japan; background in HFT, quant trading
-and risk modelling.
+**Two separate projects live in this repo, as two separate databases.** Principal for both:
+Chief Scientist at IPOR Labs, Adjunct Assistant Professor at Temple University Japan;
+background in HFT, quant trading and risk modelling.
 
-| `space:` | venture |
-|---|---|
-| `mrm` | Independent external verification of quantitative models — Japan, HK, East Asia |
-| `data` | Signal research on alternative datasets, sold to the data owner as proof of value |
-| `profile` | What is true of the principal whatever the venture — affiliations, capacity, sales constraints |
+    model-validation/    independent external verification of quantitative models
+    data-signal/         scoping the trading value of a dataset for its owner
 
-**Every card needs a `space`, and spaces do not bleed.** An item belongs to exactly one. The
-dashboard opens on a home screen; picking a space scopes every view below it. Never let one
-venture's evidence be read as support for another's.
+**They never mix.** Each has its own `entities/`, `notes/`, `tasks/`, `streams/`, `intake/`
+and its own generated `dashboard.html`, published as its own artifact. A card lives in exactly
+one project; there is no shared space and no cross-project `rel` edge — `build.py` reads one
+tree at a time and drops any reference pointing outside it. Material about the principal
+(affiliations, capacity, the sales constraint) is a topic **inside model-validation**, not a
+third thing.
 
-**Keep it actionable or it is noise.** Each space lands on a **Do next** list built from its
-priority-1 tasks, so:
-
-- **Priority 1 means live work, and there should be about three per space.** If a fourth is
-  added, something else drops to 2. A space with fifteen P1 tasks has no plan.
-- **Every priority-1 task needs a `decides:` line** — one sentence on what answering it
-  settles. `build.py` fails the build without it. A task that settles nothing is not a task.
-- Notes and organisations are background *for* those decisions, not actions in themselves.
-  Adding research without changing what to do next makes the plan less usable, not more.
+When asked to work on something, establish which project it belongs to first, and stay in
+that tree.
 
 **Git is the database.** Every organisation, person, venue, task and finding is one Markdown
-file with YAML front-matter. `dashboard.html` is a generated read model, never edited by hand.
+file with YAML front-matter. Dashboards are generated and never edited by hand.
 
-    python3 build.py                   # rebuild dashboard.html; validates the tree, 0 warnings expected
-    python3 tools/check_dashboard.py   # static-check the page BEFORE publishing the artifact
+    python3 build.py                   # rebuild both dashboards; 0 warnings expected
+    python3 tools/check_dashboard.py   # static-check both BEFORE publishing
 
 **Always run the checker before publishing.** A JavaScript error blanks every view at once
 and the page still looks like a valid HTML file — it happened when a top-level `let` was used
@@ -36,6 +29,16 @@ before its declaration. The checker catches syntax errors, missing element ids, 
 use-before-declaration.
 
 Read `SCHEMA.md` for fields and `INTAKE.md` for the company pipeline.
+
+**Keep each project actionable or it is noise.** Each dashboard lands on a **Do next** list
+built from its priority-1 tasks, so:
+
+- **Priority 1 means live work, about three per project.** Adding a fourth means something
+  drops to 2. `build.py` warns past four.
+- **Every priority-1 task needs a `decides:` line** — one sentence on what answering it
+  settles. The build fails without it. A task that settles nothing is not a task.
+- Notes and organisations are background *for* those decisions, not actions. Adding research
+  without changing what to do next makes the plan less usable, not more.
 
 ## When asked to add, update or clean up companies
 
@@ -85,9 +88,14 @@ the captive filter) belong at the pool level and must never touch a card a human
 - Say plainly which facts came from a page you actually opened versus a search-result
   summary. They are not the same evidence.
 
-## Current shape of the plan
+## Current focus
 
-Four workstreams in `streams/`: market, 顧問 (advisor), publishing, positioning. The market is
+`data-signal`, which runs a four-step sequence: build the evaluation harness on free data,
+publish one worked example, take it to three vendors, then decide the unit of sale. The first
+two steps need no client, introduction, entity or permission — deliberately.
+
+`model-validation` is **parked**. Its four workstreams — market, 顧問 (advisor), publishing,
+positioning — The market is
 tiered `startup -> sme -> mid -> large -> mega` and worked **upward** — below the JFSA
 Principles' scope the buyer is not the regulator but the warehouse lender, securitisation
 investor, bank partner or VC in diligence. See `notes/sme-wedge.md`. Match the 顧問 to the
