@@ -13,39 +13,42 @@ Read `SCHEMA.md` for fields and `INTAKE.md` for the company pipeline.
 
 ## When asked to add, update or clean up companies
 
-**Do not hand-write company cards. Use the intake pipeline.** Hand-typing is not repeatable,
-it loses rows, and it leaves no provenance. The loop:
+**Do not hand-write company cards, and do not mint a card per harvested row.** Both were
+tried and both were wrong. Hand-typing is not repeatable and loses rows; bulk-minting fills
+the repo with entries nobody has read and forces fake lifecycle events.
 
-1. Pick or add a source in `intake/sources.yaml`. Prefer `kind: register` (a regulator's own
-   list of licensed entities) over `association`, and both over `database` or `editorial`.
-2. Harvest it into `intake/<source-id>.tsv` — header row, required columns `name` and `url`;
-   optional `name_ja`, `size`, `country`, `industry`, `captive`, `note`.
-   **Harvest programmatically.** The first pass at `shotan-kyokai` was transcribed by hand and
-   silently lost a row (`task-reharvest-shotan`).
-3. `python3 tools/intake.py <source-id>` — dry run, then `--write`. It dedupes on id and on
-   website host, and never overwrites an existing card.
-4. Review each `status: candidate` stub: write the pitch and body, set `size` and `priority`,
-   move to `status: qualified`. Only qualified and beyond appear in the Targets view.
-5. `python3 build.py`, then commit.
+The universe from a source lives in `intake/<source-id>.tsv` (the **pool**, browsable in the
+dashboard's Pool tab). A file under `entities/org/` means a human formed a judgement.
+
+1. Register the source in `intake/sources.yaml`. Prefer `kind: register` (a regulator's own
+   list of licensed entities) over `association`, both over `database` or `editorial`.
+2. Harvest it **programmatically** into `intake/<source-id>.tsv`.
+3. `python3 tools/intake.py <source-id>` to read the pool.
+4. `python3 tools/intake.py <source-id> --promote <host>` for rows worth a card, then write
+   the card properly and set `status: qualified`.
+5. `python3 tools/intake.py <source-id> --exclude <host> "reason"` for rows that are not.
+   The row keeps its reason in the TSV; no card is created.
+6. `python3 build.py`, then commit.
 
 **`url` / `site` must be the operating company, not a product page.** cashari is a product;
-ガレージバンク株式会社 is the company, and the company is who signs a contract. When a source
-gives a product page, find the corporate entity before qualifying the card.
+ガレージバンク株式会社 is the company, and the company is who signs a contract.
 
 **Verify every URL before carding it** (`curl -s -o /dev/null -w "%{http_code}" -L <url>`).
 A 200 proves the domain serves a page, not that it belongs to the company — say so when the
 attribution is inferred rather than taken from the source's own listing. A 403 is usually a
 bot block, not a dead site. If DNS does not resolve, card it flagged as unverified.
 
-## Never delete a company
+## Retire only what was really a target
 
     python3 tools/retire.py org-example "Acquired; now inside group MRM"
 
-Retire instead — acquired, ceased, out of scope, no longer model-dependent, captive, or a
-poor fit. The card stays searchable and drops out of Targets. The reason is the point: later
-the useful question is *why did this come off the list*, and a deleted file cannot answer it.
-Auto-retirement rules (such as the captive filter) may only ever touch `status: candidate`
-cards — never one a human has qualified.
+Retirement is a real event in a relationship — acquired, ceased, declined, thesis disproved.
+It keeps the card searchable and drops it out of Targets, because later the useful question
+is *why did this come off the list*.
+
+**A company that never should have been carded is not a retirement, it is an intake
+mistake**: delete the card and exclude the pool row with a reason. Automated rules (such as
+the captive filter) belong at the pool level and must never touch a card a human wrote.
 
 ## Evidence rules
 

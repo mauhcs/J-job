@@ -28,7 +28,7 @@ One entity per file. YAML front-matter, then free Markdown prose for the body.
 | `source` | companies | the `intake/sources.yaml` id this came from, or `manual`. Provenance, permanently |
 | `first_seen` | companies | ISO date the company entered the repo |
 | `retired_on` / `retired_reason` | retired | required together. Set by `tools/retire.py` |
-| `status` | yes | general: `idea` `researching` `confirmed` `contacted` `active` `parked` `done` · buyer companies use the pipeline instead: `candidate` `qualified` `contacted` `engaged` `client` `retired` (see INTAKE.md) |
+| `status` | yes | general: `idea` `researching` `confirmed` `contacted` `active` `parked` `done` · buyer companies use the pipeline instead: `researching` `qualified` `contacted` `engaged` `client` `retired` (see INTAKE.md) |
 | `priority` | no | `1` high · `2` medium · `3` low |
 | `confidence` | no | `low` `med` `high` — how much we trust what the body claims |
 | `tags` | no | free list |
@@ -46,7 +46,9 @@ One entity per file. YAML front-matter, then free Markdown prose for the body.
   (company page, paper, conference programme). Until then use an `archetype` card that
   describes the profile to look for.
 - `rel` edges are undirected in the dashboard — declaring it on one side is enough.
-- **Companies are never deleted, only retired** — `python3 tools/retire.py <id> "reason"`.
+- **The pool is not the repo.** Harvested rows live in `intake/*.tsv`; a card under
+  `entities/org/` means someone formed a judgement. Promote with `tools/intake.py`.
+- **Retire only what was really a target** — `python3 tools/retire.py <id> "reason"`.
   In six months the useful question is not who is on the list but why someone came off it.
 - **`site` is the operating company, never a product page.** Adding companies is a pipeline,
   not typing: harvest a source into `intake/<id>.tsv`, then `python3 tools/intake.py <id>`.

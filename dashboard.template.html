@@ -189,6 +189,35 @@
   .target .tfoot{display:flex;gap:5px;flex-wrap:wrap}
   .tier-empty{font-size:12.5px;color:var(--ink-3);font-style:italic}
 
+  /* ---- pool ---- */
+  .srcgrid{display:grid;gap:10px;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));
+    margin-bottom:22px;max-width:1500px}
+  .src{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:11px 12px;display:grid;gap:6px}
+  .src.unharvested{border-style:dashed;opacity:.72}
+  .src h4{margin:0;font-size:13px;font-weight:500;line-height:1.35}
+  .src .kind{font-family:var(--mono);font-size:10px;text-transform:uppercase;letter-spacing:.07em}
+  .src .kind.register{color:var(--good)}
+  .src .kind.association{color:var(--accent-ink)}
+  .src .kind.award,.src .kind.database{color:var(--warn)}
+  .src .kind.editorial{color:var(--alert)}
+  .src .meta{font-family:var(--mono);font-size:10.5px;color:var(--ink-3)}
+  .pool-controls{display:flex;gap:16px;align-items:center;flex-wrap:wrap;max-width:1500px}
+  .pool-controls .search{margin-bottom:0;max-width:360px}
+  .poolwrap{overflow-x:auto;max-width:1500px;margin-top:12px;border:1px solid var(--line);border-radius:var(--radius)}
+  .pooltable{border-collapse:collapse;width:100%;background:var(--surface)}
+  .pooltable th{font-family:var(--mono);font-size:10px;text-transform:uppercase;letter-spacing:.07em;
+    color:var(--ink-3);text-align:left;font-weight:500;padding:8px 12px;border-bottom:1px solid var(--line);white-space:nowrap}
+  .pooltable td{padding:7px 12px;border-bottom:1px solid var(--line);font-size:12.5px;vertical-align:top}
+  .pooltable tr:last-child td{border-bottom:0}
+  .pooltable tr.excluded td{color:var(--ink-3)}
+  .pooltable tr.excluded .pname{text-decoration:line-through}
+  .pooltable .pname{font-weight:500}
+  .pooltable .purl{font-family:var(--mono);font-size:11px;color:var(--accent-ink);text-decoration:none;overflow-wrap:anywhere}
+  .pooltable .preason{font-family:var(--prose);font-size:12px;font-style:italic;max-width:38ch}
+  .pooltable .pstate{font-family:var(--mono);font-size:10px;text-transform:uppercase;letter-spacing:.06em}
+  .pooltable .pstate.carded{color:var(--good)}
+  .pooltable .pstate.excluded{color:var(--ink-3)}
+
   /* ---- board ---- */
   .board{display:grid;gap:14px;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));max-width:1600px;align-items:start}
   .col{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:12px}
@@ -224,6 +253,7 @@
   <button class="tab" role="tab" id="tab-streams" aria-selected="true" aria-controls="view-streams">Streams</button>
   <button class="tab" role="tab" id="tab-browse" aria-selected="false" aria-controls="view-browse">Browse</button>
   <button class="tab" role="tab" id="tab-targets" aria-selected="false" aria-controls="view-targets">Targets</button>
+  <button class="tab" role="tab" id="tab-pool" aria-selected="false" aria-controls="view-pool">Pool</button>
   <button class="tab" role="tab" id="tab-board" aria-selected="false" aria-controls="view-board">Task board</button>
 </nav>
 
@@ -260,9 +290,21 @@
   <div class="pipe" id="pipe"></div>
   <div class="tiers-controls">
     <label class="toggle"><input type="checkbox" id="showRetired"> show retired</label>
-    <label class="toggle"><input type="checkbox" id="showCandidates"> show unreviewed candidates</label>
   </div>
   <div id="tiers"></div>
+</section>
+
+<section class="view" id="view-pool" role="tabpanel" aria-labelledby="tab-pool" hidden>
+  <p class="ladder-intro">Harvested rows, not companies we have judged. A row becomes a card
+  only when someone looks at it and forms a view — which is why the pool lives in
+  <code>intake/*.tsv</code> and the repo is not full of entries nobody has read.
+  Promote with <code>tools/intake.py &lt;source&gt; --promote &lt;host&gt;</code>.</p>
+  <div id="sourceList"></div>
+  <div class="pool-controls">
+    <input class="search" id="poolSearch" type="search" placeholder="Search the pool…" aria-label="Search pool rows">
+    <label class="toggle"><input type="checkbox" id="showExcluded"> show excluded</label>
+  </div>
+  <div class="poolwrap"><table class="pooltable" id="poolTable"></table></div>
 </section>
 
 <section class="view" id="view-board" role="tabpanel" aria-labelledby="tab-board" hidden>
@@ -441,7 +483,7 @@ const TIERS = [
    why:"They built MRM teams after the 2021 Principles, so they do not need capability — only <b>independence and specialist depth at the margin</b>. Longest cycle, 顧問 non-optional. Year two, warmed by the publishing stream."},
 ];
 
-const PIPE_STEPS = ["candidate", "qualified", "contacted", "engaged", "client", "retired"];
+const PIPE_STEPS = ["researching", "qualified", "contacted", "engaged", "client", "retired"];
 
 function renderPipe(companies){
   const counts = Object.fromEntries(PIPE_STEPS.map(k => [k, 0]));
@@ -455,11 +497,9 @@ function renderTiers(){
   const buyers = ITEMS.filter(i => i.role === "buyer" && i.scope !== "segment");
   renderPipe(buyers);
   const showRetired = document.getElementById("showRetired").checked;
-  const showCandidates = document.getElementById("showCandidates").checked;
   document.getElementById("tiers").innerHTML = TIERS.map((t, idx) => {
     const inTier = buyers.filter(b => b.size === t.key)
       .filter(b => b.status !== "retired" || showRetired)
-      .filter(b => b.status !== "candidate" || showCandidates)
       .sort((a, b) => PIPE_STEPS.indexOf(a.status) - PIPE_STEPS.indexOf(b.status)
                    || (a.priority || 9) - (b.priority || 9)
                    || a.name.localeCompare(b.name));
@@ -467,8 +507,7 @@ function renderTiers(){
     const cards = inTier.length ? inTier.map(b => {
       const url = b.site || ((b.links || [])[0] || {}).url || "";
       const host = url.replace(/^https?:\/\//, "").replace(/\/$/, "");
-      const state = b.status === "retired" ? " is-retired"
-                  : b.status === "candidate" ? " is-candidate" : "";
+      const state = b.status === "retired" ? " is-retired" : "";
       return `
       <div class="target p${b.priority || 3}${state}">
         <button class="tname" type="button" data-goto="${esc(b.id)}">${esc(b.name)}</button>
@@ -478,7 +517,7 @@ function renderTiers(){
         ${url ? `<a class="tsite" href="${esc(url)}" target="_blank" rel="noopener">${esc(host)}</a>` : ""}
         <span class="tfoot">
           <span class="badge${b.status === "retired" ? "" : b.priority === 1 ? " alert" : ""}">${
-            b.status === "candidate" ? "unreviewed" : b.status === "retired" ? "retired" : "P" + (b.priority || "–")}</span>
+            b.status === "retired" ? "retired" : "P" + (b.priority || "–")}</span>
           ${b.country ? `<span class="badge">${esc(b.country)}</span>` : ""}
           <span class="badge">${esc(b.status)}</span>
         </span>
@@ -491,9 +530,49 @@ function renderTiers(){
       </div>
       <p class="tier-why">${t.why}</p>
       <div class="targets">${cards}</div>
-      ${hiddenCount > 0 ? `<p class="tier-empty">${hiddenCount} hidden in this tier (unreviewed candidates or retired).</p>` : ""}
+      ${hiddenCount > 0 ? `<p class="tier-empty">${hiddenCount} retired, hidden.</p>` : ""}
     </section>`;
   }).join("");
+}
+
+function renderSources(){
+  const rows = DATA.sources.map(src => {
+    const harvested = src.harvested && src.harvested !== "None";
+    return `<div class="src${harvested ? "" : " unharvested"}">
+      <span class="kind ${esc(src.kind)}">${esc(src.kind)}</span>
+      <h4>${esc(src.name)}</h4>
+      <span class="meta">${harvested
+        ? `${src.harvested_rows} rows · harvested ${esc(src.harvested)}`
+        : "not yet harvested"} · ${esc(src.jurisdiction || "")}</span>
+      <a class="tsite" href="${esc(src.url)}" target="_blank" rel="noopener">${
+        esc(src.url.replace(/^https?:\/\//, "").replace(/\/$/, "").slice(0, 48))}</a>
+    </div>`;
+  }).join("");
+  document.getElementById("sourceList").innerHTML = `<div class="srcgrid">${rows}</div>`;
+}
+
+let poolQuery = "";
+function renderPool(){
+  const showExcluded = document.getElementById("showExcluded").checked;
+  const rows = DATA.pool
+    .filter(r => showExcluded || r.state !== "excluded")
+    .filter(r => !poolQuery || (r.name + r.name_ja + r.url + r.note).toLowerCase().includes(poolQuery))
+    .sort((a, b) => (a.state || "pool").localeCompare(b.state || "pool") || a.name.localeCompare(b.name));
+  const body = rows.map(r => {
+    const state = r.state || "pool";
+    const host = (r.url || "").replace(/^https?:\/\//, "").replace(/\/$/, "");
+    return `<tr class="${esc(state)}">
+      <td class="pname">${esc(r.name)}${r.name_ja && r.name_ja !== r.name ? `<br><span class="meta">${esc(r.name_ja)}</span>` : ""}</td>
+      <td>${host ? `<a class="purl" href="${esc(r.url)}" target="_blank" rel="noopener">${esc(host)}</a>` : "—"}</td>
+      <td class="pstate ${esc(state)}">${esc(state)}</td>
+      <td class="preason">${state === "carded"
+        ? `<button class="rel" type="button" data-goto="${esc(r.card)}">${esc(r.card)}</button>`
+        : esc(r.reason || r.note || "")}</td>
+    </tr>`;
+  }).join("");
+  document.getElementById("poolTable").innerHTML =
+    `<thead><tr><th>Company</th><th>Site</th><th>State</th><th>Reason / card</th></tr></thead>` +
+    `<tbody>${body || `<tr><td colspan="4" class="tier-empty">Nothing matches.</td></tr>`}</tbody>`;
 }
 
 function renderBoard(){
@@ -512,7 +591,7 @@ function renderBoard(){
 
 /* ---------- wiring ---------- */
 function showTab(name){
-  for (const n of ["streams", "browse", "targets", "board"]) {
+  for (const n of ["streams", "browse", "targets", "pool", "board"]) {
     document.getElementById("tab-" + n).setAttribute("aria-selected", String(n === name));
     document.getElementById("view-" + n).hidden = n !== name;
   }
@@ -548,9 +627,15 @@ document.body.addEventListener("click", e => {
   document.querySelector(`#rows [data-id="${g.dataset.goto}"]`)?.scrollIntoView({block:"nearest"});
 });
 
-for (const id of ["showRetired", "showCandidates"])
+for (const id of ["showRetired"])
   document.getElementById(id).addEventListener("change", renderTiers);
 document.getElementById("built").textContent = "built " + DATA.built;
-renderStreams(); renderFacets(); renderRows(); renderTiers(); renderBoard();
+document.getElementById("poolSearch").addEventListener("input", e => {
+  poolQuery = e.target.value.trim().toLowerCase();
+  renderPool();
+});
+document.getElementById("showExcluded").addEventListener("change", renderPool);
+renderStreams(); renderFacets(); renderRows(); renderTiers();
+renderSources(); renderPool(); renderBoard();
 select(ITEMS.find(i => i.id === "note-ai-validation-gap")?.id || ITEMS[0].id);
 </script>
