@@ -1,6 +1,7 @@
 ---
 id: note-deliverable-spec
 type: note
+space: mrm
 name: What the deliverable actually is, and why effort is the open question
 status: researching
 priority: 1

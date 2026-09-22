@@ -1,6 +1,7 @@
 ---
 id: note-komon-market-mechanics
 type: note
+space: mrm
 name: How Japan's 顧問 market actually works — structures, prices, and the inversion
 status: confirmed
 priority: 1

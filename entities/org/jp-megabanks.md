@@ -1,6 +1,7 @@
 ---
 id: org-jp-megabanks
 type: org
+space: mrm
 name: Japanese megabanks (MUFG, SMBC, Mizuho) — segment
 name_ja: メガバンク
 role: buyer

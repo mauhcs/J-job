@@ -1,6 +1,7 @@
 ---
 id: task-subcontractor-registration
 type: task
+space: mrm
 name: Register as a specialist subcontractor with firms that already have mandates
 status: idea
 priority: 1

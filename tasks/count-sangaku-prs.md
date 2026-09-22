@@ -1,6 +1,7 @@
 ---
 id: task-count-sangaku-prs
 type: task
+space: mrm
 name: Count industry-university research PRs in Japanese finance — the credibility-spend proxy
 status: researching
 priority: 1

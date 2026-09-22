@@ -1,6 +1,7 @@
 ---
 id: org-nri
 type: org
+space: mrm
 name: Nomura Research Institute (NRI)
 name_ja: 野村総合研究所
 role: seller

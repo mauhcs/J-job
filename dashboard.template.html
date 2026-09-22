@@ -61,6 +61,27 @@
   .view{padding-block:20px 48px;padding-inline:24px}
   .view[hidden]{display:none!important}
 
+  /* ---- home ---- */
+  .wordmark{appearance:none;background:none;border:0;padding:0;cursor:pointer;
+    font-family:var(--ui);font-weight:700;font-size:17px;letter-spacing:-.01em;color:var(--ink)}
+  .wordmark:hover span{text-decoration:underline}
+  .spaces{display:grid;gap:18px;grid-template-columns:repeat(auto-fit,minmax(340px,1fr));max-width:1300px}
+  .spacecard{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);
+    padding:22px 24px 20px;display:flex;flex-direction:column;gap:12px;text-align:left;cursor:pointer;width:100%}
+  .spacecard:hover{border-color:var(--accent)}
+  .spacecard .eyebrow{font-family:var(--mono);font-size:10.5px;text-transform:uppercase;
+    letter-spacing:.09em;color:var(--ink-3)}
+  .spacecard h2{margin:0;font-size:21px;line-height:1.25;text-wrap:balance}
+  .spacecard .lede{margin:0;font-family:var(--prose);font-size:14.5px;line-height:1.6;color:var(--ink-2)}
+  .spacecard ul{margin:0;padding-left:1.05em;font-family:var(--prose);font-size:13.5px;
+    line-height:1.55;color:var(--ink-2);display:grid;gap:5px}
+  .spacecard li strong{color:var(--ink);font-weight:600}
+  .spacecard .counts{display:flex;gap:6px;flex-wrap:wrap;margin-top:auto;padding-top:6px}
+  .spacecard .enter{font-family:var(--mono);font-size:11px;color:var(--accent-ink)}
+  .home-foot{font-family:var(--prose);font-size:13.5px;color:var(--ink-3);max-width:70ch;margin:26px 0 0}
+  .spacebadge{font-family:var(--mono);font-size:10px;text-transform:uppercase;letter-spacing:.07em;
+    padding:2px 7px;border-radius:3px;background:var(--accent-soft);color:var(--accent-ink)}
+
   /* ---- streams ---- */
   .stream-grid{display:grid;gap:14px;grid-template-columns:repeat(auto-fit,minmax(290px,1fr));max-width:1400px}
   .stream{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);
@@ -244,20 +265,28 @@
 </style>
 
 <header class="masthead">
-  <h1 class="wordmark">J-job <span>Workbench</span></h1>
-  <p>Quantitative model external verification — Japan, Hong Kong, East Asia. Git is the database; this is the read model.</p>
+  <button class="wordmark" id="homeBtn" type="button">J-job <span>Workbench</span></button>
+  <p id="spaceBlurb">Two ventures, one repo. Git is the database; this is the read model.</p>
   <span class="built" id="built"></span>
 </header>
 
-<nav class="tabs" role="tablist">
-  <button class="tab" role="tab" id="tab-streams" aria-selected="true" aria-controls="view-streams">Streams</button>
+<nav class="tabs" role="tablist" id="tabs">
+  <button class="tab" role="tab" id="tab-home" aria-selected="true" aria-controls="view-home">Home</button>
+  <button class="tab" role="tab" id="tab-streams" aria-selected="false" aria-controls="view-streams">Streams</button>
   <button class="tab" role="tab" id="tab-browse" aria-selected="false" aria-controls="view-browse">Browse</button>
   <button class="tab" role="tab" id="tab-targets" aria-selected="false" aria-controls="view-targets">Targets</button>
   <button class="tab" role="tab" id="tab-pool" aria-selected="false" aria-controls="view-pool">Pool</button>
   <button class="tab" role="tab" id="tab-board" aria-selected="false" aria-controls="view-board">Task board</button>
 </nav>
 
-<section class="view" id="view-streams" role="tabpanel" aria-labelledby="tab-streams">
+<section class="view" id="view-home" role="tabpanel" aria-labelledby="tab-home">
+  <div class="spaces" id="spaceCards"></div>
+  <p class="home-foot">Everything below the surface is one Markdown file per fact, validated by
+  <code>build.py</code>. Shared material — affiliations, capacity, sales constraints — belongs to
+  both ventures and appears in either.</p>
+</section>
+
+<section class="view" id="view-streams" role="tabpanel" aria-labelledby="tab-streams" hidden>
   <div class="stream-grid" id="streamGrid"></div>
   <div class="digest">
     <h2>Where this stands</h2>
@@ -318,10 +347,36 @@
 
 <script>
 const DATA = /*__DATA__*/null;
-const ITEMS = DATA.items;
-const BY_ID = Object.fromEntries(ITEMS.map(i => [i.id, i]));
+const ALL_ITEMS = DATA.items;
+const inSpace = i => i.space === space || i.space === "shared";
+let ITEMS = ALL_ITEMS.filter(inSpace);
+const BY_ID = Object.fromEntries(ALL_ITEMS.map(i => [i.id, i]));
 const TYPE_LABEL = {org:"Org", person:"Person", venue:"Venue", artifact:"Artifact", note:"Note", task:"Task", stream:"Stream"};
 const STATUS_ORDER = ["idea","researching","contacted","confirmed","active","parked","done"];
+
+const SPACES = {
+  mrm: {
+    label: "Model verification",
+    eyebrow: "Venture 1",
+    lede: "Independent external verification of quantitative models \u2014 Japan, Hong Kong, East Asia.",
+    points: [
+      "<strong>Regulation is the demand engine</strong>, and HKMA CA-G-4 explicitly permits external validators.",
+      "<strong>Sales is the binding constraint</strong> \u2014 so start where no selling is required.",
+      "<strong>Sell research first, then model building, then validation.</strong> The plan started at the hardest one.",
+    ],
+  },
+  data: {
+    label: "Data signal research",
+    eyebrow: "Venture 2",
+    lede: "Scoping the trading value of a dataset for the people who own it \u2014 so they can sell it.",
+    points: [
+      "<strong>Supply is going from 1,200 to a forecast 5,000 sources</strong> while buyers subscribe to ~20 each. Proof becomes the scarce good.",
+      "<strong>The vendor pays, not the fund</strong> \u2014 it is a pre-sales spend, not a research budget.",
+      "<strong>Exabel already productised the obvious version.</strong> The room left is non-equity data, incremental value against a live book, shock analysis, and Japan.",
+    ],
+  },
+};
+let space = "mrm";
 
 const esc = s => String(s ?? "").replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
 
@@ -354,6 +409,7 @@ const CONF_CLASS = {high:"good", med:"warn", low:"alert"};
 function badges(it){
   const b = [];
   b.push(`<span class="badge accent">${TYPE_LABEL[it.type] || it.type}</span>`);
+  if (it.space === "shared") b.push(`<span class="badge">shared</span>`);
   if (it.role) b.push(`<span class="badge">${esc(it.role)}</span>`);
   b.push(`<span class="badge">${esc(it.status)}</span>`);
   if (it.priority) b.push(`<span class="badge${it.priority === 1 ? " alert" : ""}">P${it.priority}</span>`);
@@ -541,7 +597,7 @@ function renderTiers(){
 }
 
 function renderSources(){
-  const rows = DATA.sources.map(src => {
+  const rows = DATA.sources.filter(src => (src.space || "mrm") === space).map(src => {
     const harvested = src.harvested && src.harvested !== "None";
     return `<div class="src${harvested ? "" : " unharvested"}">
       <span class="kind ${esc(src.kind)}">${esc(src.kind)}</span>
@@ -554,13 +610,16 @@ function renderSources(){
         esc(src.url.replace(/^https?:\/\//, "").replace(/\/$/, "").slice(0, 48))}</a>
     </div>`;
   }).join("");
-  document.getElementById("sourceList").innerHTML = `<div class="srcgrid">${rows}</div>`;
+  document.getElementById("sourceList").innerHTML = rows
+    ? `<div class="srcgrid">${rows}</div>`
+    : `<p class="tier-empty">No sources harvested for this venture yet.</p>`;
 }
 
 let poolQuery = "";
 function renderPool(){
   const showExcluded = document.getElementById("showExcluded").checked;
   const rows = DATA.pool
+    .filter(r => (r.space || "mrm") === space)
     .filter(r => showExcluded || r.state !== "excluded")
     .filter(r => !poolQuery || (r.name + r.name_ja + r.url + r.note).toLowerCase().includes(poolQuery))
     .sort((a, b) => (a.state || "pool").localeCompare(b.state || "pool") || a.name.localeCompare(b.name));
@@ -596,8 +655,43 @@ function renderBoard(){
 }
 
 /* ---------- wiring ---------- */
+function renderHome(){
+  document.getElementById("spaceCards").innerHTML = Object.entries(SPACES).map(([key, sp]) => {
+    const items = ALL_ITEMS.filter(i => i.space === key);
+    const n = t => items.filter(i => i.type === t).length;
+    return `<button class="spacecard" type="button" data-space="${key}">
+      <span class="eyebrow">${sp.eyebrow}</span>
+      <h2>${sp.label}</h2>
+      <p class="lede">${sp.lede}</p>
+      <ul>${sp.points.map(p => `<li>${p}</li>`).join("")}</ul>
+      <span class="counts">
+        <span class="badge">${n("stream")} streams</span>
+        <span class="badge">${n("note")} notes</span>
+        <span class="badge">${n("org")} orgs</span>
+        <span class="badge">${n("task")} tasks</span>
+      </span>
+      <span class="enter">open \u2192</span>
+    </button>`;
+  }).join("");
+}
+
+function setSpace(key){
+  space = key;
+  ITEMS = ALL_ITEMS.filter(inSpace);
+  for (const k of Object.keys(active)) delete active[k];
+  query = "";
+  const box = document.getElementById("search");
+  if (box) box.value = "";
+  document.getElementById("spaceBlurb").innerHTML =
+    `<span class="spacebadge">${esc(SPACES[key].label)}</span> ${esc(SPACES[key].lede)}`;
+  renderStreams(); renderFacets(); renderRows(); renderTiers(); renderBoard();
+  renderSources(); renderPool();
+  const first = ITEMS.find(i => i.type === "stream") || ITEMS[0];
+  if (first) select(first.id);
+}
+
 function showTab(name){
-  for (const n of ["streams", "browse", "targets", "pool", "board"]) {
+  for (const n of ["home", "streams", "browse", "targets", "pool", "board"]) {
     document.getElementById("tab-" + n).setAttribute("aria-selected", String(n === name));
     document.getElementById("view-" + n).hidden = n !== name;
   }
@@ -626,8 +720,12 @@ document.getElementById("clear").addEventListener("click", () => {
   renderFacets(); renderRows();
 });
 document.body.addEventListener("click", e => {
+  const sp = e.target.closest("[data-space]");
+  if (sp) { setSpace(sp.dataset.space); showTab("streams"); return; }
   const g = e.target.closest("[data-goto]");
   if (!g) return;
+  const target = BY_ID[g.dataset.goto];
+  if (target && target.space !== "shared" && target.space !== space) setSpace(target.space);
   showTab("browse");
   select(g.dataset.goto);
   document.querySelector(`#rows [data-id="${g.dataset.goto}"]`)?.scrollIntoView({block:"nearest"});
@@ -635,13 +733,14 @@ document.body.addEventListener("click", e => {
 
 for (const id of ["showRetired"])
   document.getElementById(id).addEventListener("change", renderTiers);
+document.getElementById("homeBtn").addEventListener("click", () => showTab("home"));
 document.getElementById("built").textContent = "built " + DATA.built;
 document.getElementById("poolSearch").addEventListener("input", e => {
   poolQuery = e.target.value.trim().toLowerCase();
   renderPool();
 });
 document.getElementById("showExcluded").addEventListener("change", renderPool);
-renderStreams(); renderFacets(); renderRows(); renderTiers();
-renderSources(); renderPool(); renderBoard();
-select(ITEMS.find(i => i.id === "note-ai-validation-gap")?.id || ITEMS[0].id);
+renderHome(); renderSources(); renderPool();
+setSpace("mrm");
+showTab("home");
 </script>

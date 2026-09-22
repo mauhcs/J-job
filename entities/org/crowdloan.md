@@ -3,6 +3,7 @@ id: org-crowdloan
 name: クラウドローン (Crowd Loan)
 name_ja: クラウドローン株式会社
 type: org
+space: mrm
 role: buyer
 scope: company
 country: JP

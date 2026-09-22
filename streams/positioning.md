@@ -1,6 +1,7 @@
 ---
 id: stream-positioning
 type: stream
+space: mrm
 name: Positioning — what we sell and under which vehicle
 status: researching
 priority: 1

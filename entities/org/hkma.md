@@ -1,6 +1,7 @@
 ---
 id: org-hkma
 type: org
+space: mrm
 name: Hong Kong Monetary Authority (HKMA)
 role: regulator
 country: HK

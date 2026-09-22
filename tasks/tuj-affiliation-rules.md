@@ -1,6 +1,7 @@
 ---
 id: task-tuj-affiliation-rules
 type: task
+space: shared
 name: Confirm TUJ rules on outside consulting and use of affiliation
 status: idea
 priority: 1

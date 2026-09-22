@@ -1,6 +1,7 @@
 ---
 id: org-ey
 type: org
+space: mrm
 name: EY (Model Validation / BPM Platform)
 role: seller
 country: GLOBAL

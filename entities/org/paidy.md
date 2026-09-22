@@ -1,6 +1,7 @@
 ---
 id: org-paidy
 type: org
+space: mrm
 name: Paidy
 role: buyer
 scope: company

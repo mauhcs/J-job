@@ -1,6 +1,7 @@
 ---
 id: venue-cfa-japan
 type: venue
+space: mrm
 name: CFA Society Japan
 role: seminar
 country: JP

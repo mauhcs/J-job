@@ -1,6 +1,7 @@
 ---
 id: org-deloitte
 type: org
+space: mrm
 name: Deloitte (Model Risk Management Services)
 role: seller
 country: GLOBAL

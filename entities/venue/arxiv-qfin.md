@@ -1,6 +1,7 @@
 ---
 id: venue-arxiv-qfin
 type: venue
+space: mrm
 name: arXiv q-fin
 role: journal
 country: GLOBAL

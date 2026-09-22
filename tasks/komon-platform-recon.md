@@ -1,6 +1,7 @@
 ---
 id: task-komon-platform-recon
 type: task
+space: mrm
 name: Reconnoitre the 顧問 pool on 顧問バンク before paying anyone
 status: idea
 priority: 1

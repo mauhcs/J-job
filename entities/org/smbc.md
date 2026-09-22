@@ -3,6 +3,7 @@ id: org-smbc
 name: SMBC Group (三井住友フィナンシャルグループ)
 name_ja: 株式会社三井住友フィナンシャルグループ
 type: org
+space: mrm
 role: buyer
 scope: company
 country: JP

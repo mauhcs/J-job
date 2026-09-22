@@ -2,6 +2,7 @@
 id: org-yoii
 name: Yoii (Yoii Fuel)
 type: org
+space: mrm
 role: buyer
 scope: company
 country: JP

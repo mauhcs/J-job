@@ -1,6 +1,7 @@
 ---
 id: org-jp-alt-lenders
 type: org
+space: mrm
 name: Japanese alternative lenders (segment)
 role: buyer
 scope: segment

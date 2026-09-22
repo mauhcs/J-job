@@ -1,6 +1,7 @@
 ---
 id: note-model-building
 type: note
+space: mrm
 name: Building models instead of validating them — easier to sell, lower ceiling
 status: researching
 priority: 1

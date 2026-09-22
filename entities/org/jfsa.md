@@ -1,6 +1,7 @@
 ---
 id: org-jfsa
 type: org
+space: mrm
 name: Financial Services Agency (JFSA)
 name_ja: 金融庁
 role: regulator

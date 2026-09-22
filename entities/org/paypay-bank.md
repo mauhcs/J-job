@@ -3,6 +3,7 @@ id: org-paypay-bank
 name: PayPay銀行
 name_ja: PayPay銀行株式会社
 type: org
+space: mrm
 role: buyer
 scope: company
 country: JP

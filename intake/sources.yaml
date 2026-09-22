@@ -3,6 +3,7 @@
 
 sources:
   - id: shotan-kyokai
+    space: mrm
     name: 日本少額短期保険協会 — 会員一覧
     url: https://www.shougakutanki.jp/general/about/membership.html
     kind: association
@@ -22,6 +23,7 @@ sources:
       leaning on the parent group is available, which weakens the pitch.
 
   - id: fintech-kyokai
+    space: mrm
     name: 一般社団法人Fintech協会 — ベンチャー会員
     url: https://fintechjapan.org/startup/
     kind: association
@@ -33,6 +35,7 @@ sources:
     note: The association's own categorisation is the useful part — it pre-sorts by model type.
 
   - id: fsa-kashikingyo-register
+    space: mrm
     name: 金融庁・財務局 貸金業者登録一覧
     url: https://www.fsa.go.jp/
     kind: register
@@ -47,6 +50,7 @@ sources:
       licensing from association membership instead. Locate the exact register URL first.
 
   - id: fsa-shotan-register
+    space: mrm
     name: 金融庁 少額短期保険業者 登録一覧
     url: https://www.fsa.go.jp/
     kind: register
@@ -58,6 +62,7 @@ sources:
     note: NOT YET HARVESTED. Superset of the association list; catches firms outside the body.
 
   - id: hkma-ai-register
+    space: mrm
     name: HKMA Register of Authorized Institutions
     url: https://www.hkma.gov.hk/eng/
     kind: register
@@ -72,6 +77,7 @@ sources:
       in the repo came from comparison blogs, not from this register.
 
   - id: finopitch-tfa
+    space: mrm
     name: FINOPITCH / Tokyo Financial Award finalists
     url: https://www.finsum.jp/startup.html
     kind: award
@@ -83,6 +89,7 @@ sources:
     note: Garage Bank won the JETRO Award at FINOPITCH 2025 and a Tokyo Financial Award in 2024.
 
   - id: tracxn-alt-lending-jp
+    space: mrm
     name: Tracxn — alternative lending startups in Japan
     url: https://tracxn.com/d/explore/alternative-lending-startups-in-japan/__RpbITwnFhX7vmsyCXWmV0lJsCUhicLYtNSnNuATU_uQ/companies
     kind: database
@@ -96,6 +103,7 @@ sources:
       Coverage and freshness unverified. Treat names from here as leads to confirm, not facts.
 
   - id: sangaku-finance-prs
+    space: mrm
     name: 産学連携 press releases in Japanese finance (purposive sample)
     url: https://prtimes.jp/topics/keywords/%E5%85%B1%E5%90%8C%E7%A0%94%E7%A9%B6
     kind: editorial

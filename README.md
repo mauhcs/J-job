@@ -1,7 +1,13 @@
-# J-job — Quantitative Model External Verification
+# J-job — two ventures, one workbench
 
-Working repo for building a business plan around **independent external verification of
-quantitative models**, focused on Japan, Hong Kong and East Asia.
+Working repo for two separate business ideas, kept in one system because they share a
+principal, a network and a set of constraints.
+
+- **`mrm`** — independent external verification of quantitative models; Japan, Hong Kong,
+  East Asia.
+- **`data`** — signal research on alternative datasets, sold to the data owner as the
+  evidence a trading desk needs before buying.
+- **`shared`** — profile-level material bearing on both.
 
 Principal: Mauricio — Chief Scientist, IPOR Labs; Adjunct Assistant Professor, Temple
 University Japan. Background in HFT, quant trading and risk modelling.
@@ -17,6 +23,15 @@ inlines the whole graph into `dashboard.html` for browsing.
 See `SCHEMA.md` for the field definitions.
 
 ## Workstreams
+
+**data**
+
+| id | stream | question it answers |
+|----|--------|---------------------|
+| `stream-data-market` | Market | Who sells, who buys, who evaluates, and where does a quant get paid? |
+| `stream-data-offer` | Offer | What exactly is sold, and is it defensible beside Exabel? |
+
+**mrm**
 
 | id | stream | question it answers |
 |----|--------|---------------------|

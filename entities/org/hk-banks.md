@@ -1,6 +1,7 @@
 ---
 id: org-hk-banks
 type: org
+space: mrm
 name: Hong Kong authorized institutions (segment)
 role: buyer
 scope: segment

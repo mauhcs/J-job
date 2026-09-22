@@ -3,6 +3,7 @@ id: org-micin-ssi
 name: MICIN少額短期保険
 name_ja: MICIN少額短期保険株式会社
 type: org
+space: mrm
 role: buyer
 scope: company
 country: JP

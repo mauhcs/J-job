@@ -3,6 +3,7 @@ id: org-justincase-tech
 name: justInCase Technologies
 name_ja: 株式会社justInCaseTechnologies
 type: org
+space: mrm
 role: buyer
 scope: company
 country: JP

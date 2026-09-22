@@ -1,6 +1,7 @@
 ---
 id: task-defi-validation-angle
 type: task
+space: mrm
 name: Scope the on-chain rate model validation angle
 status: idea
 priority: 3

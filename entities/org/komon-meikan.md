@@ -1,6 +1,7 @@
 ---
 id: org-komon-meikan
 type: org
+space: mrm
 name: 顧問名鑑 (Komon Meikan)
 name_ja: 顧問名鑑
 role: channel

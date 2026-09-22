@@ -1,6 +1,7 @@
 ---
 id: note-hk-regulatory-driver
 type: note
+space: mrm
 name: Hong Kong's demand driver — and the clause that permits us
 status: confirmed
 priority: 1

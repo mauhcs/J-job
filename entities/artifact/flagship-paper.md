@@ -1,6 +1,7 @@
 ---
 id: artifact-flagship-paper
 type: artifact
+space: mrm
 name: Flagship paper — validating AI-driven models under the new APAC guidance
 role: paper
 country: APAC

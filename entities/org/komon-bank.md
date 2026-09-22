@@ -1,6 +1,7 @@
 ---
 id: org-komon-bank
 type: org
+space: mrm
 name: 顧問バンク (Komon Bank)
 name_ja: 顧問バンク
 role: channel

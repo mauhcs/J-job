@@ -1,6 +1,7 @@
 ---
 id: stream-market
 type: stream
+space: mrm
 name: Market — who sells, who buys, at what price
 status: researching
 priority: 1

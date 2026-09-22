@@ -3,6 +3,7 @@ id: org-dai-ichi-smart
 name: 第一スマート少額短期保険
 name_ja: 第一スマート少額短期保険株式会社
 type: org
+space: mrm
 role: buyer
 scope: company
 country: JP

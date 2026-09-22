@@ -1,6 +1,7 @@
 ---
 id: org-pasona-jobhub
 type: org
+space: mrm
 name: パソナ JOB HUB (ProShare)
 name_ja: 株式会社パソナJOB HUB
 role: channel

@@ -1,6 +1,7 @@
 ---
 id: task-jafee-programme-mining
 type: task
+space: mrm
 name: Mine JAFEE officer lists and recent conference programmes for advisor candidates
 status: idea
 priority: 1

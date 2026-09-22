@@ -1,6 +1,7 @@
 ---
 id: note-ai-validation-gap
 type: note
+space: mrm
 name: The AI validation gap — the clearest near-term opening
 status: confirmed
 priority: 1

@@ -2,6 +2,7 @@
 id: org-funds
 name: Funds
 type: org
+space: mrm
 role: buyer
 scope: company
 country: JP

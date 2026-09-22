@@ -1,6 +1,7 @@
 ---
 id: note-startup-university-partnerships
 type: note
+space: mrm
 name: Startup–university partnerships — the mechanics, and what the company is actually buying
 status: researching
 priority: 1

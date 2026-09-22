@@ -3,6 +3,7 @@ id: org-sony-sasti
 name: ソニー少額短期保険 (formerly justInCase)
 name_ja: ソニー少額短期保険株式会社
 type: org
+space: mrm
 role: buyer
 scope: company
 country: JP

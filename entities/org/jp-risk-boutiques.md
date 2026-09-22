@@ -2,6 +2,7 @@
 id: org-jp-risk-boutiques
 name: Japanese ALM & risk-management boutiques (segment)
 type: org
+space: mrm
 role: seller
 country: JP
 industry: [consulting, banking]

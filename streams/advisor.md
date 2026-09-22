@@ -1,6 +1,7 @@
 ---
 id: stream-advisor
 type: stream
+space: mrm
 name: 顧問 — the door-opener
 status: researching
 priority: 1

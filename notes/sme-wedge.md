@@ -1,6 +1,7 @@
 ---
 id: note-sme-wedge
 type: note
+space: mrm
 name: The SME wedge — go down-market, and who actually forces the purchase
 status: confirmed
 priority: 1

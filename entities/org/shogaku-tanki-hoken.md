@@ -1,6 +1,7 @@
 ---
 id: org-shogaku-tanki-hoken
 type: org
+space: mrm
 name: 少額短期保険業者 (micro-insurers, segment)
 name_ja: 少額短期保険業者
 role: buyer

@@ -1,6 +1,7 @@
 ---
 id: org-abeam
 type: org
+space: mrm
 name: ABeam Consulting
 name_ja: アビームコンサルティング
 role: seller

@@ -1,6 +1,7 @@
 ---
 id: task-state-of-art-survey
 type: task
+space: mrm
 name: State-of-the-art survey — AI/ML model validation methodology
 status: idea
 priority: 2

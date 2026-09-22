@@ -1,6 +1,7 @@
 ---
 id: person-archetype-ex-cro
 type: person
+space: mrm
 name: Archetype — former megabank CRO / head of model risk
 role: archetype
 country: JP

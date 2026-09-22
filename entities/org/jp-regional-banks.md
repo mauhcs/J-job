@@ -1,6 +1,7 @@
 ---
 id: org-jp-regional-banks
 type: org
+space: mrm
 name: Japanese regional banks (segment)
 name_ja: 地方銀行
 role: buyer

@@ -2,6 +2,7 @@
 id: org-hk-digital-banks
 name: Hong Kong Licensed Digital Banks (all eight)
 type: org
+space: mrm
 role: buyer
 scope: segment
 country: HK

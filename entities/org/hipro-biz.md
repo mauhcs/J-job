@@ -1,6 +1,7 @@
 ---
 id: org-hipro-biz
 type: org
+space: mrm
 name: HiPro Biz (formerly i-common)
 role: channel
 country: JP

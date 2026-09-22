@@ -1,6 +1,7 @@
 ---
 id: org-boj
 type: org
+space: mrm
 name: Bank of Japan
 name_ja: 日本銀行
 role: regulator

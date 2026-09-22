@@ -1,6 +1,7 @@
 ---
 id: venue-jafee
 type: venue
+space: mrm
 name: JAFEE — Japanese Association of Financial Econometrics and Engineering
 name_ja: 一般社団法人 日本金融・証券計量・工学学会
 role: conference

@@ -1,6 +1,7 @@
 ---
 id: note-differentiation-thesis
 type: note
+space: mrm
 name: Differentiation thesis — what only this principal can say
 status: idea
 priority: 1

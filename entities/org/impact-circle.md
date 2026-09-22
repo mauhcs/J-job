@@ -3,6 +3,7 @@ id: org-impact-circle
 name: Impact Circle
 name_ja: インパクトサークル株式会社
 type: org
+space: mrm
 role: buyer
 scope: company
 country: JP

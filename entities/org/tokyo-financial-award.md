@@ -1,6 +1,7 @@
 ---
 id: org-tokyo-financial-award
 type: org
+space: mrm
 name: Tokyo Financial Award & FINOPITCH
 role: channel
 country: JP

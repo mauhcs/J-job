@@ -1,6 +1,7 @@
 ---
 id: task-join-jafee
 type: task
+space: mrm
 name: Join JAFEE as an individual member
 status: idea
 priority: 1

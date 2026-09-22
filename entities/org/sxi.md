@@ -3,6 +3,7 @@ id: org-sxi
 name: SXI (エス・エックス・アイ)
 name_ja: 株式会社エス・エックス・アイ
 type: org
+space: mrm
 role: buyer
 scope: company
 country: JP

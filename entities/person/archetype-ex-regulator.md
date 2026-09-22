@@ -1,6 +1,7 @@
 ---
 id: person-archetype-ex-regulator
 type: person
+space: mrm
 name: Archetype — retired JFSA / BoJ supervisor
 role: archetype
 country: JP

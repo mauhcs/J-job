@@ -1,6 +1,7 @@
 ---
 id: org-finolab
 type: org
+space: mrm
 name: FINOLAB
 role: channel
 country: JP

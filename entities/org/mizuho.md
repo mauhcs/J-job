@@ -3,6 +3,7 @@ id: org-mizuho
 name: Mizuho Financial Group (みずほフィナンシャルグループ)
 name_ja: 株式会社みずほフィナンシャルグループ
 type: org
+space: mrm
 role: buyer
 scope: company
 country: JP

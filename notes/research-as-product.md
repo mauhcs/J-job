@@ -1,6 +1,7 @@
 ---
 id: note-research-as-product
 type: note
+space: mrm
 name: Selling research — the market exists, is growing, and is sized like a marketing budget
 status: researching
 priority: 1

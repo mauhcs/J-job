@@ -1,6 +1,7 @@
 ---
 id: task-pricing-comparables
 type: task
+space: mrm
 name: Reconstruct engagement structure and pricing from boutique comparables
 status: idea
 priority: 1

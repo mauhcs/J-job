@@ -1,6 +1,7 @@
 ---
 id: task-expert-witness-registration
 type: task
+space: shared
 name: Approach the expert-witness firms
 status: idea
 priority: 1

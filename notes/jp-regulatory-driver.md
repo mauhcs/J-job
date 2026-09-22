@@ -1,6 +1,7 @@
 ---
 id: note-jp-regulatory-driver
 type: note
+space: mrm
 name: Japan's demand driver — two waves of model risk regulation
 status: confirmed
 priority: 1

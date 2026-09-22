@@ -1,6 +1,7 @@
 ---
 id: stream-publishing
 type: stream
+space: mrm
 name: Publishing — venue, state of the art, and the work itself
 status: researching
 priority: 2

@@ -1,6 +1,7 @@
 ---
 id: org-ipor-labs
 type: org
+space: shared
 name: IPOR Labs
 role: channel
 country: GLOBAL

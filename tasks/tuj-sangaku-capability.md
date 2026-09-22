@@ -1,6 +1,7 @@
 ---
 id: task-tuj-sangaku-capability
 type: task
+space: mrm
 name: Can TUJ sign a 共同研究契約? The blocker for research-as-product
 status: idea
 priority: 1

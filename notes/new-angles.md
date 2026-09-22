@@ -1,6 +1,7 @@
 ---
 id: note-new-angles
 type: note
+space: shared
 name: Five angles nobody asked for — fitted to the profile and to what the market pays for
 status: researching
 priority: 1

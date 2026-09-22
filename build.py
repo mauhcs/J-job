@@ -24,6 +24,9 @@ MARKER = "/*__DATA__*/null"
 REPO_BLOB = "https://github.com/mauhcs/J-job/blob/main/"
 
 TYPES = {"org", "person", "venue", "artifact", "note", "task", "stream"}
+# Two independent ventures share this repo. "shared" is profile-level material
+# (affiliations, capacity, sales constraints) that bears on both.
+SPACES = {"mrm", "data", "shared"}
 # General lifecycle, used by everything except buyer companies.
 STATUSES = {"idea", "researching", "confirmed", "contacted", "active", "parked", "done"}
 # Buyer companies run a sales pipeline instead. See INTAKE.md.
@@ -58,6 +61,8 @@ def collect():
                     problems.append(f"{rel}: missing required field '{field}'")
             if meta.get("type") not in TYPES:
                 problems.append(f"{rel}: unknown type {meta.get('type')!r}")
+            if meta.get("space") not in SPACES:
+                problems.append(f"{rel}: space {meta.get('space')!r} not in {sorted(SPACES)}")
             pipeline = meta.get("role") == "buyer" and meta.get("scope") != "segment"
             allowed = PIPELINE if pipeline else STATUSES
             if meta.get("status") not in allowed:
@@ -127,7 +132,8 @@ def pool():
         if source.get("purpose") == "evidence":
             continue
         for r in parsed:
-            rows.append({k: (v or "").strip() for k, v in r.items()} | {"source": source["id"]})
+            rows.append({k: (v or "").strip() for k, v in r.items()}
+                        | {"source": source["id"], "space": source.get("space", "mrm")})
     return sources, rows
 
 
@@ -165,7 +171,11 @@ def main():
     for item in items:
         counts[item.get("type")] = counts.get(item.get("type"), 0) + 1
     summary = ", ".join(f"{v} {k}" for k, v in sorted(counts.items()))
+    spaces = {}
+    for item in items:
+        spaces[item.get("space")] = spaces.get(item.get("space"), 0) + 1
     print(f"built {OUTPUT.name}: {len(items)} items ({summary}), {len(problems)} warnings")
+    print("spaces: " + " | ".join(f"{k} {v}" for k, v in sorted(spaces.items())))
 
     pipe = {}
     for item in items:

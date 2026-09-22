@@ -1,6 +1,7 @@
 ---
 id: task-komon-comp-structure
 type: task
+space: mrm
 name: Design what we can actually offer a 顧問
 status: idea
 priority: 2

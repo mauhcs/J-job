@@ -3,6 +3,7 @@ id: org-jibun-bank
 name: auじぶん銀行
 name_ja: auじぶん銀行株式会社
 type: org
+space: mrm
 role: buyer
 scope: company
 country: JP

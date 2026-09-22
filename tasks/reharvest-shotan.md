@@ -1,6 +1,7 @@
 ---
 id: task-reharvest-shotan
 type: task
+space: mrm
 name: Re-harvest the 少額短期保険協会 member list programmatically
 status: idea
 priority: 2

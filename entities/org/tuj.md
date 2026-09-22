@@ -1,6 +1,7 @@
 ---
 id: org-tuj
 type: org
+space: shared
 name: Temple University Japan
 name_ja: テンプル大学ジャパンキャンパス
 role: channel

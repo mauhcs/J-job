@@ -1,6 +1,7 @@
 ---
 id: person-archetype-academic-bridge
 type: person
+space: mrm
 name: Archetype — chaired academic with industry standing
 role: archetype
 country: JP

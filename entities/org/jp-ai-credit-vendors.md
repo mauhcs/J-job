@@ -1,6 +1,7 @@
 ---
 id: org-jp-ai-credit-vendors
 type: org
+space: mrm
 name: AI credit-scoring vendors (segment)
 name_ja: AI与信ベンダー
 role: buyer

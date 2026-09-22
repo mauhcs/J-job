@@ -1,6 +1,7 @@
 ---
 id: org-finalyse
 type: org
+space: mrm
 name: Finalyse
 role: seller
 country: GLOBAL

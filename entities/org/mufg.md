@@ -3,6 +3,7 @@ id: org-mufg
 name: MUFG (三菱UFJフィナンシャル・グループ)
 name_ja: 株式会社三菱UFJフィナンシャル・グループ
 type: org
+space: mrm
 role: buyer
 scope: company
 country: JP

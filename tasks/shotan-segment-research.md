@@ -1,6 +1,7 @@
 ---
 id: task-shotan-segment-research
 type: task
+space: mrm
 name: Size and qualify the 少額短期保険業者 segment
 status: idea
 priority: 1

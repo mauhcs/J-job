@@ -1,8 +1,18 @@
 # J-job — working instructions
 
-Business plan for **independent external verification of quantitative models**, focused on
-Japan, Hong Kong and East Asia. Principal: Chief Scientist at IPOR Labs, Adjunct Assistant
-Professor at Temple University Japan; background in HFT, quant trading and risk modelling.
+**Two independent ventures share this repo.** Principal for both: Chief Scientist at IPOR
+Labs, Adjunct Assistant Professor at Temple University Japan; background in HFT, quant trading
+and risk modelling.
+
+| `space:` | venture |
+|---|---|
+| `mrm` | Independent external verification of quantitative models — Japan, HK, East Asia |
+| `data` | Signal research on alternative datasets, sold to the data owner as proof of value |
+| `shared` | Profile-level material bearing on both — affiliations, capacity, sales constraints |
+
+**Every card needs a `space`.** The dashboard opens on a home screen and everything below it
+is scoped to the active venture; `shared` cards appear in both. Do not mix the two ventures'
+evidence — a finding about alt data vendors does not belong to the validation thesis.
 
 **Git is the database.** Every organisation, person, venue, task and finding is one Markdown
 file with YAML front-matter. `dashboard.html` is a generated read model, never edited by hand.

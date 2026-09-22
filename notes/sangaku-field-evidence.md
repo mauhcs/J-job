@@ -1,6 +1,7 @@
 ---
 id: note-sangaku-field-evidence
 type: note
+space: mrm
 name: Does Japanese finance commission academic research? First pass, with the method's limits
 status: researching
 priority: 1

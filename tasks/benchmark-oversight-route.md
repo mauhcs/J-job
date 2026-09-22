@@ -1,6 +1,7 @@
 ---
 id: task-benchmark-oversight-route
 type: task
+space: shared
 name: Test the benchmark oversight and IOSCO assessment route
 status: idea
 priority: 1

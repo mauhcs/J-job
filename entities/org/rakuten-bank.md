@@ -3,6 +3,7 @@ id: org-rakuten-bank
 name: 楽天銀行
 name_ja: 楽天銀行株式会社
 type: org
+space: mrm
 role: buyer
 scope: company
 country: JP

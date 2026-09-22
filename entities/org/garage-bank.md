@@ -1,6 +1,7 @@
 ---
 id: org-garage-bank
 type: org
+space: mrm
 name: Garage Bank (cashari / カシャリ)
 name_ja: 株式会社ガレージバンク
 role: buyer

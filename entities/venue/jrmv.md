@@ -1,6 +1,7 @@
 ---
 id: venue-jrmv
 type: venue
+space: mrm
 name: Journal of Risk Model Validation (Risk.net)
 role: journal
 country: GLOBAL

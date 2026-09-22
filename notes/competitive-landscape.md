@@ -1,6 +1,7 @@
 ---
 id: note-competitive-landscape
 type: note
+space: mrm
 name: Competitive landscape — three tiers and where the gap is
 status: researching
 priority: 1

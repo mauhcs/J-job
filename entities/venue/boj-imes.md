@@ -1,6 +1,7 @@
 ---
 id: venue-boj-imes
 type: venue
+space: mrm
 name: Bank of Japan IMES — Finance Workshop & Discussion Paper Series
 role: seminar
 country: JP

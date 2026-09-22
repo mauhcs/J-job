@@ -1,6 +1,7 @@
 ---
 id: org-mas
 type: org
+space: mrm
 name: Monetary Authority of Singapore (MAS)
 role: regulator
 country: SG

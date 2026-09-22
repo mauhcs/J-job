@@ -3,6 +3,7 @@ id: org-sumishin-sbi
 name: 住信SBIネット銀行 (NEOBANK)
 name_ja: 住信SBIネット銀行株式会社
 type: org
+space: mrm
 role: buyer
 scope: company
 country: JP

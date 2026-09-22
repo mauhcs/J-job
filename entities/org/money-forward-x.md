@@ -2,6 +2,7 @@
 id: org-money-forward-x
 name: Money Forward X
 type: org
+space: mrm
 role: buyer
 scope: company
 country: JP

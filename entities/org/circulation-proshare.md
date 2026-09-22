@@ -1,6 +1,7 @@
 ---
 id: org-circulation
 type: org
+space: mrm
 name: プロシェアリング (Circulation)
 name_ja: 株式会社サーキュレーション
 role: channel

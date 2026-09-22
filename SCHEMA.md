@@ -16,6 +16,7 @@ One entity per file. YAML front-matter, then free Markdown prose for the body.
 |-------|----------|--------|
 | `id` | yes | unique slug, prefixed by type: `org-`, `person-`, `venue-`, `artifact-`, `note-`, `task-`, `stream-` |
 | `type` | yes | `org` `person` `venue` `artifact` `note` `task` `stream` |
+| `space` | yes | `mrm` · `data` · `shared` — which venture. `shared` shows in both |
 | `name` | yes | display name |
 | `name_ja` | no | Japanese name |
 | `role` | no | org: `regulator` `seller` `buyer` `channel` · person: `advisor` `contact` `archetype` · venue: `conference` `journal` `seminar` `media` |

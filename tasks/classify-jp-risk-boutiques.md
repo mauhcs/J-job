@@ -1,6 +1,7 @@
 ---
 id: task-classify-jp-risk-boutiques
 type: task
+space: mrm
 name: Classify the Japanese ALM/risk boutiques — competitor or partner?
 status: idea
 priority: 1

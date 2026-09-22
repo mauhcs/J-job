@@ -1,6 +1,7 @@
 ---
 id: note-sales-routes
 type: note
+space: shared
 name: Sales routes, ranked by how much selling you have to do
 status: confirmed
 priority: 1

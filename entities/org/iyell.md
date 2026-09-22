@@ -3,6 +3,7 @@ id: org-iyell
 name: iYell (住宅ローンテック)
 name_ja: iYell株式会社
 type: org
+space: mrm
 role: buyer
 scope: company
 country: JP

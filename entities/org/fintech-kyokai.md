@@ -1,6 +1,7 @@
 ---
 id: org-fintech-kyokai
 type: org
+space: mrm
 name: Fintech Association of Japan
 name_ja: 一般社団法人Fintech協会
 role: channel

@@ -1,6 +1,7 @@
 ---
 id: org-credit-engine
 type: org
+space: mrm
 name: Credit Engine
 role: buyer
 scope: company

@@ -3,6 +3,7 @@ id: org-quants
 name: Quants株式会社
 name_ja: Quants株式会社
 type: org
+space: mrm
 role: buyer
 scope: company
 country: JP

@@ -1,6 +1,7 @@
 ---
 id: task-big4-japan-ai-offerings
 type: task
+space: mrm
 name: Check whether Big 4 Japan have launched AI model validation offerings
 status: idea
 priority: 1

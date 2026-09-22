@@ -1,6 +1,7 @@
 ---
 id: person-archetype-fintech-operator
 type: person
+space: mrm
 name: Archetype — fintech operator / licensed-lender veteran
 role: archetype
 country: JP

@@ -1,6 +1,7 @@
 ---
 id: org-kpmg-japan
 type: org
+space: mrm
 name: KPMG Japan
 role: seller
 country: JP

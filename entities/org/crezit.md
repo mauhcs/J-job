@@ -3,6 +3,7 @@ id: org-crezit
 name: Crezit Holdings
 name_ja: Crezit Holdings株式会社
 type: org
+space: mrm
 role: buyer
 scope: company
 country: JP

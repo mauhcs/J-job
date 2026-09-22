@@ -1,6 +1,7 @@
 ---
 id: task-jp-foreign-validator-legality
 type: task
+space: mrm
 name: Can a foreign principal be the independent validator of record in Japan?
 status: idea
 priority: 1

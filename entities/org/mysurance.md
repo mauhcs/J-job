@@ -3,6 +3,7 @@ id: org-mysurance
 name: Mysurance
 name_ja: Mysurance株式会社
 type: org
+space: mrm
 role: buyer
 scope: company
 country: JP

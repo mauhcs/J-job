@@ -1,6 +1,7 @@
 ---
 id: note-open-questions
 type: note
+space: mrm
 name: What we do not know — ranked by how much it would change the plan
 status: researching
 priority: 1

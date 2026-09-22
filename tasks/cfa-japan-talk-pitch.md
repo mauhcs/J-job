@@ -1,6 +1,7 @@
 ---
 id: task-cfa-japan-talk-pitch
 type: task
+space: mrm
 name: Pitch a practitioner talk to CFA Society Japan
 status: idea
 priority: 3

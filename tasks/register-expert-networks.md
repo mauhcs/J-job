@@ -1,6 +1,7 @@
 ---
 id: task-register-expert-networks
 type: task
+space: shared
 name: Register with the global expert networks, then measure what actually arrives
 status: idea
 priority: 1

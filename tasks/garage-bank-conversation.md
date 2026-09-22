@@ -1,6 +1,7 @@
 ---
 id: task-garage-bank-conversation
 type: task
+space: mrm
 name: Talk to Garage Bank — test the SME thesis on a warm contact
 status: idea
 priority: 1

@@ -3,6 +3,7 @@ id: org-olta
 name: OLTA (クラウドファクタリング)
 name_ja: OLTA株式会社
 type: org
+space: mrm
 role: buyer
 scope: company
 country: JP
