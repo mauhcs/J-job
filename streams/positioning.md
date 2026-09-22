@@ -7,7 +7,8 @@ priority: 1
 confidence: low
 tags: [strategy, vehicle, differentiation]
 rel: [stream-market, stream-advisor, note-differentiation-thesis, note-unit-economics, note-feasible-play, note-sales-routes, note-deliverable-spec,
-      note-correction-invented-numbers, note-research-as-product, note-model-building]
+      note-correction-invented-numbers, note-research-as-product, note-model-building, note-new-angles,
+      note-startup-university-partnerships]
 updated: 2026-09-22
 ---
 
@@ -27,6 +28,19 @@ IPOR Labs is not the primary vehicle but remains the source of a genuine differe
 
 Both are kept open until the market stream tells us how Japanese buyers actually procure
 independence — that is the fact that decides this, and we do not have it yet.
+
+## Monetise the credential, not a consultancy (2026-09-22)
+
+The broader reframe in `note-new-angles`: every viable route found monetises **being a
+credentialed independent expert** rather than **running a consultancy**. Expert-witness work
+(firms find you, HFT and derivatives are named practice areas), benchmark oversight and IOSCO
+assessment (two outsider roles written into the rulebook, and the IPOR role makes the profile
+scarce), a 社外取締役 or risk-committee seat, and paid teaching through きんざい — which runs
+1,000+ instructor-days a year and sources its own instructors — all share one property: the
+counterparty initiates.
+
+That is a different business from the one this repo was built to plan, and it fits the
+constraints. The validation practice is the destination those roads lead to, not the entry.
 
 ## Three products, in the order they can actually be sold (2026-09-22)
 
