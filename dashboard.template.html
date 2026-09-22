@@ -145,6 +145,30 @@
   .srcpath{font-family:var(--mono);font-size:11px;color:var(--ink-3);margin-top:20px;
     padding-top:12px;border-top:1px solid var(--line)}
 
+  /* ---- targets ---- */
+  .ladder-intro{font-family:var(--prose);font-size:15px;line-height:1.6;color:var(--ink-2);
+    max-width:68ch;margin:0 0 26px}
+  .tier{margin-bottom:26px;max-width:1500px}
+  .tier-head{display:flex;align-items:baseline;gap:12px;flex-wrap:wrap;margin-bottom:4px}
+  .tier-rank{font-family:var(--mono);font-size:11px;color:var(--ink-3);
+    border:1px solid var(--line-2);border-radius:3px;padding:1px 6px}
+  .tier-head h3{margin:0;font-size:16px;font-weight:700}
+  .tier-head .who{font-family:var(--mono);font-size:11px;color:var(--ink-3)}
+  .tier-why{margin:0 0 12px;font-family:var(--prose);font-size:13.5px;color:var(--ink-2);max-width:72ch}
+  .tier-why b{color:var(--ink);font-weight:600}
+  .targets{display:grid;gap:10px;grid-template-columns:repeat(auto-fill,minmax(270px,1fr))}
+  .target{appearance:none;background:var(--surface);border:1px solid var(--line);
+    border-top:3px solid var(--line-2);border-radius:var(--radius);padding:12px 13px;
+    text-align:left;cursor:pointer;display:grid;gap:7px;align-content:start;width:100%}
+  .target:hover{border-color:var(--line-2)}
+  .target.p1{border-top-color:var(--alert)}
+  .target.p2{border-top-color:var(--warn)}
+  .target .tname{font-size:13.5px;font-weight:500;line-height:1.35}
+  .target .tja{font-family:var(--mono);font-size:10.5px;color:var(--ink-3)}
+  .target .tpitch{font-family:var(--prose);font-size:12.5px;line-height:1.5;color:var(--ink-2)}
+  .target .tfoot{display:flex;gap:5px;flex-wrap:wrap}
+  .tier-empty{font-size:12.5px;color:var(--ink-3);font-style:italic}
+
   /* ---- board ---- */
   .board{display:grid;gap:14px;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));max-width:1600px;align-items:start}
   .col{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:12px}
@@ -179,6 +203,7 @@
 <nav class="tabs" role="tablist">
   <button class="tab" role="tab" id="tab-streams" aria-selected="true" aria-controls="view-streams">Streams</button>
   <button class="tab" role="tab" id="tab-browse" aria-selected="false" aria-controls="view-browse">Browse</button>
+  <button class="tab" role="tab" id="tab-targets" aria-selected="false" aria-controls="view-targets">Targets</button>
   <button class="tab" role="tab" id="tab-board" aria-selected="false" aria-controls="view-board">Task board</button>
 </nav>
 
@@ -206,6 +231,13 @@
     </div>
     <article class="detail" id="detail"></article>
   </div>
+</section>
+
+<section class="view" id="view-targets" role="tabpanel" aria-labelledby="tab-targets" hidden>
+  <p class="ladder-intro">Work upward. At the bottom the purchase is forced by warehouse lenders,
+  securitisation investors and VCs in diligence — decisions made in weeks. At the top it is forced by the
+  supervisor — decisions made in quarters. Each tier's reference case is what makes the next one possible.</p>
+  <div id="tiers"></div>
 </section>
 
 <section class="view" id="view-board" role="tabpanel" aria-labelledby="tab-board" hidden>
@@ -254,6 +286,7 @@ function badges(it){
   b.push(`<span class="badge">${esc(it.status)}</span>`);
   if (it.priority) b.push(`<span class="badge${it.priority === 1 ? " alert" : ""}">P${it.priority}</span>`);
   if (it.confidence) b.push(`<span class="badge ${CONF_CLASS[it.confidence] || ""}">confidence: ${esc(it.confidence)}</span>`);
+  if (it.size) b.push(`<span class="badge accent">tier: ${esc(it.size)}</span>`);
   if (it.country) b.push(`<span class="badge">${esc(it.country)}</span>`);
   if (it.owner) b.push(`<span class="badge">owner: ${esc(it.owner)}</span>`);
   if (it.due) b.push(`<span class="badge">due ${esc(it.due)}</span>`);
@@ -292,6 +325,7 @@ const FACETS = [
   {key:"type", label:"Type"},
   {key:"status", label:"Status"},
   {key:"country", label:"Geography"},
+  {key:"size", label:"Target tier"},
   {key:"priority", label:"Priority", fmt:v => "P" + v},
   {key:"confidence", label:"Confidence"},
   {key:"tags", label:"Tag", multi:true},
@@ -363,6 +397,46 @@ function renderStreams(){
   }).join("");
 }
 
+const TIERS = [
+  {key:"startup", label:"Startup", who:"founder / CTO decides",
+   why:"Not under the Principles, so the buyer is the <b>warehouse lender, the securitisation investor or the VC in diligence</b>. Sell cheaper capital and faster due diligence, not compliance. Smallest fees, fastest yes, and the first reference case."},
+  {key:"sme", label:"SME &amp; regulated small institutions", who:"president / compliance head decides",
+   why:"Licensed, model-dependent, and structurally unable to staff the function — the FSA's own internal-audit work says small institutions cannot resource it, and its suggested remedies (parent-group resources, peer cooperation) are unavailable to an independent firm. <b>Buy rather than build is the only option left.</b>"},
+  {key:"mid", label:"Mid — regional banks, mid insurers", who:"risk or audit function decides",
+   why:"AI moved into core customer-facing operations over the past year while governance and third-party risk management lagged. Real supervisory pressure, <b>no internal MRM bench</b>, and priced out of a Big 4 governance programme."},
+  {key:"large", label:"Large — HK authorized institutions, trust banks, major insurers", who:"procurement, with a sponsor",
+   why:"Internal models under supervision. In Hong Kong, <b>HKMA CA-G-4 explicitly permits external validators</b> — the strongest single sentence available to this business, and the reason HK is likely the first sale despite the tier."},
+  {key:"mega", label:"Mega — megabanks, global banks", who:"procurement, slowly",
+   why:"They built MRM teams after the 2021 Principles, so they do not need capability — only <b>independence and specialist depth at the margin</b>. Longest cycle, 顧問 non-optional. Year two, warmed by the publishing stream."},
+];
+
+function renderTiers(){
+  const buyers = ITEMS.filter(i => i.role === "buyer");
+  document.getElementById("tiers").innerHTML = TIERS.map((t, idx) => {
+    const inTier = buyers.filter(b => b.size === t.key)
+      .sort((a, b) => (a.priority || 9) - (b.priority || 9) || a.name.localeCompare(b.name));
+    const cards = inTier.length ? inTier.map(b => `
+      <button class="target p${b.priority || 3}" type="button" data-goto="${esc(b.id)}">
+        <span class="tname">${esc(b.name)}</span>
+        ${b.name_ja ? `<span class="tja">${esc(b.name_ja)}</span>` : ""}
+        ${b.pitch ? `<span class="tpitch">${esc(b.pitch)}</span>` : ""}
+        <span class="tfoot">
+          <span class="badge${b.priority === 1 ? " alert" : ""}">P${b.priority || "–"}</span>
+          ${b.country ? `<span class="badge">${esc(b.country)}</span>` : ""}
+          <span class="badge">${esc(b.status)}</span>
+        </span>
+      </button>`).join("") : `<p class="tier-empty">No targets carded in this tier yet.</p>`;
+    return `<section class="tier">
+      <div class="tier-head">
+        <span class="tier-rank">${idx + 1}</span><h3>${t.label}</h3>
+        <span class="who">${t.who}</span><span class="who">· ${inTier.length} carded</span>
+      </div>
+      <p class="tier-why">${t.why}</p>
+      <div class="targets">${cards}</div>
+    </section>`;
+  }).join("");
+}
+
 function renderBoard(){
   const tasks = ITEMS.filter(i => i.type === "task");
   const cols = STATUS_ORDER.filter(s => tasks.some(t => t.status === s));
@@ -379,7 +453,7 @@ function renderBoard(){
 
 /* ---------- wiring ---------- */
 function showTab(name){
-  for (const n of ["streams", "browse", "board"]) {
+  for (const n of ["streams", "browse", "targets", "board"]) {
     document.getElementById("tab-" + n).setAttribute("aria-selected", String(n === name));
     document.getElementById("view-" + n).hidden = n !== name;
   }
@@ -416,6 +490,6 @@ document.body.addEventListener("click", e => {
 });
 
 document.getElementById("built").textContent = "built " + DATA.built;
-renderStreams(); renderFacets(); renderRows(); renderBoard();
+renderStreams(); renderFacets(); renderRows(); renderTiers(); renderBoard();
 select(ITEMS.find(i => i.id === "note-ai-validation-gap")?.id || ITEMS[0].id);
 </script>

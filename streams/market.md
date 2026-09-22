@@ -6,7 +6,8 @@ status: researching
 priority: 1
 confidence: med
 tags: [market, competitive-landscape]
-rel: [stream-positioning, note-jp-regulatory-driver, note-competitive-landscape]
+rel: [stream-positioning, note-jp-regulatory-driver, note-competitive-landscape, note-sme-wedge,
+      org-jp-alt-lenders, org-jp-ai-credit-vendors, org-shogaku-tanki-hoken, org-garage-bank]
 updated: 2026-09-22
 ---
 
@@ -30,16 +31,29 @@ Three layers, researched separately:
    MRM teams and buy *capacity and independence*; regional banks and insurers lack teams
    entirely and buy *the whole function*; funds and crypto venues buy *credibility*.
 
-## Current state
+## Current state (updated 2026-09-22)
 
-First sweep done. The regulatory picture is solid and sourced. The commercial picture —
-who actually wins these mandates in Japan, typical fee levels, whether foreign-principal
-boutiques get past procurement — is still unknown and is the highest-value gap.
+**Re-aimed down-market.** The first sweep targeted banks because that is where the
+regulation is, which pointed the plan at the hardest buyers in the market. The corrected
+view is in `note-sme-wedge`: work the tiers from the bottom, because at the startup and SME
+tier the purchase is forced not by the supervisor but by **warehouse lenders, securitisation
+investors, bank partners and VCs in diligence** — buyers who decide in weeks and whose
+motivation is cost of capital rather than compliance.
+
+Three segments now lead: Japanese alternative lenders (39 firms, 24 funded), AI credit-model
+vendors selling into regulated institutions (whose clients' third-party model risk flows back
+to them), and 少額短期保険業者 — licensed, supervised, and with 41% under ten employees, the
+one small segment where the regulator *is* the driver.
+
+The regulatory picture remains solid and sourced. The commercial picture — fee levels,
+procurement route, whether a foreign principal can be validator of record — is still the
+highest-value gap, and `task-garage-bank-conversation` is the fastest cheap test of it.
 
 ## Open questions
 
-- What is a typical Japanese model-validation engagement worth, and is it procured as
-  consulting, audit, or an outsourced function?
-- Do Japanese banks accept a non-Japanese principal as "independent validator" of record,
+- What is a typical engagement worth at each tier, and is it procured as consulting, audit,
+  or an outsourced function?
+- Do Japanese buyers accept a non-Japanese principal as "independent validator" of record,
   or does independence have to be a domestic legal entity?
-- Which regional banks have been told by JFSA to fix MRM and have no team to do it?
+- **Has any funding counterparty actually asked a Japanese fintech lender for an independent
+  model opinion?** If not, demand at the startup tier is latent rather than real.

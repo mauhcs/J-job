@@ -21,6 +21,8 @@ One entity per file. YAML front-matter, then free Markdown prose for the body.
 | `role` | no | org: `regulator` `seller` `buyer` `channel` · person: `advisor` `contact` `archetype` · venue: `conference` `journal` `seminar` `media` |
 | `country` | no | `JP` `HK` `SG` `KR` `TW` `CN` `APAC` `GLOBAL` |
 | `industry` | no | list: `banking` `securities` `insurance` `asset-mgmt` `crypto` `regulator` `academia` `consulting` |
+| `size` | buyers | `startup` `sme` `mid` `large` `mega` — the target tier; drives the Targets view |
+| `pitch` | buyers | one line: why *this* tier buys. Shown on the target card |
 | `status` | yes | `idea` `researching` `confirmed` `contacted` `active` `parked` `done` |
 | `priority` | no | `1` high · `2` medium · `3` low |
 | `confidence` | no | `low` `med` `high` — how much we trust what the body claims |
@@ -39,3 +41,6 @@ One entity per file. YAML front-matter, then free Markdown prose for the body.
   (company page, paper, conference programme). Until then use an `archetype` card that
   describes the profile to look for.
 - `rel` edges are undirected in the dashboard — declaring it on one side is enough.
+- **Every `role: buyer` card needs `size` and `pitch`.** Without `size` it does not appear in
+  the Targets view; the tiers run `startup` → `sme` → `mid` → `large` → `mega` and we work
+  upward, each tier's reference case unlocking the next.

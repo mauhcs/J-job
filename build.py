@@ -23,6 +23,7 @@ REPO_BLOB = "https://github.com/mauhcs/J-job/blob/main/"
 TYPES = {"org", "person", "venue", "artifact", "note", "task", "stream"}
 STATUSES = {"idea", "researching", "confirmed", "contacted", "active", "parked", "done"}
 REQUIRED = ("id", "type", "name", "status", "updated")
+SIZES = {"startup", "sme", "mid", "large", "mega"}
 
 FM = re.compile(r"\A---\n(.*?)\n---\n?(.*)\Z", re.S)
 
@@ -53,6 +54,10 @@ def collect():
                 problems.append(f"{rel}: unknown type {meta.get('type')!r}")
             if meta.get("status") not in STATUSES:
                 problems.append(f"{rel}: unknown status {meta.get('status')!r}")
+            if meta.get("size") and meta["size"] not in SIZES:
+                problems.append(f"{rel}: unknown size {meta.get('size')!r}")
+            if meta.get("role") == "buyer" and not meta.get("size"):
+                problems.append(f"{rel}: buyer without a size tier — absent from Targets view")
             meta["updated"] = str(meta.get("updated", ""))
             if meta.get("due"):
                 meta["due"] = str(meta["due"])

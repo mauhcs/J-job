@@ -6,9 +6,11 @@ name_ja: 地方銀行
 role: buyer
 country: JP
 industry: [banking]
+size: mid
 status: researching
 priority: 1
 confidence: med
+pitch: AI pushed into core customer-facing operations over the past year, with no validation capability behind it.
 tags: [buyer, segment, ai, beachhead]
 rel: [stream-market, org-jfsa, org-boj, note-ai-validation-gap]
 links:

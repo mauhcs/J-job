@@ -7,7 +7,8 @@ priority: 1
 confidence: med
 tags: [advisor, network, japan, komon]
 rel: [stream-market, person-archetype-ex-regulator, person-archetype-ex-cro, person-archetype-academic-bridge,
-      person-academic-advisor-au, org-komon-bank, org-komon-meikan, org-visasq, note-komon-market-mechanics]
+      person-academic-advisor-au, org-komon-bank, org-komon-meikan, org-visasq, note-komon-market-mechanics,
+      person-archetype-fintech-operator, note-sme-wedge, org-fintech-kyokai]
 updated: 2026-09-22
 ---
 
@@ -52,6 +53,19 @@ Two things temper it. These pools are **generalist** — none advertises financi
 ex-executives as a speciality, though 顧問名鑑's registrant base is described as including
 megabank and securities alumni. And a 業務委託 contract needs a contracting entity on our
 side, which the vehicle question has not yet settled.
+
+## The target profile moved with the market (2026-09-22)
+
+Re-aiming at the startup and SME tiers (`note-sme-wedge`) changes who the 顧問 should be.
+A retired megabank CRO opens megabank doors — the market we have just concluded is the
+hardest and last to enter — and has no particular reach into a 30-person lender.
+
+**Match the 顧問 to the buyer tier, not to the prestige ladder.** The lead profile is now
+`person-archetype-fintech-operator`: someone who has run a licensed lending, payments or
+insurance business in Japan, sits on Fintech協会 committees or judges at FINOPITCH, is 40s–50s
+rather than 60s–70s, and is far likelier to accept equity or a success fee than a ¥300k
+retainer. The senior archetypes stay on file for the large and mega tiers as a year-two
+relationship, approached once there is a reference case.
 
 ## Sequencing now
 

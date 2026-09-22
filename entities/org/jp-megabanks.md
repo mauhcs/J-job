@@ -6,9 +6,11 @@ name_ja: メガバンク
 role: buyer
 country: JP
 industry: [banking, securities]
+size: mega
 status: researching
 priority: 2
 confidence: low
+pitch: Independence and specialist depth at the margin — not capability, which they already have.
 tags: [buyer, segment, mrm]
 rel: [stream-market, org-jfsa, org-jp-regional-banks]
 updated: 2026-09-22

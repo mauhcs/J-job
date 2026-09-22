@@ -5,9 +5,11 @@ name: Hong Kong authorized institutions (segment)
 role: buyer
 country: HK
 industry: [banking]
+size: large
 status: researching
 priority: 1
 confidence: med
+pitch: CA-G-4 explicitly permits external validators — the regulator has already written the permission slip.
 tags: [buyer, segment, beachhead]
 rel: [stream-market, org-hkma, note-hk-regulatory-driver]
 updated: 2026-09-22
