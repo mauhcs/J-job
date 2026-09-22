@@ -5,11 +5,11 @@ name: Archetype — chaired academic with industry standing
 role: archetype
 country: JP
 industry: [academia, banking]
-status: idea
-priority: 2
+status: done
+priority: 3
 confidence: low
 tags: [advisor, archetype, academia, publishing]
-rel: [stream-advisor, stream-publishing, venue-jafee, venue-boj-imes]
+rel: [stream-advisor, stream-publishing, venue-jafee, venue-boj-imes, person-academic-advisor-au]
 updated: 2026-09-22
 ---
 
@@ -27,9 +27,20 @@ supplicant.
 **What they cost.** Least expensive, least commercially decisive. An academic 顧問 does not
 by themselves get us through a megabank's procurement.
 
-**Sequencing.** This is the *first* archetype to engage, precisely because it is cheap and
-natural, and because the publication record it produces is the precondition for the other
-two archetypes saying yes. The JAFEE membership action is the concrete first step.
+**Status: filled, with a caveat (2026-09-22).** A strong academic advisor is already in
+place — see `person-academic-advisor-au` — but based in Australia. The research and
+co-authorship function of this archetype is therefore covered, and it no longer needs
+recruiting in Japan for its own sake.
+
+**What is still missing, and it is the part that mattered commercially.** An Australia-based
+academic is not in the JAFEE room, carries no weight with a Japanese bank's procurement, and
+makes no domestic introductions. Those were the reasons this archetype was sequenced first.
+With the research leg secured, the remaining need is squarely a **Japanese business contact**,
+which promotes `person-archetype-ex-cro` to the front of the queue.
+
+Keep this profile on file for one narrower purpose: a JAFEE-active Japanese academic as a
+*second* co-author or session host is still a cheap way into the domestic room, even though
+it is no longer the stream's critical path.
 
 **Where they are found.** JAFEE officer lists and conference programmes, ジャフィー・ジャーナル
 author lists on J-STAGE, IMES discussion paper authors and workshop discussants.
