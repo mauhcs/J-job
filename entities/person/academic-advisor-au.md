@@ -1,7 +1,7 @@
 ---
 id: person-academic-advisor-au
 type: person
-space: shared
+space: profile
 name: Academic advisor (Australia) — in place
 role: advisor
 country: APAC

@@ -5,6 +5,7 @@ space: mrm
 name: Find out what a validation actually takes — in days
 status: idea
 priority: 1
+decides: What a validation actually costs to deliver — the number every fee in this repo was missing.
 owner: mau
 due: 2026-11-30
 confidence: high

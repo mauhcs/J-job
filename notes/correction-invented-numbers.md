@@ -1,7 +1,7 @@
 ---
 id: note-correction-invented-numbers
 type: note
-space: shared
+space: profile
 name: Correction — the engagement fees were fabricated
 status: confirmed
 priority: 1

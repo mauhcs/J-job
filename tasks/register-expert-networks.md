@@ -1,10 +1,10 @@
 ---
 id: task-register-expert-networks
 type: task
-space: shared
+space: profile
 name: Register with the global expert networks, then measure what actually arrives
 status: idea
-priority: 1
+priority: 2
 owner: mau
 due: 2026-10-31
 confidence: med

@@ -4,7 +4,7 @@ type: task
 space: mrm
 name: Classify the Japanese ALM/risk boutiques — competitor or partner?
 status: idea
-priority: 1
+priority: 2
 owner: claude
 due: 2026-10-31
 confidence: high

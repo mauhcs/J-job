@@ -4,7 +4,7 @@ type: task
 space: mrm
 name: Size and qualify the 少額短期保険業者 segment
 status: idea
-priority: 1
+priority: 3
 owner: claude
 due: 2026-11-15
 confidence: med

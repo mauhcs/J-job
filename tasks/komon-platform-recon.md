@@ -4,7 +4,7 @@ type: task
 space: mrm
 name: Reconnoitre the 顧問 pool on 顧問バンク before paying anyone
 status: idea
-priority: 1
+priority: 3
 owner: mau
 due: 2026-10-15
 confidence: high

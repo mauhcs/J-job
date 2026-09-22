@@ -58,3 +58,9 @@ highest-value gap, and `task-garage-bank-conversation` is the fastest cheap test
   or does independence have to be a domestic legal entity?
 - **Has any funding counterparty actually asked a Japanese fintech lender for an independent
   model opinion?** If not, demand at the startup tier is latent rather than real.
+
+## Parked 2026-09-22
+
+Focus moved to the `data` space. This stream is kept intact, not deleted — the regulatory
+research and the named target lists stay valid, and the sales-constraint findings carried over.
+Nothing here is live work.

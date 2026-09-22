@@ -1,7 +1,7 @@
 ---
 id: org-visasq
 type: org
-space: shared
+space: profile
 name: VisasQ (ビザスク)
 name_ja: ビザスク
 role: channel

@@ -5,6 +5,7 @@ space: mrm
 name: Talk to Garage Bank — test the SME thesis on a warm contact
 status: idea
 priority: 1
+decides: Whether demand at the SME tier is real or only inferred. If no funding counterparty has ever asked, the wedge is dead.
 owner: mau
 due: 2026-10-10
 confidence: high

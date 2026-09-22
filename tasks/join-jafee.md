@@ -4,7 +4,7 @@ type: task
 space: mrm
 name: Join JAFEE as an individual member
 status: idea
-priority: 1
+priority: 2
 confidence: high
 owner: mau
 due: 2026-10-15

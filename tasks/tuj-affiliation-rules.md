@@ -1,10 +1,11 @@
 ---
 id: task-tuj-affiliation-rules
 type: task
-space: shared
+space: profile
 name: Confirm TUJ rules on outside consulting and use of affiliation
 status: idea
 priority: 1
+decides: What the affiliation can actually be used for — gates the academic vehicle, paid research and outside work.
 owner: mau
 due: 2026-10-15
 confidence: high

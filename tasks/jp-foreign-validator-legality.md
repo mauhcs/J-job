@@ -4,7 +4,7 @@ type: task
 space: mrm
 name: Can a foreign principal be the independent validator of record in Japan?
 status: idea
-priority: 1
+priority: 2
 owner: mau
 due: 2026-11-15
 confidence: low

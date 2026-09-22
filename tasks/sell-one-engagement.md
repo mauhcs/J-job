@@ -4,7 +4,7 @@ type: task
 space: mrm
 name: Sell one engagement, at any tier, at a real price
 status: idea
-priority: 1
+priority: 2
 owner: mau
 due: 2027-03-31
 confidence: med

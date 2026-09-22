@@ -96,3 +96,9 @@ bench is thinnest.
 
 See `note-differentiation-thesis`. This is a hypothesis with `confidence: low` and it
 needs to be tested against real buyers before anything is built on it.
+
+## Parked 2026-09-22
+
+Focus moved to the `data` space. This stream is kept intact, not deleted — the regulatory
+research and the named target lists stay valid, and the sales-constraint findings carried over.
+Nothing here is live work.

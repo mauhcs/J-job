@@ -2,9 +2,10 @@
 id: task-altdata-vendor-interviews
 type: task
 space: data
-name: Ask three data vendors what proving their data costs them
+name: The five questions to ask a data vendor
 status: idea
-priority: 1
+priority: 2
+decides: Whether data vendors pay outsiders to prove their data works, and whether a desk discounts a vendor-paid report.
 owner: mau
 due: 2026-10-31
 confidence: high

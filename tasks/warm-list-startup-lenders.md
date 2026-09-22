@@ -4,7 +4,7 @@ type: task
 space: mrm
 name: Build the named target list for the startup and SME tiers
 status: idea
-priority: 1
+priority: 3
 owner: claude
 due: 2026-10-31
 confidence: high

@@ -8,11 +8,21 @@ and risk modelling.
 |---|---|
 | `mrm` | Independent external verification of quantitative models — Japan, HK, East Asia |
 | `data` | Signal research on alternative datasets, sold to the data owner as proof of value |
-| `shared` | Profile-level material bearing on both — affiliations, capacity, sales constraints |
+| `profile` | What is true of the principal whatever the venture — affiliations, capacity, sales constraints |
 
-**Every card needs a `space`.** The dashboard opens on a home screen and everything below it
-is scoped to the active venture; `shared` cards appear in both. Do not mix the two ventures'
-evidence — a finding about alt data vendors does not belong to the validation thesis.
+**Every card needs a `space`, and spaces do not bleed.** An item belongs to exactly one. The
+dashboard opens on a home screen; picking a space scopes every view below it. Never let one
+venture's evidence be read as support for another's.
+
+**Keep it actionable or it is noise.** Each space lands on a **Do next** list built from its
+priority-1 tasks, so:
+
+- **Priority 1 means live work, and there should be about three per space.** If a fourth is
+  added, something else drops to 2. A space with fifteen P1 tasks has no plan.
+- **Every priority-1 task needs a `decides:` line** — one sentence on what answering it
+  settles. `build.py` fails the build without it. A task that settles nothing is not a task.
+- Notes and organisations are background *for* those decisions, not actions in themselves.
+  Adding research without changing what to do next makes the plan less usable, not more.
 
 **Git is the database.** Every organisation, person, venue, task and finding is one Markdown
 file with YAML front-matter. `dashboard.html` is a generated read model, never edited by hand.

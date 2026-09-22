@@ -1,7 +1,7 @@
 ---
 id: note-unit-economics
 type: note
-space: shared
+space: profile
 name: Unit economics — what you can charge and how many days you have
 status: researching
 priority: 1

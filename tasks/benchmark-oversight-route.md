@@ -1,10 +1,10 @@
 ---
 id: task-benchmark-oversight-route
 type: task
-space: shared
+space: profile
 name: Test the benchmark oversight and IOSCO assessment route
 status: idea
-priority: 1
+priority: 2
 owner: mau
 due: 2026-11-30
 confidence: low

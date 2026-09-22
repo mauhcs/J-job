@@ -1,7 +1,7 @@
 ---
 id: note-feasible-play
 type: note
-space: shared
+space: profile
 name: The feasible play — why this does not need to be a full practice
 status: confirmed
 priority: 1

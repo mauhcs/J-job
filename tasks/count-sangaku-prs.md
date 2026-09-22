@@ -4,7 +4,7 @@ type: task
 space: mrm
 name: Count industry-university research PRs in Japanese finance — the credibility-spend proxy
 status: researching
-priority: 1
+priority: 3
 owner: claude
 due: 2026-10-31
 confidence: high

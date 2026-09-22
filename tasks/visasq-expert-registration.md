@@ -1,10 +1,10 @@
 ---
 id: task-visasq-expert-registration
 type: task
-space: shared
+space: profile
 name: Register as a VisasQ expert — get paid to do the market research
 status: idea
-priority: 1
+priority: 2
 owner: mau
 due: 2026-10-31
 confidence: med

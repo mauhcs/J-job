@@ -4,7 +4,7 @@ type: task
 space: mrm
 name: Mine JAFEE officer lists and recent conference programmes for advisor candidates
 status: idea
-priority: 1
+priority: 3
 owner: claude
 due: 2026-10-31
 confidence: med

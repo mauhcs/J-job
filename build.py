@@ -24,9 +24,10 @@ MARKER = "/*__DATA__*/null"
 REPO_BLOB = "https://github.com/mauhcs/J-job/blob/main/"
 
 TYPES = {"org", "person", "venue", "artifact", "note", "task", "stream"}
-# Two independent ventures share this repo. "shared" is profile-level material
-# (affiliations, capacity, sales constraints) that bears on both.
-SPACES = {"mrm", "data", "shared"}
+# Three fully separate spaces. They do not bleed into each other: an item belongs to
+# exactly one, so a finding about data vendors can never be read as evidence for the
+# validation thesis. "profile" holds what is true of the principal regardless of venture.
+SPACES = {"mrm", "data", "profile"}
 # General lifecycle, used by everything except buyer companies.
 STATUSES = {"idea", "researching", "confirmed", "contacted", "active", "parked", "done"}
 # Buyer companies run a sales pipeline instead. See INTAKE.md.
@@ -72,6 +73,8 @@ def collect():
                     f"({', '.join(sorted(allowed))})")
             if meta.get("status") == "retired" and not meta.get("retired_reason"):
                 problems.append(f"{rel}: retired without a retired_reason — use tools/retire.py")
+            if meta.get("type") == "task" and meta.get("priority") == 1 and not meta.get("decides"):
+                problems.append(f"{rel}: priority-1 task without 'decides' — say what it settles")
             if pipeline and meta.get("status") not in ("researching", "retired"):
                 for field in ("pitch", "priority"):
                     if not meta.get(field):

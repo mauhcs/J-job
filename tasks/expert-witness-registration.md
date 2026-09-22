@@ -1,10 +1,11 @@
 ---
 id: task-expert-witness-registration
 type: task
-space: shared
+space: profile
 name: Approach the expert-witness firms
 status: idea
 priority: 1
+decides: Whether the highest-rate, zero-selling route is open to a Japan-based expert.
 owner: mau
 due: 2026-11-15
 confidence: med

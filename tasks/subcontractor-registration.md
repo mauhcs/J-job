@@ -5,6 +5,7 @@ space: mrm
 name: Register as a specialist subcontractor with firms that already have mandates
 status: idea
 priority: 1
+decides: Whether anyone will pay for this work at all, without you having to sell it.
 owner: mau
 due: 2026-10-31
 confidence: med

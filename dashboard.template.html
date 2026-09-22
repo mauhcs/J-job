@@ -82,6 +82,22 @@
   .spacebadge{font-family:var(--mono);font-size:10px;text-transform:uppercase;letter-spacing:.07em;
     padding:2px 7px;border-radius:3px;background:var(--accent-soft);color:var(--accent-ink)}
 
+  /* ---- do next ---- */
+  .nextlist{list-style:none;counter-reset:step;margin:0;padding:0;display:grid;gap:12px;max-width:820px}
+  .nextlist li{counter-increment:step;background:var(--surface);border:1px solid var(--line);
+    border-left:3px solid var(--accent);border-radius:var(--radius);padding:15px 18px 14px;
+    display:grid;gap:7px;position:relative}
+  .nextlist li.later{border-left-color:var(--line-2);opacity:.82}
+  .nextlist .step{font-family:var(--mono);font-size:10.5px;color:var(--ink-3);
+    text-transform:uppercase;letter-spacing:.08em}
+  .nextlist .step::before{content:counter(step) " \00b7 "}
+  .nextact{appearance:none;background:none;border:0;padding:0;text-align:left;cursor:pointer;
+    font-family:var(--ui);font-size:15.5px;font-weight:700;line-height:1.3;color:var(--ink)}
+  .nextact:hover{color:var(--accent-ink);text-decoration:underline}
+  .nextdec{font-family:var(--prose);font-size:14px;line-height:1.55;color:var(--ink-2);margin:0}
+  .nextdec b{color:var(--ink);font-weight:600}
+  .nextmeta{display:flex;gap:6px;flex-wrap:wrap}
+
   /* ---- streams ---- */
   .stream-grid{display:grid;gap:14px;grid-template-columns:repeat(auto-fit,minmax(290px,1fr));max-width:1400px}
   .stream{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);
@@ -272,6 +288,7 @@
 
 <nav class="tabs" role="tablist" id="tabs">
   <button class="tab" role="tab" id="tab-home" aria-selected="true" aria-controls="view-home">Home</button>
+  <button class="tab" role="tab" id="tab-next" aria-selected="false" aria-controls="view-next">Do next</button>
   <button class="tab" role="tab" id="tab-streams" aria-selected="false" aria-controls="view-streams">Streams</button>
   <button class="tab" role="tab" id="tab-browse" aria-selected="false" aria-controls="view-browse">Browse</button>
   <button class="tab" role="tab" id="tab-targets" aria-selected="false" aria-controls="view-targets">Targets</button>
@@ -284,6 +301,12 @@
   <p class="home-foot">Everything below the surface is one Markdown file per fact, validated by
   <code>build.py</code>. Shared material — affiliations, capacity, sales constraints — belongs to
   both ventures and appears in either.</p>
+</section>
+
+<section class="view" id="view-next" role="tabpanel" aria-labelledby="tab-next" hidden>
+  <p class="ladder-intro" id="nextIntro"></p>
+  <ol class="nextlist" id="nextList"></ol>
+  <p class="home-foot" id="nextRest"></p>
 </section>
 
 <section class="view" id="view-streams" role="tabpanel" aria-labelledby="tab-streams" hidden>
@@ -349,7 +372,7 @@
 const DATA = /*__DATA__*/null;
 let space = "mrm";
 const ALL_ITEMS = DATA.items;
-const inSpace = i => i.space === space || i.space === "shared";
+const inSpace = i => i.space === space;
 let ITEMS = ALL_ITEMS.filter(inSpace);
 const BY_ID = Object.fromEntries(ALL_ITEMS.map(i => [i.id, i]));
 const TYPE_LABEL = {org:"Org", person:"Person", venue:"Venue", artifact:"Artifact", note:"Note", task:"Task", stream:"Stream"};
@@ -364,6 +387,16 @@ const SPACES = {
       "<strong>Regulation is the demand engine</strong>, and HKMA CA-G-4 explicitly permits external validators.",
       "<strong>Sales is the binding constraint</strong> \u2014 so start where no selling is required.",
       "<strong>Sell research first, then model building, then validation.</strong> The plan started at the hardest one.",
+    ],
+  },
+  profile: {
+    label: "Profile & constraints",
+    eyebrow: "Applies to both",
+    lede: "What is true of the principal whatever the venture \u2014 affiliations, capacity, and the routes that need no selling.",
+    points: [
+      "<strong>Two days a week, ~70\u201380 billable days a year.</strong> A solo operator cannot bill full time and also run business development.",
+      "<strong>Positioning is worth ~10x the rate</strong> \u2014 \u00a3215/day as a contractor against $300\u2013500/hour as a named expert.",
+      "<strong>Four routes where the counterparty initiates:</strong> expert witness, benchmark oversight, an outside-director seat, teaching through \u304d\u3093\u3056\u3044.",
     ],
   },
   data: {
@@ -409,7 +442,8 @@ const CONF_CLASS = {high:"good", med:"warn", low:"alert"};
 function badges(it){
   const b = [];
   b.push(`<span class="badge accent">${TYPE_LABEL[it.type] || it.type}</span>`);
-  if (it.space === "shared") b.push(`<span class="badge">shared</span>`);
+  if (it.space !== space) b.push(`<span class="badge warn">${esc(it.space)} space</span>`);
+  if (it.decides) b.push(`<span class="badge good">decides something</span>`);
   if (it.role) b.push(`<span class="badge">${esc(it.role)}</span>`);
   b.push(`<span class="badge">${esc(it.status)}</span>`);
   if (it.priority) b.push(`<span class="badge${it.priority === 1 ? " alert" : ""}">P${it.priority}</span>`);
@@ -640,6 +674,26 @@ function renderPool(){
     `<tbody>${body || `<tr><td colspan="4" class="tier-empty">Nothing matches.</td></tr>`}</tbody>`;
 }
 
+function renderNext(){
+  const tasks = ITEMS.filter(i => i.type === "task" && i.status !== "done" && i.status !== "parked");
+  const live = tasks.filter(t => t.priority === 1)
+    .sort((a, b) => String(a.name).localeCompare(String(b.name)));
+  const later = tasks.filter(t => t.priority === 2)
+    .sort((a, b) => String(a.due).localeCompare(String(b.due)));
+  document.getElementById("nextIntro").textContent = live.length
+    ? "Everything else in this space is background. These are the live threads, in order \u2014 each one states what it settles."
+    : "No live threads in this space. It is parked; the research stays valid but nothing here is active work.";
+  document.getElementById("nextList").innerHTML = live.concat(later).map(t => `
+    <li class="${t.priority === 1 ? "" : "later"}">
+      <span class="step">${t.priority === 1 ? "now" : "after"} \u00b7 ${esc(t.owner || "\u2014")}${t.due ? " \u00b7 by " + esc(t.due) : ""}</span>
+      <button class="nextact" type="button" data-goto="${esc(t.id)}">${esc(t.name)}</button>
+      ${t.decides ? `<p class="nextdec"><b>Settles:</b> ${esc(t.decides)}</p>` : ""}
+    </li>`).join("") || `<li class="later"><span class="step">nothing live</span></li>`;
+  const rest = ITEMS.length - live.length - later.length;
+  document.getElementById("nextRest").textContent =
+    `${rest} other items in this space \u2014 notes, organisations and parked tasks \u2014 are background for these decisions, not actions in themselves. Browse them only when one of the above needs them.`;
+}
+
 function renderBoard(){
   const tasks = ITEMS.filter(i => i.type === "task");
   const cols = STATUS_ORDER.filter(s => tasks.some(t => t.status === s));
@@ -685,13 +739,13 @@ function setSpace(key){
   document.getElementById("spaceBlurb").innerHTML =
     `<span class="spacebadge">${esc(SPACES[key].label)}</span> ${esc(SPACES[key].lede)}`;
   renderStreams(); renderFacets(); renderRows(); renderTiers(); renderBoard();
-  renderSources(); renderPool();
+  renderSources(); renderPool(); renderNext();
   const first = ITEMS.find(i => i.type === "stream") || ITEMS[0];
   if (first) select(first.id);
 }
 
 function showTab(name){
-  for (const n of ["home", "streams", "browse", "targets", "pool", "board"]) {
+  for (const n of ["home", "next", "streams", "browse", "targets", "pool", "board"]) {
     document.getElementById("tab-" + n).setAttribute("aria-selected", String(n === name));
     document.getElementById("view-" + n).hidden = n !== name;
   }
@@ -721,11 +775,11 @@ document.getElementById("clear").addEventListener("click", () => {
 });
 document.body.addEventListener("click", e => {
   const sp = e.target.closest("[data-space]");
-  if (sp) { setSpace(sp.dataset.space); showTab("streams"); return; }
+  if (sp) { setSpace(sp.dataset.space); showTab("next"); return; }
   const g = e.target.closest("[data-goto]");
   if (!g) return;
   const target = BY_ID[g.dataset.goto];
-  if (target && target.space !== "shared" && target.space !== space) setSpace(target.space);
+  if (target && target.space !== space) setSpace(target.space);
   showTab("browse");
   select(g.dataset.goto);
   document.querySelector(`#rows [data-id="${g.dataset.goto}"]`)?.scrollIntoView({block:"nearest"});

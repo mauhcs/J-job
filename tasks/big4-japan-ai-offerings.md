@@ -4,7 +4,7 @@ type: task
 space: mrm
 name: Check whether Big 4 Japan have launched AI model validation offerings
 status: idea
-priority: 1
+priority: 3
 owner: claude
 due: 2026-10-10
 confidence: high

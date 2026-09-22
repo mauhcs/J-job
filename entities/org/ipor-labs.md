@@ -1,7 +1,7 @@
 ---
 id: org-ipor-labs
 type: org
-space: shared
+space: profile
 name: IPOR Labs
 role: channel
 country: GLOBAL
