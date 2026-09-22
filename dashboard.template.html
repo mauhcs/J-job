@@ -544,6 +544,7 @@ function renderSources(){
     return `<div class="src${harvested ? "" : " unharvested"}">
       <span class="kind ${esc(src.kind)}">${esc(src.kind)}</span>
       <h4>${esc(src.name)}</h4>
+      ${src.purpose === "evidence" ? `<span class="meta">evidence source \u2014 not prospects</span>` : ""}
       <span class="meta">${harvested
         ? `${src.harvested_rows} rows · harvested ${esc(src.harvested)}`
         : "not yet harvested"} · ${esc(src.jurisdiction || "")}</span>

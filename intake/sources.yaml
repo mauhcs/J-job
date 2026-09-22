@@ -94,3 +94,20 @@ sources:
     note: >
       Used only via search summaries so far — the listing page itself has not been opened.
       Coverage and freshness unverified. Treat names from here as leads to confirm, not facts.
+
+  - id: sangaku-finance-prs
+    name: 産学連携 press releases in Japanese finance (purposive sample)
+    url: https://prtimes.jp/topics/keywords/%E5%85%B1%E5%90%8C%E7%A0%94%E7%A9%B6
+    kind: editorial
+    purpose: evidence
+    jurisdiction: JP
+    authority: PR TIMES / company newsrooms
+    yields: observations of finance companies commissioning academic research
+    cadence: annual
+    harvested: 2026-09-22
+    rows_captured: 16
+    note: >
+      NOT A COUNT. A purposive sample found by targeted search, establishing existence and
+      pattern only. PR TIMES keyword totals are loose full-text matches and are unusable as a
+      measure - 共同研究 銀行 reports 3,178 results of which the top 40 were mostly unrelated.
+      Rows here are evidence for note-sangaku-field-evidence, not target companies.

@@ -115,6 +115,8 @@ def pool():
     registry = yaml.safe_load((INTAKE / "sources.yaml").read_text(encoding="utf-8"))["sources"]
     rows, sources = [], []
     for source in registry:
+        # Some sources are evidence for a research question, not lists of prospects.
+        # They keep a source card but their rows never enter the prospect pool.
         tsv = INTAKE / f"{source['id']}.tsv"
         sources.append({k: str(v) for k, v in source.items() if k != "note"}
                        | {"note": source.get("note", ""), "harvested_rows": 0})
@@ -122,6 +124,8 @@ def pool():
             continue
         parsed = list(csv.DictReader(tsv.read_text(encoding="utf-8").splitlines(), delimiter="\t"))
         sources[-1]["harvested_rows"] = len(parsed)
+        if source.get("purpose") == "evidence":
+            continue
         for r in parsed:
             rows.append({k: (v or "").strip() for k, v in r.items()} | {"source": source["id"]})
     return sources, rows

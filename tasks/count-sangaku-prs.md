@@ -2,13 +2,13 @@
 id: task-count-sangaku-prs
 type: task
 name: Count industry-university research PRs in Japanese finance — the credibility-spend proxy
-status: idea
+status: researching
 priority: 1
 owner: claude
 due: 2026-10-31
 confidence: high
 tags: [research, measurement, falsification, sangaku]
-rel: [note-research-as-product, stream-market, stream-publishing, org-fintech-kyokai, org-jp-ai-credit-vendors]
+rel: [note-research-as-product, note-sangaku-field-evidence, stream-market, stream-publishing, org-fintech-kyokai, org-jp-ai-credit-vendors]
 updated: 2026-09-22
 ---
 
@@ -18,6 +18,27 @@ MEXT's statistics prove Japanese companies fund university research at ¥97.7bn 
 tens of thousands of contracts — but most 産学連携 by volume is engineering and medical.
 Whether *financial institutions and fintechs* commission academic research at any meaningful
 rate is unestablished, and it is the difference between a market and a wish.
+
+## First pass done 2026-09-22 — pattern found, base rate not
+
+Results in `note-sangaku-field-evidence`; 16 observations in
+`intake/sangaku-finance-prs.tsv`. Two method findings that constrain the rest of this task:
+
+- **PR TIMES keyword totals are noise.** 共同研究 銀行 reports 3,178件 and 産学連携 金融
+  reports 1,699件, but the top 40 of each was overwhelmingly unrelated. Do not quote them.
+- **MEXT has no field breakdown at all** — the FY2023 summary contains zero occurrences of
+  分野 or any discipline name. An official comparison does not exist; the sample is the only
+  source of a field split.
+
+## What a real count still needs
+
+- Systematic retrieval rather than targeted search: PR TIMES topic/keyword pages
+  (`prtimes.jp/topics/keywords/共同研究`, `/寄付講座`) paged through and filtered by
+  industry, or company newsroom sweeps for a defined list of firms.
+- A defined denominator — e.g. every Fintech協会 member and every 少額短期保険協会 member,
+  checked for any research PR. That converts "how many exist" into "what share of reachable
+  firms do this", which is the decision-relevant number.
+- The counts by year, to show whether it is growing.
 
 ## Method
 
