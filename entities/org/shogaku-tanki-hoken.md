@@ -12,7 +12,8 @@ priority: 1
 confidence: high
 pitch: Regulated, model-dependent, and structurally too small to staff the function the FSA expects them to have.
 tags: [target, segment, insurance, insurtech, capability-gap]
-rel: [stream-market, note-sme-wedge, org-jfsa, task-shotan-segment-research]
+rel: [stream-market, note-sme-wedge, org-jfsa, task-shotan-segment-research, org-sony-sasti,
+      org-micin-ssi, org-kenko-nenrei, org-mysurance, org-dai-ichi-smart, org-justincase-tech]
 links:
   - label: 少額短期保険業者向けの監督指針 (FSA)
     url: https://www.fsa.go.jp/common/law/guide/syougaku/index.html
@@ -39,11 +40,23 @@ in front of the regulator. That is about as clear a demand signal as a segment c
 is real rather than commercial; they are numerous; and pricing and insurance-risk models
 are squarely inside the quantitative skill set rather than adjacent to it.
 
+## Sized, 2026-09-22
+
+The association's published membership list answers the first open question: **123 正会員
+(regular members)**, 1 準会員 and 30 賛助会員 — **154 organisations**, each with a public
+website. That is a named, addressable, licensed target list of 123 firms, most of them under
+twenty people.
+
+**The filter that matters.** Many members are captives — Tokio Marine, SBI, Aflac, Chubb,
+Rakuten, au, 東急, 積水ハウス and similar group subsidiaries. For those, the FSA's own suggested
+remedy (lean on the parent group's resources) is actually available, which weakens the pitch.
+**Target the independents and the insurtechs**, where no group bench exists: `org-sony-sasti`,
+`org-micin-ssi`, `org-kenko-nenrei`, `org-mysurance`, `org-dai-ichi-smart`.
+
 ## Open questions
 
-- How many 少額短期保険業者 are there, and what does the 監督指針 say specifically about
-  model and actuarial validation?
-- Do they procure individually, or through the association?
+- What does the 監督指針 say specifically about model and actuarial validation?
+- Do they procure individually, or does the association organise shared services?
 
 ## Sources
 

@@ -12,6 +12,13 @@ confidence: med
 pitch: Sells credit scoring to megabanks — their model's credibility is their product, so independent review is a sales asset not a cost.
 tags: [target, fintech, credit-model, vendor, channel]
 rel: [org-jp-alt-lenders, note-sme-wedge, org-jp-megabanks]
+size: sme
+pitch: Sells credit scoring to megabanks — an independently validated model is a sales asset, not a cost.
+links:
+  - label: Credit Engine
+    url: https://www.creditengine.jp/
+  - label: LENDY (their SMB lending platform)
+    url: https://lendy.jp/
 updated: 2026-09-22
 ---
 
@@ -26,6 +33,10 @@ an objection from every bank sale it makes.
 
 That inverts the usual pitch: validation is not a compliance cost to be minimised, it is a
 **sales asset** they can put in front of their own buyers.
+
+They also operate **LENDY**, an online lending platform for Japanese SMBs where business
+owners hold a credit line by connecting their business accounts — so they are both a model
+vendor and a lender on their own book. Two validation surfaces, one relationship.
 
 Also a potential channel — they sit between us and the megabanks, and a vendor's
 independent validator gets introduced to the vendor's clients as a matter of course.

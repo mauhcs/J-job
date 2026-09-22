@@ -6,7 +6,8 @@ status: researching
 priority: 1
 confidence: med
 tags: [market, competition, thesis]
-rel: [org-kpmg-japan, org-pwc-japan, org-deloitte, org-ey, org-nri, org-abeam, org-finalyse, stream-market, stream-positioning]
+rel: [org-kpmg-japan, org-pwc-japan, org-deloitte, org-ey, org-nri, org-abeam, org-finalyse, stream-market,
+      stream-positioning, org-jp-risk-boutiques]
 updated: 2026-09-22
 ---
 
@@ -33,6 +34,21 @@ market reaches for by default.
 Finalyse (independent valuation of structured products and complex OTC derivatives, as a
 fully outsourced managed service), Kevin D. Oden & Associates, HedgeStar, LSEG's model
 validation and benchmarking service. All Western. **None was found operating in Japan.**
+
+## Correction, 2026-09-22
+
+Tier 3 was wrong. Fintech協会's venture member list carries a dedicated **ALM・リスク管理**
+category containing five Japanese firms — KYCコンサルティング, コンプライアンス・データラボ,
+ステラリスクコンサルティング, rubi labs, 株式会社レンズ — plus EduCare under スコアリング. See
+`org-jp-risk-boutiques`.
+
+Whether they do *independent model validation* or ALM advisory, compliance data work and
+implementation is not yet established, and that distinction decides whether they are
+competitors or partners. The likelier reading is partner: domestic contracting, language and
+relationships on their side, deep quantitative modelling on ours.
+
+The gap below is therefore stated with less confidence than when it was written, and
+`task-classify-jp-risk-boutiques` exists to settle it.
 
 ## The gap, stated plainly
 

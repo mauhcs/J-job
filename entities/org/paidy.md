@@ -13,6 +13,8 @@ pitch: BNPL at scale — large book, thin regulatory model-risk obligation, heav
 tags: [target, fintech, bnpl, credit-model]
 rel: [org-jp-alt-lenders, note-sme-wedge]
 links:
+  - label: Paidy
+    url: https://paidy.com/
   - label: Alternative lending startups in Japan (Tracxn)
     url: https://tracxn.com/d/explore/alternative-lending-startups-in-japan/__RpbITwnFhX7vmsyCXWmV0lJsCUhicLYtNSnNuATU_uQ/companies
 updated: 2026-09-22

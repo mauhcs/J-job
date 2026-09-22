@@ -11,7 +11,8 @@ priority: 1
 confidence: med
 pitch: Building credit models with no validation function, and funded by counterparties who are starting to ask.
 tags: [target, segment, fintech, credit-model, beachhead]
-rel: [stream-market, note-sme-wedge, org-garage-bank, org-paidy, org-credit-engine, task-warm-list-startup-lenders]
+rel: [stream-market, note-sme-wedge, org-garage-bank, org-paidy, org-credit-engine, task-warm-list-startup-lenders,
+      org-yoii, org-olta, org-funds, org-crezit, org-iyell, org-crowdloan, org-impact-circle, org-fintech-kyokai]
 links:
   - label: Alternative lending startups in Japan (Tracxn)
     url: https://tracxn.com/d/explore/alternative-lending-startups-in-japan/__RpbITwnFhX7vmsyCXWmV0lJsCUhicLYtNSnNuATU_uQ/companies
@@ -31,6 +32,11 @@ personal guarantors and introductions rather than objective credit scoring. That
 these companies are building scoring models into a market with **no established local
 benchmark for what good looks like** — a gap that is normally filled by an independent
 opinion.
+
+**Named and carded so far:** `org-yoii` (revenue-based financing), `org-olta` (cloud
+factoring), `org-funds` (marketplace lending), `org-crezit` (consumer credit), `org-iyell`
+(mortgage-tech), `org-crowdloan`, `org-impact-circle`, `org-garage-bank` (leaseback), plus
+`org-paidy` and `org-credit-engine` further up the size ladder.
 
 **Who actually forces the purchase** is not the regulator at this size. See
 `note-sme-wedge`: it is the warehouse lender, the securitisation investor, the bank
