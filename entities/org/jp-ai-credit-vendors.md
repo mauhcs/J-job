@@ -4,6 +4,7 @@ type: org
 name: AI credit-scoring vendors (segment)
 name_ja: AI与信ベンダー
 role: buyer
+scope: segment
 country: JP
 industry: [banking, insurance]
 size: sme

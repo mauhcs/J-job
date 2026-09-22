@@ -4,6 +4,7 @@ type: org
 name: 少額短期保険業者 (micro-insurers, segment)
 name_ja: 少額短期保険業者
 role: buyer
+scope: segment
 country: JP
 industry: [insurance]
 size: sme

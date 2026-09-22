@@ -4,8 +4,12 @@ name: MICIN少額短期保険
 name_ja: MICIN少額短期保険株式会社
 type: org
 role: buyer
+scope: company
 country: JP
-status: idea
+status: qualified
+source: shotan-kyokai
+first_seen: 2026-09-22
+site: https://micin-insurance.jp/
 confidence: med
 size: sme
 industry: [insurance]

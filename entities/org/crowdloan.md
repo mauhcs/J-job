@@ -4,8 +4,12 @@ name: クラウドローン (Crowd Loan)
 name_ja: クラウドローン株式会社
 type: org
 role: buyer
+scope: company
 country: JP
-status: idea
+status: qualified
+source: manual
+first_seen: 2026-09-22
+site: http://corp.crowdloan.jp/
 confidence: med
 industry: [banking]
 size: startup

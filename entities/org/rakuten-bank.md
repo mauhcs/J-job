@@ -4,8 +4,12 @@ name: 楽天銀行
 name_ja: 楽天銀行株式会社
 type: org
 role: buyer
+scope: company
 country: JP
-status: idea
+status: qualified
+source: manual
+first_seen: 2026-09-22
+site: https://www.rakuten-bank.co.jp/
 confidence: med
 size: mid
 industry: [banking]

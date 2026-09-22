@@ -4,8 +4,12 @@ name: 住信SBIネット銀行 (NEOBANK)
 name_ja: 住信SBIネット銀行株式会社
 type: org
 role: buyer
+scope: company
 country: JP
-status: idea
+status: qualified
+source: manual
+first_seen: 2026-09-22
+site: https://www.netbk.co.jp/
 confidence: med
 size: mid
 industry: [banking]

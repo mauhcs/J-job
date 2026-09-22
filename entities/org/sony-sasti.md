@@ -4,8 +4,12 @@ name: ソニー少額短期保険 (formerly justInCase)
 name_ja: ソニー少額短期保険株式会社
 type: org
 role: buyer
+scope: company
 country: JP
-status: idea
+status: qualified
+source: shotan-kyokai
+first_seen: 2026-09-22
+site: https://sony-sasti.jp/
 confidence: med
 size: sme
 industry: [insurance]

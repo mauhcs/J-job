@@ -3,10 +3,14 @@ id: org-paidy
 type: org
 name: Paidy
 role: buyer
+scope: company
 country: JP
 industry: [banking]
 size: mid
-status: idea
+status: qualified
+source: tracxn-alt-lending-jp
+first_seen: 2026-09-22
+site: https://paidy.com/
 priority: 3
 confidence: med
 pitch: BNPL at scale — large book, thin regulatory model-risk obligation, heavy reliance on one scoring model.

@@ -3,6 +3,7 @@ id: org-hk-digital-banks
 name: Hong Kong Licensed Digital Banks (all eight)
 type: org
 role: buyer
+scope: segment
 country: HK
 industry: [banking]
 size: mid

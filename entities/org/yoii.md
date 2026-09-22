@@ -3,8 +3,12 @@ id: org-yoii
 name: Yoii (Yoii Fuel)
 type: org
 role: buyer
+scope: company
 country: JP
-status: idea
+status: qualified
+source: manual
+first_seen: 2026-09-22
+site: https://yoii.jp/
 confidence: med
 industry: [banking]
 size: startup

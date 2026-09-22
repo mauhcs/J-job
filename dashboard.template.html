@@ -146,6 +146,19 @@
     padding-top:12px;border-top:1px solid var(--line)}
 
   /* ---- targets ---- */
+  .pipe{display:flex;flex-wrap:wrap;gap:1px;margin:0 0 14px;border:1px solid var(--line);
+    border-radius:var(--radius);overflow:hidden;background:var(--line);max-width:1500px}
+  .pipe-step{background:var(--surface);padding:9px 14px;display:grid;gap:1px;flex:1 1 110px}
+  .pipe-step .n{font-family:var(--mono);font-size:18px;font-variant-numeric:tabular-nums;line-height:1.1}
+  .pipe-step .l{font-family:var(--mono);font-size:10px;text-transform:uppercase;letter-spacing:.07em;color:var(--ink-3)}
+  .pipe-step.on .n{color:var(--accent-ink)}
+  .pipe-step.off .n{color:var(--ink-3)}
+  .tiers-controls{display:flex;gap:16px;flex-wrap:wrap;margin:0 0 22px}
+  .toggle{display:flex;align-items:center;gap:6px;font-family:var(--mono);font-size:11px;color:var(--ink-2);cursor:pointer}
+  .target.is-retired{opacity:.55}
+  .target.is-retired .tname{text-decoration:line-through}
+  .target.is-candidate{border-top-color:var(--line);border-style:dashed}
+  .treason{font-family:var(--prose);font-size:12px;color:var(--ink-3);font-style:italic;line-height:1.45}
   .ladder-intro{font-family:var(--prose);font-size:15px;line-height:1.6;color:var(--ink-2);
     max-width:68ch;margin:0 0 26px}
   .tier{margin-bottom:26px;max-width:1500px}
@@ -244,6 +257,11 @@
   <p class="ladder-intro">Work upward. At the bottom the purchase is forced by warehouse lenders,
   securitisation investors and VCs in diligence — decisions made in weeks. At the top it is forced by the
   supervisor — decisions made in quarters. Each tier's reference case is what makes the next one possible.</p>
+  <div class="pipe" id="pipe"></div>
+  <div class="tiers-controls">
+    <label class="toggle"><input type="checkbox" id="showRetired"> show retired</label>
+    <label class="toggle"><input type="checkbox" id="showCandidates"> show unreviewed candidates</label>
+  </div>
   <div id="tiers"></div>
 </section>
 
@@ -297,6 +315,7 @@ function badges(it){
   if (it.country) b.push(`<span class="badge">${esc(it.country)}</span>`);
   if (it.owner) b.push(`<span class="badge">owner: ${esc(it.owner)}</span>`);
   if (it.due) b.push(`<span class="badge">due ${esc(it.due)}</span>`);
+  if (it.retired_on) b.push(`<span class="badge alert">retired ${esc(it.retired_on)}</span>`);
   return b.join("");
 }
 
@@ -321,7 +340,11 @@ function select(id){
     <div class="prose">${md(it.body || "_No body yet._")}</div>
     ${links ? `<h3 class="subhead">Links</h3><ul class="linklist">${links}</ul>` : ""}
     ${rels ? `<h3 class="subhead">Connected</h3><div class="rels">${rels}</div>` : ""}
-    <p class="srcpath">source · ${repo}</p>`;
+    <p class="srcpath">
+      file · ${repo}${it.source ? `<br>harvested from · ${esc(it.source)}` : ""}${
+        it.first_seen ? ` · first seen ${esc(it.first_seen)}` : ""}${
+        it.site ? `<br>company · <a href="${esc(it.site)}" target="_blank" rel="noopener">${esc(it.site)}</a>` : ""}
+    </p>`;
   d.scrollTop = 0;
   document.querySelectorAll("#rows .row").forEach(r =>
     r.setAttribute("aria-current", String(r.dataset.id === id)));
@@ -333,6 +356,7 @@ const FACETS = [
   {key:"status", label:"Status"},
   {key:"country", label:"Geography"},
   {key:"size", label:"Target tier"},
+  {key:"source", label:"Harvested from"},
   {key:"priority", label:"Priority", fmt:v => "P" + v},
   {key:"confidence", label:"Confidence"},
   {key:"tags", label:"Tag", multi:true},
@@ -417,35 +441,57 @@ const TIERS = [
    why:"They built MRM teams after the 2021 Principles, so they do not need capability — only <b>independence and specialist depth at the margin</b>. Longest cycle, 顧問 non-optional. Year two, warmed by the publishing stream."},
 ];
 
+const PIPE_STEPS = ["candidate", "qualified", "contacted", "engaged", "client", "retired"];
+
+function renderPipe(companies){
+  const counts = Object.fromEntries(PIPE_STEPS.map(k => [k, 0]));
+  for (const c of companies) counts[c.status] = (counts[c.status] || 0) + 1;
+  document.getElementById("pipe").innerHTML = PIPE_STEPS.map(k =>
+    `<div class="pipe-step ${counts[k] ? "on" : "off"}"><span class="n">${counts[k] || 0}</span><span class="l">${k}</span></div>`
+  ).join("");
+}
+
 function renderTiers(){
-  const buyers = ITEMS.filter(i => i.role === "buyer");
+  const buyers = ITEMS.filter(i => i.role === "buyer" && i.scope !== "segment");
+  renderPipe(buyers);
+  const showRetired = document.getElementById("showRetired").checked;
+  const showCandidates = document.getElementById("showCandidates").checked;
   document.getElementById("tiers").innerHTML = TIERS.map((t, idx) => {
     const inTier = buyers.filter(b => b.size === t.key)
-      .sort((a, b) => (a.priority || 9) - (b.priority || 9) || a.name.localeCompare(b.name));
+      .filter(b => b.status !== "retired" || showRetired)
+      .filter(b => b.status !== "candidate" || showCandidates)
+      .sort((a, b) => PIPE_STEPS.indexOf(a.status) - PIPE_STEPS.indexOf(b.status)
+                   || (a.priority || 9) - (b.priority || 9)
+                   || a.name.localeCompare(b.name));
+    const hiddenCount = buyers.filter(b => b.size === t.key).length - inTier.length;
     const cards = inTier.length ? inTier.map(b => {
-      const site = (b.links || [])[0];
-      const host = site ? site.url.replace(/^https?:\/\//, "").replace(/\/$/, "") : "";
+      const url = b.site || ((b.links || [])[0] || {}).url || "";
+      const host = url.replace(/^https?:\/\//, "").replace(/\/$/, "");
+      const state = b.status === "retired" ? " is-retired"
+                  : b.status === "candidate" ? " is-candidate" : "";
       return `
-      <div class="target p${b.priority || 3}">
+      <div class="target p${b.priority || 3}${state}">
         <button class="tname" type="button" data-goto="${esc(b.id)}">${esc(b.name)}</button>
         ${b.name_ja ? `<span class="tja">${esc(b.name_ja)}</span>` : ""}
         ${b.pitch ? `<span class="tpitch">${esc(b.pitch)}</span>` : ""}
-        ${site ? `<a class="tsite" href="${esc(site.url)}" target="_blank" rel="noopener">${esc(host)}</a>` : ""}
+        ${b.retired_reason ? `<span class="treason">${esc(b.retired_reason)}</span>` : ""}
+        ${url ? `<a class="tsite" href="${esc(url)}" target="_blank" rel="noopener">${esc(host)}</a>` : ""}
         <span class="tfoot">
-          <span class="badge${b.priority === 1 ? " alert" : ""}">P${b.priority || "–"}</span>
+          <span class="badge${b.status === "retired" ? "" : b.priority === 1 ? " alert" : ""}">${
+            b.status === "candidate" ? "unreviewed" : b.status === "retired" ? "retired" : "P" + (b.priority || "–")}</span>
           ${b.country ? `<span class="badge">${esc(b.country)}</span>` : ""}
           <span class="badge">${esc(b.status)}</span>
-          ${(b.links || []).length > 1 ? `<span class="badge">${b.links.length} links</span>` : ""}
         </span>
       </div>`;
     }).join("") : `<p class="tier-empty">No targets carded in this tier yet.</p>`;
     return `<section class="tier">
       <div class="tier-head">
         <span class="tier-rank">${idx + 1}</span><h3>${t.label}</h3>
-        <span class="who">${t.who}</span><span class="who">· ${inTier.length} carded</span>
+        <span class="who">${t.who}</span><span class="who">· ${inTier.length} shown</span>
       </div>
       <p class="tier-why">${t.why}</p>
       <div class="targets">${cards}</div>
+      ${hiddenCount > 0 ? `<p class="tier-empty">${hiddenCount} hidden in this tier (unreviewed candidates or retired).</p>` : ""}
     </section>`;
   }).join("");
 }
@@ -502,6 +548,8 @@ document.body.addEventListener("click", e => {
   document.querySelector(`#rows [data-id="${g.dataset.goto}"]`)?.scrollIntoView({block:"nearest"});
 });
 
+for (const id of ["showRetired", "showCandidates"])
+  document.getElementById(id).addEventListener("change", renderTiers);
 document.getElementById("built").textContent = "built " + DATA.built;
 renderStreams(); renderFacets(); renderRows(); renderTiers(); renderBoard();
 select(ITEMS.find(i => i.id === "note-ai-validation-gap")?.id || ITEMS[0].id);

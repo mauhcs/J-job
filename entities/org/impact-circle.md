@@ -4,8 +4,12 @@ name: Impact Circle
 name_ja: インパクトサークル株式会社
 type: org
 role: buyer
+scope: company
 country: JP
-status: idea
+status: qualified
+source: fintech-kyokai
+first_seen: 2026-09-22
+site: https://impact-circle.co.jp/
 confidence: med
 industry: [banking]
 size: startup

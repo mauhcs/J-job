@@ -3,8 +3,12 @@ id: org-money-forward-x
 name: Money Forward X
 type: org
 role: buyer
+scope: company
 country: JP
-status: idea
+status: qualified
+source: manual
+first_seen: 2026-09-22
+site: https://corp.moneyforward.com/
 confidence: med
 size: sme
 industry: [banking]

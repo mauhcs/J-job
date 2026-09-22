@@ -4,6 +4,7 @@ type: org
 name: Japanese megabanks (MUFG, SMBC, Mizuho) — segment
 name_ja: メガバンク
 role: buyer
+scope: segment
 country: JP
 industry: [banking, securities]
 size: mega

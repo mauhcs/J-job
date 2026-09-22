@@ -5,6 +5,7 @@ Git is the database; this is the read model. Run after editing any .md file:
 
     python3 build.py
 """
+import datetime
 import json
 import re
 import sys
@@ -21,7 +22,10 @@ MARKER = "/*__DATA__*/null"
 REPO_BLOB = "https://github.com/mauhcs/J-job/blob/main/"
 
 TYPES = {"org", "person", "venue", "artifact", "note", "task", "stream"}
+# General lifecycle, used by everything except buyer companies.
 STATUSES = {"idea", "researching", "confirmed", "contacted", "active", "parked", "done"}
+# Buyer companies run a sales pipeline instead. See INTAKE.md.
+PIPELINE = {"candidate", "qualified", "contacted", "engaged", "client", "retired"}
 REQUIRED = ("id", "type", "name", "status", "updated")
 SIZES = {"startup", "sme", "mid", "large", "mega"}
 
@@ -52,15 +56,30 @@ def collect():
                     problems.append(f"{rel}: missing required field '{field}'")
             if meta.get("type") not in TYPES:
                 problems.append(f"{rel}: unknown type {meta.get('type')!r}")
-            if meta.get("status") not in STATUSES:
-                problems.append(f"{rel}: unknown status {meta.get('status')!r}")
+            pipeline = meta.get("role") == "buyer" and meta.get("scope") != "segment"
+            allowed = PIPELINE if pipeline else STATUSES
+            if meta.get("status") not in allowed:
+                kind = "pipeline" if pipeline else "general"
+                problems.append(
+                    f"{rel}: status {meta.get('status')!r} is not a {kind} state "
+                    f"({', '.join(sorted(allowed))})")
+            if meta.get("status") == "retired" and not meta.get("retired_reason"):
+                problems.append(f"{rel}: retired without a retired_reason — use tools/retire.py")
+            if pipeline and meta.get("status") not in ("candidate", "retired"):
+                for field in ("pitch", "priority"):
+                    if not meta.get(field):
+                        problems.append(f"{rel}: qualified target missing '{field}'")
             if meta.get("size") and meta["size"] not in SIZES:
                 problems.append(f"{rel}: unknown size {meta.get('size')!r}")
+            if pipeline and meta.get("status") not in ("candidate", "retired") and not meta.get("site"):
+                problems.append(f"{rel}: company without a 'site' (operating company URL)")
             if meta.get("role") == "buyer" and not meta.get("size"):
                 problems.append(f"{rel}: buyer without a size tier — absent from Targets view")
+            # YAML parses bare ISO dates into date objects; JSON wants strings.
+            for key, value in meta.items():
+                if isinstance(value, (datetime.date, datetime.datetime)):
+                    meta[key] = value.isoformat()
             meta["updated"] = str(meta.get("updated", ""))
-            if meta.get("due"):
-                meta["due"] = str(meta["due"])
             meta["body"] = body
             meta["path"] = rel
             items.append(meta)
@@ -116,6 +135,14 @@ def main():
         counts[item.get("type")] = counts.get(item.get("type"), 0) + 1
     summary = ", ".join(f"{v} {k}" for k, v in sorted(counts.items()))
     print(f"built {OUTPUT.name}: {len(items)} items ({summary}), {len(problems)} warnings")
+
+    pipe = {}
+    for item in items:
+        if item.get("role") == "buyer" and item.get("scope") != "segment":
+            pipe[item["status"]] = pipe.get(item["status"], 0) + 1
+    if pipe:
+        order = ["candidate", "qualified", "contacted", "engaged", "client", "retired"]
+        print("pipeline: " + " | ".join(f"{s} {pipe[s]}" for s in order if s in pipe))
 
 
 if __name__ == "__main__":

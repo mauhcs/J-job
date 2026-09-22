@@ -4,16 +4,22 @@ type: org
 name: Garage Bank (cashari / カシャリ)
 name_ja: 株式会社ガレージバンク
 role: buyer
+scope: company
 country: JP
 industry: [banking, crypto]
 size: startup
-status: idea
+status: qualified
+source: manual
+first_seen: 2026-09-22
 priority: 1
 confidence: med
 pitch: Known relationship, and a genuinely novel valuation model that no standard validation playbook covers.
 tags: [target, fintech, warm, credit-model, leaseback]
 rel: [stream-market, note-sme-wedge, org-tokyo-financial-award, task-warm-list-startup-lenders]
+site: https://www.garagebank.co.jp/
 links:
+  - label: ガレージバンク株式会社 (corporate site)
+    url: https://www.garagebank.co.jp/
   - label: cashari on Google Play
     url: https://play.google.com/store/apps/details?id=jp.cashari.app&hl=en_US
   - label: cashari on the App Store (JP)
@@ -22,6 +28,9 @@ updated: 2026-09-22
 ---
 
 **The warmest lead in the repo — you already worked here.**
+
+The operating company is **ガレージバンク株式会社**, founded 22 January 2020, mission
+「モノの価値を、みんなの『できる』に。」 cashari is its product; the company is the counterparty.
 
 Garage Bank operates cashari, a leaseback app: users monetise physical assets (phones,
 game consoles, brand goods, PCs, cameras, watches, cars) while continuing to use them,

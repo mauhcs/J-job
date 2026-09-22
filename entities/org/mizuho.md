@@ -4,10 +4,14 @@ name: Mizuho Financial Group (みずほフィナンシャルグループ)
 name_ja: 株式会社みずほフィナンシャルグループ
 type: org
 role: buyer
+scope: company
 country: JP
 industry: [banking, securities]
 size: mega
-status: idea
+status: qualified
+source: manual
+first_seen: 2026-09-22
+site: https://www.mizuho-fg.co.jp/
 priority: 3
 confidence: low
 tags: [target, megabank, year-two]

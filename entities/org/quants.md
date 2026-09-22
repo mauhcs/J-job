@@ -4,8 +4,12 @@ name: Quants株式会社
 name_ja: Quants株式会社
 type: org
 role: buyer
+scope: company
 country: JP
-status: idea
+status: qualified
+source: manual
+first_seen: 2026-09-22
+site: https://www.quants-grp.co.jp/
 confidence: med
 size: sme
 industry: [banking]

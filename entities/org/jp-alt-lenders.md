@@ -3,6 +3,7 @@ id: org-jp-alt-lenders
 type: org
 name: Japanese alternative lenders (segment)
 role: buyer
+scope: segment
 country: JP
 industry: [banking]
 size: startup

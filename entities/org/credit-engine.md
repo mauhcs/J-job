@@ -3,10 +3,14 @@ id: org-credit-engine
 type: org
 name: Credit Engine
 role: buyer
+scope: company
 country: JP
 industry: [banking]
 size: sme
-status: idea
+status: qualified
+source: tracxn-alt-lending-jp
+first_seen: 2026-09-22
+site: https://www.creditengine.jp/
 priority: 2
 confidence: med
 pitch: Sells credit scoring to megabanks — their model's credibility is their product, so independent review is a sales asset not a cost.

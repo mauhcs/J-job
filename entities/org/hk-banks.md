@@ -3,6 +3,7 @@ id: org-hk-banks
 type: org
 name: Hong Kong authorized institutions (segment)
 role: buyer
+scope: segment
 country: HK
 industry: [banking]
 size: large

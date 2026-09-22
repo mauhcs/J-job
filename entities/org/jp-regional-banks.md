@@ -4,6 +4,7 @@ type: org
 name: Japanese regional banks (segment)
 name_ja: 地方銀行
 role: buyer
+scope: segment
 country: JP
 industry: [banking]
 size: mid

@@ -4,10 +4,14 @@ name: justInCase Technologies
 name_ja: 株式会社justInCaseTechnologies
 type: org
 role: buyer
+scope: company
 country: JP
 industry: [insurance]
 size: sme
-status: idea
+status: qualified
+source: fintech-kyokai
+first_seen: 2026-09-22
+site: https://justincase-tech.com/
 priority: 2
 confidence: med
 pitch: Insurtech SaaS selling into licensed insurers — their platform's models inherit their clients' obligations.

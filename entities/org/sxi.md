@@ -4,8 +4,12 @@ name: SXI (エス・エックス・アイ)
 name_ja: 株式会社エス・エックス・アイ
 type: org
 role: buyer
+scope: company
 country: JP
-status: idea
+status: qualified
+source: manual
+first_seen: 2026-09-22
+site: https://www.sxi.co.jp/
 confidence: med
 size: sme
 industry: [banking, insurance]

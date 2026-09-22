@@ -4,8 +4,12 @@ name: 健康年齢少額短期保険
 name_ja: 健康年齢少額短期保険株式会社
 type: org
 role: buyer
+scope: company
 country: JP
-status: idea
+status: qualified
+source: shotan-kyokai
+first_seen: 2026-09-22
+site: https://kenko-nenrei.co.jp/
 confidence: med
 size: sme
 industry: [insurance]
