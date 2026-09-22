@@ -7,7 +7,7 @@ priority: 1
 confidence: low
 tags: [strategy, vehicle, differentiation]
 rel: [stream-market, stream-advisor, note-differentiation-thesis, note-unit-economics, note-feasible-play, note-sales-routes, note-deliverable-spec,
-      note-correction-invented-numbers]
+      note-correction-invented-numbers, note-research-as-product, note-model-building]
 updated: 2026-09-22
 ---
 
@@ -28,7 +28,24 @@ IPOR Labs is not the primary vehicle but remains the source of a genuine differe
 Both are kept open until the market stream tells us how Japanese buyers actually procure
 independence — that is the fact that decides this, and we do not have it yet.
 
-## The binding constraint is sales, not positioning (2026-09-22)
+## Three products, in the order they can actually be sold (2026-09-22)
+
+The plan began at the hardest product and the hardest buyer. Reordered by what can be sold
+without a credential, a 顧問 or an entity:
+
+1. **Paid research** (`note-research-as-product`). Japanese companies put **¥97.7bn a year**
+   into university joint research; the **average contract is ¥3.3m and 85% are under ¥3m** —
+   marketing-budget scale, marketing-budget buyer, no procurement gauntlet. It manufactures the
+   publication record everything else needs. Blocked on whether TUJ can be the counterparty
+   (`task-tuj-sangaku-capability`) and on whether Japanese finance does this at all
+   (`task-count-sangaku-prs`).
+2. **Model building** (`note-model-building`) in classes where no vendor product and no local
+   hire exists — residual value, microstructure and execution, on-chain rates, insurance
+   products with no loss history. Easy to sell, lower ceiling, does not compound.
+3. **Validation** — highest status and rate, but it needs the credential and the independence
+   story the first two produce. The destination, not the entry point.
+
+## The binding constraint is sales, not positioning
 
 Revised after the economics were challenged. The vehicle question, the differentiation thesis
 and the tier model all assume a practice that can win its own mandates. If selling is the
