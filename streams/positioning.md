@@ -6,7 +6,8 @@ status: researching
 priority: 1
 confidence: low
 tags: [strategy, vehicle, differentiation]
-rel: [stream-market, stream-advisor, note-differentiation-thesis, note-unit-economics, note-feasible-play]
+rel: [stream-market, stream-advisor, note-differentiation-thesis, note-unit-economics, note-feasible-play, note-sales-routes, note-deliverable-spec,
+      note-correction-invented-numbers]
 updated: 2026-09-22
 ---
 
@@ -27,7 +28,19 @@ IPOR Labs is not the primary vehicle but remains the source of a genuine differe
 Both are kept open until the market stream tells us how Japanese buyers actually procure
 independence — that is the fact that decides this, and we do not have it yet.
 
-## Scale of the thing (decided 2026-09-22)
+## The binding constraint is sales, not positioning (2026-09-22)
+
+Revised after the economics were challenged. The vehicle question, the differentiation thesis
+and the tier model all assume a practice that can win its own mandates. If selling is the
+constraint — and it is — then the first version of this business is **delivering for firms that
+have already sold the work**: Big 4 subcontracting panels, the Japanese ALM boutiques, and
+expert networks. Lower rate, no pipeline to build, and it produces the two numbers this plan
+does not have: an observed price and an observed effort. See `note-sales-routes`.
+
+A direct practice stays an option that opens later, once reference cases and a publication
+record exist. It is not the starting position.
+
+## Scale of the thing
 
 Not a full-time practice, at least not at the start. `note-unit-economics` puts a solo
 operator's ceiling at ~150 billable days a year at full commitment — and the 50–65%

@@ -4,18 +4,30 @@ type: note
 name: The feasible play — why this does not need to be a full practice
 status: confirmed
 priority: 1
-confidence: med
+confidence: low
 tags: [strategy, feasibility, capacity, decision]
-rel: [note-unit-economics, stream-positioning, stream-advisor, stream-publishing, stream-market, org-visasq, org-jp-risk-boutiques, person-archetype-fintech-operator]
+rel: [note-unit-economics, note-correction-invented-numbers, note-sales-routes, note-deliverable-spec, stream-positioning, stream-advisor, stream-publishing, stream-market, org-visasq, org-jp-risk-boutiques, person-archetype-fintech-operator]
 updated: 2026-09-22
 ---
+
+**Revised 2026-09-22 after the numbers in it were challenged and did not survive.**
 
 The worry: *business development at four tiers, plus marketing and exposure, plus doing the
 analysis and reporting — that is three jobs, and one contract at a time would have to be
 enormous to justify it.*
 
-The arithmetic in `note-unit-economics` says the worry is right about the workload and wrong
-about the conclusion. Six things change the shape.
+The original version of this note answered that with a revenue model built on fabricated fees
+(`note-correction-invented-numbers`) and treated the sales problem as solvable by structure —
+"the 顧問 does the BD", "publishing is the marketing". Both of those take a year to work and
+neither says what to do on Monday, so neither is an answer to *selling takes forever and I do
+not know how*.
+
+**The revised position: treat the inability to sell as a fixed constraint.** The feasible
+business is then not an independent practice but being the specialist that firms with mandates
+call — subcontracting, expert networks, a domestic boutique partnership. That is
+`note-sales-routes`, and it supersedes most of what follows.
+
+The points below still hold as far as they go, with that correction in front of them.
 
 ## 1. You are not unemployed
 

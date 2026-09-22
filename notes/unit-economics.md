@@ -6,7 +6,8 @@ status: researching
 priority: 1
 confidence: low
 tags: [economics, pricing, capacity, feasibility]
-rel: [stream-positioning, stream-market, note-feasible-play, note-open-questions, org-finalyse, note-komon-market-mechanics]
+rel: [stream-positioning, stream-market, note-feasible-play, note-open-questions, org-finalyse,
+      note-komon-market-mechanics, note-correction-invented-numbers, note-deliverable-spec, note-sales-routes]
 updated: 2026-09-22
 ---
 
@@ -47,6 +48,10 @@ development, marketing, admin and professional development. Small firms of 2–1
 **A solo operator's ceiling is therefore ~150 billable days a year at full commitment** —
 and that is for someone doing this as their whole job, which is not the situation here.
 
+These are utilisation benchmarks for consultants **who already have a pipeline**. They say
+nothing about how long it takes to acquire one, which is the actual binding constraint here.
+See `note-sales-routes`.
+
 ## The arithmetic you were worried about, done
 
 | commitment | billable days/yr | at ¥400k/day |
@@ -63,20 +68,21 @@ BD at four tiers and write papers. The arithmetic simply does not close.
 
 But it does not need to. See `note-feasible-play`.
 
-## Engagement sizing, by tier
+## Engagement sizing — WITHDRAWN
 
-Indicative, from the day rate and plausible scope:
+This section carried a table of days and fees per tier. **It was fabricated** — a triangulated
+day rate multiplied by a guessed day count, neither sourced. See
+`note-correction-invented-numbers`.
 
-| tier | scope | days | fee |
-|---|---|---|---|
-| Startup | one model, fixed-scope review, short report | 4–8 | ¥1.5–3m |
-| SME / micro-insurer | one material model, full validation, documented | 8–15 | ¥3–6m |
-| Mid (digital/regional bank) | material model + methodology opinion | 15–30 | ¥6–12m |
-| Large / mega | specialist review inside a larger programme | 20–40 | ¥8–20m |
+It cannot be replaced by a better guess. Effort is the missing factor and no published data on
+validation duration exists (`note-deliverable-spec`), so the number has to be *observed*:
+`task-measure-real-validation-effort`. **Until then, quote nothing.**
 
-**Two or three mid-tier engagements a year, or six to eight SME ones, is a business.** That
-is a very different proposition from "one enormous contract at a time", and it is the shape
-the capacity actually supports.
+What can be said without inventing anything: understanding someone else's model and getting
+usable data are the dominant costs, and **they do not scale down with the client's budget**.
+A ten-person lender's model can take as long to understand as a bank's, and is usually worse
+documented. That alone is enough to doubt the startup tier — the effort floor is set by the
+model, not by what the buyer can pay.
 
 ## What would change these numbers
 
