@@ -10,6 +10,7 @@ location: Tokyo
 seniority: unstated
 work_mode: onsite
 fit: strong
+verified: listing-confirmed
 source: morgan-mckinley
 seen: 2026-09-23
 status: researching

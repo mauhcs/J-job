@@ -9,7 +9,7 @@ status: researching
 priority: 1
 confidence: med
 tags: [jobs, crypto, remote, defi, best-fit-channel]
-rel: [note-job-channels, note-job-profile-fit, job-gauntlet-defi-risk, org-gauntlet]
+rel: [note-job-channels, note-job-profile-fit, job-polymarket-quant-researcher, org-gauntlet]
 links:
   - label: web3.career — quantitative roles
     url: https://web3.career/quantitative-jobs

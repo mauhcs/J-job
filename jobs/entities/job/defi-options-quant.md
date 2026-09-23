@@ -10,6 +10,7 @@ location: Remote
 seniority: unstated
 work_mode: remote
 fit: plausible
+verified: listing-confirmed
 source: cryptocurrencyjobs
 seen: 2026-09-23
 status: researching

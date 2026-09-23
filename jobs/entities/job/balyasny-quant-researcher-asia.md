@@ -10,6 +10,7 @@ location: Tokyo
 seniority: senior
 work_mode: onsite
 fit: plausible
+verified: listing-confirmed
 source: efinancialcareers
 status: researching
 priority: 2

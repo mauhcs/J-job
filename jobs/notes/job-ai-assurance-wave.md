@@ -6,7 +6,7 @@ status: confirmed
 priority: 1
 confidence: high
 tags: [jobs, ai-assurance, singapore, regulatory-driven, evidence]
-rel: [job-uob-vp-ai-data-assurance, job-ocbc-responsible-ai-specialist, job-uob-vp-credit-risk-model-validation, job-aig-ai-utilization-specialist, note-job-profile-fit, stream-job-search]
+rel: [job-uob-vp-ai-data-assurance, job-ocbc-responsible-ai-specialist, job-uob-vp-credit-risk-model-validation, note-job-profile-fit, stream-job-search]
 updated: 2026-09-23
 ---
 

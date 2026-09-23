@@ -10,6 +10,7 @@ location: New York
 seniority: senior
 work_mode: onsite
 fit: plausible
+verified: listing-confirmed
 source: web3career
 status: idea
 priority: 2

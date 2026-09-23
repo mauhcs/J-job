@@ -31,18 +31,24 @@ indication of depth, not of opportunity.
 profile**, by an order of magnitude on quantitative risk. That is the reverse of where the
 `model-validation` project spent most of its effort.
 
+**Correction:** the Tokyo ¥14M–17M credit risk model developer figure came from a recruiter
+advert with no named employer, and that card has been deleted per
+`note-job-verification-standard`. The number is retained here as a market signal only — it is
+an advertised band, not a verified role.
+
 ## Compensation, from postings that publish it
 
 | role | market | advertised |
 |---|---|---|
 | Quantitative Researcher, Polymarket | New York, crypto | **$250k–350k** |
 | Quantitative Developer, Risk, Ellipsis Labs | New York, crypto | $180k–250k |
-| Senior Python Engineer, quant trading | Hong Kong | **HK$2M–4M** |
-| Head of Market Execution, global quant fund | Hong Kong | up to **HK$2.5M** base |
-| Quantitative Developer, global quant fund | Hong Kong | up to HK$2M base |
-| Credit Risk Model Developer | Tokyo | **¥14M–17M** |
+| Quant Developer, **Gauntlet** (JD read) | Remote US/CAN | **$175k–200k** base + equity |
+| Credit Risk Researcher, **Gauntlet** (JD read) | Remote US/CAN | $160k–195k base + OTE |
+| Quant Researcher OEX, Crypto.com | US | $100k–230k |
 | Quantitative Trader, D1 Liquidity, OKX | Remote, crypto | $105k–150k |
-| Core Quantitative Developer, FalconX | Remote, crypto | $87k–110k |
+| Senior Python Engineer, quant trading (recruiter advert) | Hong Kong | HK$2M–4M |
+| Head of Market Execution (recruiter advert) | Hong Kong | up to HK$2.5M base |
+| Credit Risk Model Developer (recruiter advert) | Tokyo | ¥14M–17M |
 
 ## What the numbers say
 

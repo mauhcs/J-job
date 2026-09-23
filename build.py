@@ -101,13 +101,17 @@ def collect(root):
                     if not meta.get(field):
                         problems.append(f"{rel}: qualified target missing '{field}'")
             if meta.get("type") == "job":
-                for field in ("company", "track", "country", "fit"):
+                for field in ("company", "track", "country", "fit", "verified"):
                     if not meta.get(field):
                         problems.append(f"{rel}: job without '{field}'")
                 if meta.get("track") and meta["track"] not in TRACKS:
                     problems.append(f"{rel}: unknown track {meta.get('track')!r}")
                 if meta.get("fit") and meta["fit"] not in FIT:
                     problems.append(f"{rel}: unknown fit {meta.get('fit')!r}")
+                if meta.get("verified") not in (None, "jd-read", "listing-confirmed"):
+                    problems.append(f"{rel}: verified must be jd-read or listing-confirmed")
+                if not meta.get("links"):
+                    problems.append(f"{rel}: job without a link — cannot be acted on")
             if meta.get("size") and meta["size"] not in SIZES:
                 problems.append(f"{rel}: unknown size {meta.get('size')!r}")
             if pipeline and meta.get("status") != "retired" and not meta.get("site"):

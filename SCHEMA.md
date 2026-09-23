@@ -21,7 +21,9 @@ across them is dropped at build time.
 | `id` | yes | unique slug, prefixed by type: `org-`, `person-`, `venue-`, `artifact-`, `note-`, `task-`, `stream-` |
 | `type` | yes | `org` `person` `venue` `artifact` `note` `task` `stream` `job` |
 | `company` `track` `country` `fit` | jobs | required on `type: job`. `track`: quant-research · model-risk · ml-engineering · defi · academic · advisory · data-science · leadership. `fit`: strong · plausible · stretch · mismatch |
-| `location` `seniority` `work_mode` `seen` | jobs | optional; `seen` is the date the listing was observed, since postings go stale |
+| `verified` | jobs | `jd-read` or `listing-confirmed`. Required |
+| `links` | jobs | required — a job with no link cannot be acted on |
+| `location` `seniority` `work_mode` `salary` `seen` | jobs | optional; `seen` is the date observed, since postings go stale |
 | `decides` | P1 tasks | one sentence on what answering this settles. Required on priority-1 tasks |
 | `name` | yes | display name |
 | `name_ja` | no | Japanese name |

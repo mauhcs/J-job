@@ -10,6 +10,7 @@ location: Tokyo
 seniority: vp
 work_mode: onsite
 fit: strong
+verified: listing-confirmed
 source: efinancialcareers
 status: researching
 priority: 1

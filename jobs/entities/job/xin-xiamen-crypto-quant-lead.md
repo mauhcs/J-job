@@ -10,6 +10,7 @@ location: Hong Kong
 seniority: lead
 work_mode: onsite
 fit: plausible
+verified: listing-confirmed
 source: efinancialcareers
 status: idea
 priority: 2

@@ -10,6 +10,7 @@ location: Remote
 seniority: unstated
 work_mode: remote
 fit: plausible
+verified: listing-confirmed
 source: web3career
 status: idea
 priority: 2

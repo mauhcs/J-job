@@ -669,6 +669,7 @@ const JOB_FACETS = [
   {key: "track", label: "Role"},
   {key: "country", label: "Country"},
   {key: "fit", label: "Fit"},
+  {key: "verified", label: "Verified"},
 ];
 const jobFilter = {};
 const FIT_CLASS = {strong: "good", plausible: "accent", stretch: "warn", mismatch: "alert"};
@@ -709,9 +710,14 @@ function renderJobs(){
         <span class="badge">${esc(j.location || j.country)}</span>
         ${j.seniority && j.seniority !== "unstated" ? `<span class="badge">${esc(j.seniority)}</span>` : ""}
         ${j.work_mode ? `<span class="badge">${esc(j.work_mode)}</span>` : ""}
+        ${j.salary ? `<span class="badge good">${esc(j.salary)}</span>` : ""}
+        ${j.verified ? `<span class="badge ${j.verified === "jd-read" ? "good" : "warn"}">${esc(j.verified)}</span>` : ""}
       </span>
       <p class="jobwhy">${md(why).replace(/<\/?p>/g, "")}</p>
-      <span class="jobstale">seen ${esc(j.seen || j.updated)} \u00b7 listings go stale, verify before acting</span>
+      <span class="jobstale">
+        ${(j.links || []).map(l => `<a class="purl" href="${esc(l.url)}" target="_blank" rel="noopener">${esc(l.label)}</a>`).join(" \u00b7 ")}
+        ${(j.links || []).length ? " \u00b7 " : ""}seen ${esc(j.seen || j.updated)}, verify before acting
+      </span>
     </div>`;
   }).join("") : `<p class="tier-empty">No roles match. Clear a filter.</p>`;
 }
