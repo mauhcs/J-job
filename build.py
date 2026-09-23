@@ -32,6 +32,10 @@ PROJECTS = {
         "lede": "Scoping the trading value of a dataset for the people who own it, "
                 "so they can sell it.",
     },
+    "jobs": {
+        "title": "Job Opportunities",
+        "lede": "Roles that fit the profile \u2014 filterable by industry, role track and country.",
+    },
     "game-ml": {
         "title": "Game ML Services",
         "lede": "Applied machine learning for Japanese game companies \u2014 the "
@@ -42,7 +46,11 @@ MARKER = "/*__DATA__*/null"
 TITLE_MARKER = "__TITLE__"
 REPO_BLOB = "https://github.com/mauhcs/J-job/blob/main/"
 
-TYPES = {"org", "person", "venue", "artifact", "note", "task", "stream"}
+TYPES = {"org", "person", "venue", "artifact", "note", "task", "stream", "job"}
+# Job-specific vocabularies. `track` is the kind of work, not the seniority.
+TRACKS = {"quant-research", "model-risk", "ml-engineering", "defi", "academic",
+          "advisory", "data-science", "leadership"}
+FIT = {"strong", "plausible", "stretch", "mismatch"}
 # General lifecycle, used by everything except buyer companies.
 STATUSES = {"idea", "researching", "confirmed", "contacted", "active", "parked", "done"}
 # Buyer companies run a sales pipeline instead. See INTAKE.md.
@@ -92,6 +100,14 @@ def collect(root):
                 for field in ("pitch", "priority"):
                     if not meta.get(field):
                         problems.append(f"{rel}: qualified target missing '{field}'")
+            if meta.get("type") == "job":
+                for field in ("company", "track", "country", "fit"):
+                    if not meta.get(field):
+                        problems.append(f"{rel}: job without '{field}'")
+                if meta.get("track") and meta["track"] not in TRACKS:
+                    problems.append(f"{rel}: unknown track {meta.get('track')!r}")
+                if meta.get("fit") and meta["fit"] not in FIT:
+                    problems.append(f"{rel}: unknown fit {meta.get('fit')!r}")
             if meta.get("size") and meta["size"] not in SIZES:
                 problems.append(f"{rel}: unknown size {meta.get('size')!r}")
             if pipeline and meta.get("status") != "retired" and not meta.get("site"):

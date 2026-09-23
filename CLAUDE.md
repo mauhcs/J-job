@@ -7,6 +7,7 @@ background in HFT, quant trading and risk modelling.
     model-validation/    independent external verification of quantitative models
     data-signal/         scoping the trading value of a dataset for its owner
     game-ml/             applied machine learning for Japanese game companies
+    jobs/                roles that fit the profile
 
 To add a project: create the directory tree and add an entry to `PROJECTS` in `build.py`.
 
