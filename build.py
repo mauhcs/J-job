@@ -39,6 +39,7 @@ PROJECTS = {
     },
 }
 MARKER = "/*__DATA__*/null"
+TITLE_MARKER = "__TITLE__"
 REPO_BLOB = "https://github.com/mauhcs/J-job/blob/main/"
 
 TYPES = {"org", "person", "venue", "artifact", "note", "task", "stream"}
@@ -181,8 +182,11 @@ def build(slug, meta):
     }
     blob = json.dumps(payload, ensure_ascii=False).replace("</", "<\\/")
     html = TEMPLATE.read_text(encoding="utf-8")
-    if MARKER not in html:
-        sys.exit(f"template has no {MARKER} marker to inject into")
+    if MARKER not in html or TITLE_MARKER not in html:
+        sys.exit(f"template needs both {MARKER} and {TITLE_MARKER} markers")
+    # The artifact gallery reads the <title> tag from the file, so it has to be baked
+    # in per project rather than set by script at runtime.
+    html = html.replace(TITLE_MARKER, meta["title"], 1)
     out = root / "dashboard.html"
     out.write_text(html.replace(MARKER, blob), encoding="utf-8")
 
