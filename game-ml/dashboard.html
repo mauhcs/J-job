@@ -1,0 +1,733 @@
+<title>J-job Workbench</title>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Zen+Kaku+Gothic+New:wght@400;500;700&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+  :root{
+    --ground:#F4F6F9; --surface:#FFFFFF; --surface-2:#EDF0F5; --sunken:#E5E9F0;
+    --ink:#141820; --ink-2:#4A5361; --ink-3:#78818F;
+    --line:#DCE1E9; --line-2:#C6CDD9;
+    --accent:#1F3A6E; --accent-soft:#E7ECF6; --accent-ink:#1F3A6E;
+    --alert:#B03A2E; --alert-soft:#FAEAE7;
+    --warn:#8A6516; --warn-soft:#FAF1DE;
+    --good:#1F6B4D; --good-soft:#E4F1EA;
+    --ui:"Zen Kaku Gothic New",-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+    --prose:"Source Serif 4",Georgia,"Times New Roman",serif;
+    --mono:"IBM Plex Mono",ui-monospace,SFMono-Regular,Menlo,monospace;
+    --radius:6px;
+  }
+  @media (prefers-color-scheme:dark){
+    :root:not([data-theme="light"]){
+      --ground:#0E1116; --surface:#161B23; --surface-2:#1D232D; --sunken:#11151B;
+      --ink:#E6EAF1; --ink-2:#A3ACBA; --ink-3:#737D8C;
+      --line:#262E3A; --line-2:#36404F;
+      --accent:#8AA9E0; --accent-soft:#1A2335; --accent-ink:#A8C0EC;
+      --alert:#E0776A; --alert-soft:#2C1A18;
+      --warn:#D6A94E; --warn-soft:#2A2214;
+      --good:#67B893; --good-soft:#132620;
+    }
+  }
+  :root[data-theme="dark"]{
+    --ground:#0E1116; --surface:#161B23; --surface-2:#1D232D; --sunken:#11151B;
+    --ink:#E6EAF1; --ink-2:#A3ACBA; --ink-3:#737D8C;
+    --line:#262E3A; --line-2:#36404F;
+    --accent:#8AA9E0; --accent-soft:#1A2335; --accent-ink:#A8C0EC;
+    --alert:#E0776A; --alert-soft:#2C1A18;
+    --warn:#D6A94E; --warn-soft:#2A2214;
+    --good:#67B893; --good-soft:#132620;
+  }
+
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--ground);color:var(--ink);font-family:var(--ui);font-size:14px;line-height:1.5}
+  a{color:var(--accent-ink)}
+  button{font:inherit;color:inherit}
+  :focus-visible{outline:2px solid var(--accent);outline-offset:2px;border-radius:3px}
+  @media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+
+  /* ---- masthead ---- */
+  .masthead{display:flex;align-items:baseline;gap:14px;flex-wrap:wrap;
+    padding-block:18px 14px;padding-inline:24px;background:var(--surface);border-bottom:1px solid var(--line)}
+  .wordmark{font-weight:700;font-size:17px;letter-spacing:-.01em;margin:0}
+  .wordmark span{color:var(--accent-ink)}
+  .masthead p{margin:0;color:var(--ink-3);font-size:12.5px;max-width:60ch}
+  .built{margin-left:auto;font-family:var(--mono);font-size:11px;color:var(--ink-3);white-space:nowrap}
+
+  /* ---- tabs ---- */
+  .tabs{display:flex;gap:2px;padding-inline:24px;background:var(--surface);border-bottom:1px solid var(--line);overflow-x:auto}
+  .tab{appearance:none;background:none;border:0;border-bottom:2px solid transparent;
+    padding:9px 12px;cursor:pointer;color:var(--ink-2);font-size:13px;font-weight:500;white-space:nowrap}
+  .tab[aria-selected="true"]{color:var(--accent-ink);border-bottom-color:var(--accent)}
+  .tab:hover{color:var(--ink)}
+
+  .view{padding-block:20px 48px;padding-inline:24px}
+  .view[hidden]{display:none!important}
+
+  .home-foot{font-family:var(--prose);font-size:13.5px;color:var(--ink-3);max-width:70ch;margin:26px 0 0}
+
+  /* ---- do next ---- */
+  .nextlist{list-style:none;counter-reset:step;margin:0;padding:0;display:grid;gap:12px;max-width:820px}
+  .nextlist li{counter-increment:step;background:var(--surface);border:1px solid var(--line);
+    border-left:3px solid var(--accent);border-radius:var(--radius);padding:15px 18px 14px;
+    display:grid;gap:7px;position:relative}
+  .nextlist li.later{border-left-color:var(--line-2);opacity:.82}
+  .nextlist .step{font-family:var(--mono);font-size:10.5px;color:var(--ink-3);
+    text-transform:uppercase;letter-spacing:.08em}
+  .nextlist .step::before{content:counter(step) " \00b7 "}
+  .nextact{appearance:none;background:none;border:0;padding:0;text-align:left;cursor:pointer;
+    font-family:var(--ui);font-size:15.5px;font-weight:700;line-height:1.3;color:var(--ink)}
+  .nextact:hover{color:var(--accent-ink);text-decoration:underline}
+  .nextdec{font-family:var(--prose);font-size:14px;line-height:1.55;color:var(--ink-2);margin:0}
+  .nextdec b{color:var(--ink);font-weight:600}
+  .nextmeta{display:flex;gap:6px;flex-wrap:wrap}
+
+  /* ---- streams ---- */
+  .stream-grid{display:grid;gap:14px;grid-template-columns:repeat(auto-fit,minmax(290px,1fr));max-width:1400px}
+  .stream{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);
+    padding:16px 18px 14px;display:flex;flex-direction:column;gap:9px;text-align:left;cursor:pointer;width:100%}
+  .stream:hover{border-color:var(--line-2)}
+  .stream h3{margin:0;font-size:15px;font-weight:700;text-wrap:balance}
+  .stream .q{margin:0;font-family:var(--prose);font-size:13.5px;color:var(--ink-2);line-height:1.55}
+  .stream footer{display:flex;gap:6px;flex-wrap:wrap;margin-top:auto;padding-top:4px}
+
+  .digest{max-width:70ch;margin-block:28px 0}
+  .digest h2{font-size:12px;text-transform:uppercase;letter-spacing:.09em;color:var(--ink-3);margin:0 0 10px;font-weight:500}
+  .digest ol{margin:0;padding-left:1.1em;font-family:var(--prose);font-size:14.5px;line-height:1.65;color:var(--ink-2)}
+  .digest li{margin-bottom:9px}
+  .digest li strong{color:var(--ink);font-weight:600}
+
+  /* ---- browse ---- */
+  .browse{display:grid;grid-template-columns:200px minmax(300px,1.1fr) minmax(0,1.5fr);gap:18px;align-items:start;max-width:1600px}
+  .facets{display:flex;flex-direction:column;gap:16px;position:sticky;top:12px}
+  .facet h4{margin:0 0 6px;font-size:11px;text-transform:uppercase;letter-spacing:.09em;color:var(--ink-3);font-weight:500}
+  .facet-opts{display:flex;flex-wrap:wrap;gap:4px}
+  .chip{appearance:none;border:1px solid var(--line);background:var(--surface);border-radius:100px;
+    padding:2.5px 9px;font-size:11.5px;cursor:pointer;color:var(--ink-2);font-family:var(--mono)}
+  .chip:hover{border-color:var(--line-2);color:var(--ink)}
+  .chip[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:#fff}
+  .chip .n{opacity:.6;margin-left:4px}
+
+  .search{width:100%;padding:8px 11px;border:1px solid var(--line-2);border-radius:var(--radius);
+    background:var(--surface);color:var(--ink);font-family:var(--ui);font-size:13.5px;margin-bottom:10px}
+  .search::placeholder{color:var(--ink-3)}
+  .resultmeta{font-family:var(--mono);font-size:11px;color:var(--ink-3);margin:0 0 8px;display:flex;justify-content:space-between;gap:8px}
+  .linkbtn{appearance:none;background:none;border:0;padding:0;cursor:pointer;color:var(--accent-ink);
+    font-family:var(--mono);font-size:11px;text-decoration:underline}
+
+  .rows{display:flex;flex-direction:column;border:1px solid var(--line);border-radius:var(--radius);
+    background:var(--surface);overflow:hidden}
+  .row{appearance:none;background:none;border:0;border-bottom:1px solid var(--line);border-left:3px solid transparent;
+    padding:9px 12px;cursor:pointer;display:grid;gap:3px;text-align:left;width:100%}
+  .row:last-child{border-bottom:0}
+  .row:hover{background:var(--surface-2)}
+  .row[aria-current="true"]{background:var(--accent-soft);border-left-color:var(--accent)}
+  .row.p1{border-left-color:var(--alert)}
+  .row.p1[aria-current="true"]{border-left-color:var(--accent)}
+  .row .rname{font-size:13.5px;font-weight:500;line-height:1.35}
+  .row .rmeta{font-family:var(--mono);font-size:10.5px;color:var(--ink-3);display:flex;gap:7px;flex-wrap:wrap}
+  .empty{padding:24px 12px;color:var(--ink-3);font-size:13px;text-align:center}
+
+  /* ---- detail ---- */
+  .detail{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);
+    padding:20px 24px 26px;position:sticky;top:12px;max-height:calc(100vh - 24px);overflow-y:auto}
+  .detail .eyebrow{font-family:var(--mono);font-size:11px;color:var(--ink-3);margin:0 0 4px}
+  .detail h2{margin:0 0 3px;font-size:19px;line-height:1.28;text-wrap:balance}
+  .detail .ja{margin:0 0 10px;color:var(--ink-2);font-size:14px}
+  .badges{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:16px}
+  .badge{font-family:var(--mono);font-size:10.5px;padding:2px 7px;border-radius:3px;
+    background:var(--surface-2);color:var(--ink-2);border:1px solid var(--line)}
+  .badge.alert{background:var(--alert-soft);color:var(--alert);border-color:transparent}
+  .badge.warn{background:var(--warn-soft);color:var(--warn);border-color:transparent}
+  .badge.good{background:var(--good-soft);color:var(--good);border-color:transparent}
+  .badge.accent{background:var(--accent-soft);color:var(--accent-ink);border-color:transparent}
+
+  .prose{font-family:var(--prose);font-size:15px;line-height:1.66;color:var(--ink-2);max-width:66ch}
+  .prose p{margin:0 0 .85em}
+  .prose strong{color:var(--ink);font-weight:600}
+  .prose h2{font-family:var(--ui);font-size:12px;text-transform:uppercase;letter-spacing:.09em;
+    color:var(--ink-3);font-weight:500;margin:1.7em 0 .6em;padding-top:.8em;border-top:1px solid var(--line)}
+  .prose h3{font-family:var(--ui);font-size:14px;font-weight:700;color:var(--ink);margin:1.4em 0 .4em}
+  .prose ul{margin:0 0 .9em;padding-left:1.15em}
+  .prose li{margin-bottom:.32em}
+  .prose code{font-family:var(--mono);font-size:.85em;background:var(--sunken);padding:1px 4px;border-radius:3px;color:var(--ink)}
+  .prose em{font-style:italic}
+
+  .subhead{font-size:11px;text-transform:uppercase;letter-spacing:.09em;color:var(--ink-3);
+    font-weight:500;margin:22px 0 8px;padding-top:12px;border-top:1px solid var(--line)}
+  .linklist{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:5px}
+  .linklist a{font-size:13px;text-decoration:none;border-bottom:1px solid var(--line-2)}
+  .linklist a:hover{border-bottom-color:var(--accent)}
+  .rels{display:flex;flex-wrap:wrap;gap:5px}
+  .rel{appearance:none;border:1px solid var(--line);background:var(--surface-2);border-radius:var(--radius);
+    padding:3px 8px;font-size:12px;cursor:pointer;color:var(--ink-2);text-align:left}
+  .rel:hover{border-color:var(--accent);color:var(--accent-ink)}
+  .rel b{font-family:var(--mono);font-size:10px;font-weight:500;color:var(--ink-3);margin-right:5px;text-transform:uppercase}
+  .srcpath{font-family:var(--mono);font-size:11px;color:var(--ink-3);margin-top:20px;
+    padding-top:12px;border-top:1px solid var(--line)}
+
+  /* ---- targets ---- */
+  .pipe{display:flex;flex-wrap:wrap;gap:1px;margin:0 0 14px;border:1px solid var(--line);
+    border-radius:var(--radius);overflow:hidden;background:var(--line);max-width:1500px}
+  .pipe-step{background:var(--surface);padding:9px 14px;display:grid;gap:1px;flex:1 1 110px}
+  .pipe-step .n{font-family:var(--mono);font-size:18px;font-variant-numeric:tabular-nums;line-height:1.1}
+  .pipe-step .l{font-family:var(--mono);font-size:10px;text-transform:uppercase;letter-spacing:.07em;color:var(--ink-3)}
+  .pipe-step.on .n{color:var(--accent-ink)}
+  .pipe-step.off .n{color:var(--ink-3)}
+  .tiers-controls{display:flex;gap:16px;flex-wrap:wrap;margin:0 0 22px}
+  .toggle{display:flex;align-items:center;gap:6px;font-family:var(--mono);font-size:11px;color:var(--ink-2);cursor:pointer}
+  .target.is-retired{opacity:.55}
+  .target.is-retired .tname{text-decoration:line-through}
+  .target.is-candidate{border-top-color:var(--line);border-style:dashed}
+  .treason{font-family:var(--prose);font-size:12px;color:var(--ink-3);font-style:italic;line-height:1.45}
+  .ladder-intro{font-family:var(--prose);font-size:15px;line-height:1.6;color:var(--ink-2);
+    max-width:68ch;margin:0 0 26px}
+  .tier{margin-bottom:26px;max-width:1500px}
+  .tier-head{display:flex;align-items:baseline;gap:12px;flex-wrap:wrap;margin-bottom:4px}
+  .tier-rank{font-family:var(--mono);font-size:11px;color:var(--ink-3);
+    border:1px solid var(--line-2);border-radius:3px;padding:1px 6px}
+  .tier-head h3{margin:0;font-size:16px;font-weight:700}
+  .tier-head .who{font-family:var(--mono);font-size:11px;color:var(--ink-3)}
+  .tier-why{margin:0 0 12px;font-family:var(--prose);font-size:13.5px;color:var(--ink-2);max-width:72ch}
+  .tier-why b{color:var(--ink);font-weight:600}
+  .targets{display:grid;gap:10px;grid-template-columns:repeat(auto-fill,minmax(270px,1fr))}
+  .target{background:var(--surface);border:1px solid var(--line);
+    border-top:3px solid var(--line-2);border-radius:var(--radius);padding:12px 13px;
+    display:grid;gap:7px;align-content:start}
+  .target:hover{border-color:var(--line-2)}
+  .target.p1{border-top-color:var(--alert)}
+  .target.p2{border-top-color:var(--warn)}
+  .target .tname{appearance:none;background:none;border:0;padding:0;justify-self:start;
+    text-align:left;cursor:pointer;font-family:var(--ui);font-size:13.5px;font-weight:500;
+    line-height:1.35;color:var(--ink)}
+  .target .tname:hover{color:var(--accent-ink);text-decoration:underline}
+  .target .tsite{font-family:var(--mono);font-size:11px;justify-self:start;
+    color:var(--accent-ink);text-decoration:none;border-bottom:1px solid var(--line-2);
+    max-width:100%;overflow-wrap:anywhere}
+  .target .tsite:hover{border-bottom-color:var(--accent)}
+  .target .tja{font-family:var(--mono);font-size:10.5px;color:var(--ink-3)}
+  .target .tpitch{font-family:var(--prose);font-size:12.5px;line-height:1.5;color:var(--ink-2)}
+  .target .tfoot{display:flex;gap:5px;flex-wrap:wrap}
+  .tier-empty{font-size:12.5px;color:var(--ink-3);font-style:italic}
+
+  /* ---- pool ---- */
+  .srcgrid{display:grid;gap:10px;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));
+    margin-bottom:22px;max-width:1500px}
+  .src{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:11px 12px;display:grid;gap:6px}
+  .src.unharvested{border-style:dashed;opacity:.72}
+  .src h4{margin:0;font-size:13px;font-weight:500;line-height:1.35}
+  .src .kind{font-family:var(--mono);font-size:10px;text-transform:uppercase;letter-spacing:.07em}
+  .src .kind.register{color:var(--good)}
+  .src .kind.association{color:var(--accent-ink)}
+  .src .kind.award,.src .kind.database{color:var(--warn)}
+  .src .kind.editorial{color:var(--alert)}
+  .src .meta{font-family:var(--mono);font-size:10.5px;color:var(--ink-3)}
+  .pool-controls{display:flex;gap:16px;align-items:center;flex-wrap:wrap;max-width:1500px}
+  .pool-controls .search{margin-bottom:0;max-width:360px}
+  .poolwrap{overflow-x:auto;max-width:1500px;margin-top:12px;border:1px solid var(--line);border-radius:var(--radius)}
+  .pooltable{border-collapse:collapse;width:100%;background:var(--surface)}
+  .pooltable th{font-family:var(--mono);font-size:10px;text-transform:uppercase;letter-spacing:.07em;
+    color:var(--ink-3);text-align:left;font-weight:500;padding:8px 12px;border-bottom:1px solid var(--line);white-space:nowrap}
+  .pooltable td{padding:7px 12px;border-bottom:1px solid var(--line);font-size:12.5px;vertical-align:top}
+  .pooltable tr:last-child td{border-bottom:0}
+  .pooltable tr.excluded td{color:var(--ink-3)}
+  .pooltable tr.excluded .pname{text-decoration:line-through}
+  .pooltable .pname{font-weight:500}
+  .pooltable .purl{font-family:var(--mono);font-size:11px;color:var(--accent-ink);text-decoration:none;overflow-wrap:anywhere}
+  .pooltable .preason{font-family:var(--prose);font-size:12px;font-style:italic;max-width:38ch}
+  .pooltable .pstate{font-family:var(--mono);font-size:10px;text-transform:uppercase;letter-spacing:.06em}
+  .pooltable .pstate.carded{color:var(--good)}
+  .pooltable .pstate.excluded{color:var(--ink-3)}
+
+  /* ---- board ---- */
+  .board{display:grid;gap:14px;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));max-width:1600px;align-items:start}
+  .col{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:12px}
+  .col h3{margin:0 0 10px;font-size:11px;text-transform:uppercase;letter-spacing:.09em;color:var(--ink-3);font-weight:500;
+    display:flex;justify-content:space-between}
+  .cards{display:flex;flex-direction:column;gap:8px}
+  .card{appearance:none;background:var(--surface-2);border:1px solid var(--line);border-left:3px solid var(--line-2);
+    border-radius:4px;padding:9px 10px;text-align:left;cursor:pointer;display:grid;gap:5px;width:100%}
+  .card:hover{border-color:var(--line-2)}
+  .card.p1{border-left-color:var(--alert)}
+  .card.p2{border-left-color:var(--warn)}
+  .card .cname{font-size:13px;font-weight:500;line-height:1.35}
+  .card .cmeta{font-family:var(--mono);font-size:10.5px;color:var(--ink-3);display:flex;gap:8px;flex-wrap:wrap;font-variant-numeric:tabular-nums}
+
+  @media (max-width:1000px){
+    .browse{grid-template-columns:1fr}
+    .facets,.detail{position:static;max-height:none}
+    .rows{max-height:340px;overflow-y:auto}
+  }
+  @media (max-width:520px){
+    .masthead,.tabs,.view{padding-inline:16px}
+    .built{margin-left:0}
+  }
+</style>
+
+<header class="masthead">
+  <h1 class="wordmark" id="projTitle"></h1>
+  <p id="projLede"></p>
+  <span class="built" id="built"></span>
+</header>
+
+<nav class="tabs" role="tablist" id="tabs">
+  <button class="tab" role="tab" id="tab-next" aria-selected="true" aria-controls="view-next">Do next</button>
+  <button class="tab" role="tab" id="tab-streams" aria-selected="false" aria-controls="view-streams">Streams</button>
+  <button class="tab" role="tab" id="tab-browse" aria-selected="false" aria-controls="view-browse">Browse</button>
+  <button class="tab" role="tab" id="tab-targets" aria-selected="false" aria-controls="view-targets">Targets</button>
+  <button class="tab" role="tab" id="tab-pool" aria-selected="false" aria-controls="view-pool">Pool</button>
+  <button class="tab" role="tab" id="tab-board" aria-selected="false" aria-controls="view-board">Task board</button>
+</nav>
+
+<section class="view" id="view-next" role="tabpanel" aria-labelledby="tab-next">
+  <p class="ladder-intro" id="nextIntro"></p>
+  <ol class="nextlist" id="nextList"></ol>
+  <p class="home-foot" id="nextRest"></p>
+</section>
+
+<section class="view" id="view-streams" role="tabpanel" aria-labelledby="tab-streams" hidden>
+  <div class="stream-grid" id="streamGrid"></div>
+  <div class="digest">
+    <h2>Where this stands</h2>
+    <ol>
+      <li><strong>Regulation is the demand engine, and it has fired twice.</strong> JFSA's 2021 Principles built internal teams at the top of the market; the 2025&ndash;26 AI guidance from JFSA, MAS and the BoJ created a second wave at institutions that never built one. This part is sourced and quotable.</li>
+      <li><strong>Hong Kong gives explicit permission.</strong> HKMA SPM CA-G-4 states independent review may be performed by external parties with relevant experience, and the eight licensed digital banks are the best-defined target set in the plan.</li>
+      <li><strong>Demand at the SME tier is unverified.</strong> The wedge assumed warehouse lenders, securitisation investors and VCs ask for independent model review. No instance of a Japanese fintech actually being asked has been found. Treat it as a hypothesis.</li>
+      <li><strong>The engagement fees were withdrawn.</strong> They were a triangulated day rate times a guessed day count. Effort is the missing factor and no published data on validation duration exists &mdash; so it has to be observed before anything is quoted.</li>
+      <li><strong>Positioning is worth roughly ten times the rate.</strong> A quantitative risk contractor bills &pound;215/day; a niche independent expert bills $300&ndash;500/hour for the same skill. That gap is real and sourced, and it is what the academic affiliation and publishing buy.</li>
+      <li><strong>Sales is the binding constraint, so start where no selling is required.</strong> Deliver for firms that already hold the mandates &mdash; Big 4 subcontractor panels, domestic risk boutiques &mdash; and take inbound from expert networks.</li>
+      <li><strong>Companies do buy research, and it is sized like a marketing budget.</strong> &yen;97.7bn a year flows from Japanese companies into university joint research, average contract &yen;3.3m, 85% under &yen;3m. That buyer is marketing or the CEO, not risk or procurement &mdash; and the work is the publication record, paid for. Blocked on whether TUJ can sign a &#x5171;&#x540C;&#x7814;&#x7A76;&#x5951;&#x7D04;.</li>
+      <li><strong>Sell in this order: paid research, then model building, then validation.</strong> The plan started at validation, which is the one that needs a credential, independence and a demand premise none of which existed yet.</li>
+      <li><strong>What a startup buys from a university is a name, grant access and capability &mdash; not scrutiny.</strong> The Japanese literature is blunt that a professor's name is indispensable when a company competes on technical strength, and that partnering unlocks subsidies a company cannot reach alone.</li>
+      <li><strong>Monetise the credential, not a consultancy.</strong> Expert-witness work, benchmark oversight under IOSCO Principle 5, an outside-director seat, and paid teaching through &#x304D;&#x3093;&#x3056;&#x3044; all share the property this plan needs: the counterparty initiates.</li>
+    </ol>
+  </div>
+</section>
+
+<section class="view" id="view-browse" role="tabpanel" aria-labelledby="tab-browse" hidden>
+  <div class="browse">
+    <aside class="facets" id="facets"></aside>
+    <div>
+      <input class="search" id="search" type="search" placeholder="Search names, tags, prose…" aria-label="Search all entries">
+      <p class="resultmeta"><span id="count"></span><button class="linkbtn" id="clear" type="button">clear filters</button></p>
+      <div class="rows" id="rows"></div>
+    </div>
+    <article class="detail" id="detail"></article>
+  </div>
+</section>
+
+<section class="view" id="view-targets" role="tabpanel" aria-labelledby="tab-targets" hidden>
+  <p class="ladder-intro">Work upward. At the bottom the purchase is forced by warehouse lenders,
+  securitisation investors and VCs in diligence — decisions made in weeks. At the top it is forced by the
+  supervisor — decisions made in quarters. Each tier's reference case is what makes the next one possible.</p>
+  <div class="pipe" id="pipe"></div>
+  <div class="tiers-controls">
+    <label class="toggle"><input type="checkbox" id="showRetired"> show retired</label>
+  </div>
+  <div id="tiers"></div>
+</section>
+
+<section class="view" id="view-pool" role="tabpanel" aria-labelledby="tab-pool" hidden>
+  <p class="ladder-intro">Harvested rows, not companies we have judged. A row becomes a card
+  only when someone looks at it and forms a view — which is why the pool lives in
+  <code>intake/*.tsv</code> and the repo is not full of entries nobody has read.
+  Promote with <code>tools/intake.py &lt;source&gt; --promote &lt;host&gt;</code>.</p>
+  <div id="sourceList"></div>
+  <div class="pool-controls">
+    <input class="search" id="poolSearch" type="search" placeholder="Search the pool…" aria-label="Search pool rows">
+    <label class="toggle"><input type="checkbox" id="showExcluded"> show excluded</label>
+  </div>
+  <div class="poolwrap"><table class="pooltable" id="poolTable"></table></div>
+</section>
+
+<section class="view" id="view-board" role="tabpanel" aria-labelledby="tab-board" hidden>
+  <div class="board" id="board"></div>
+</section>
+
+<script>
+const DATA = {"built": "2026-09-23", "repo": "https://github.com/mauhcs/J-job/blob/main/", "project": {"slug": "game-ml", "title": "Game ML Services", "lede": "Applied machine learning for Japanese game companies — the quantitative problems their AI vendors do not cover."}, "items": [{"id": "org-cedec", "type": "org", "name": "CEDEC — Computer Entertainment Developers Conference", "role": "venue", "country": "JP", "industry": ["games"], "status": "researching", "priority": 1, "confidence": "high", "tags": ["game", "conference", "distribution", "discovery", "open-submission"], "rel": ["note-game-business-model", "note-game-usecases", "org-cesa", "task-game-cedec-talk"], "links": [{"label": "CEDEC 2026 programme", "url": "https://cedec.cesa.or.jp/2026/"}, {"label": "Session — mathematical optimisation and ML for multi-player imperfect-information game AI", "url": "https://cedec.cesa.or.jp/2026/timetable/detail/s698912371e49f/"}, {"label": "Session — game QA with video and generative AI", "url": "https://cedec.cesa.or.jp/2026/timetable/detail/s6985e6f038961/"}, {"label": "Nikkei xTECH — generative AI cases discussed at CEDEC 2026", "url": "https://xtech.nikkei.com/atcl/nxt/column/18/03696/072900006/"}], "updated": "2026-09-23", "body": "**The single most useful entity in this project.**\n\nJapan's largest game developers' conference, run by CESA. CEDEC 2026 ran **22–24 July in\nYokohama**, with generative AI prominent throughout — sessions on video-plus-generative-AI QA,\nLLM-assisted development, Square Enix on zero-to-prototype generative workflows, and a\nlightning track on AI playtesting and AI debugging.\n\n**Crucially, the 2026 programme included a session on mathematical optimisation and machine\nlearning for multi-player imperfect-information game AI.** Quantitative, game-theoretic\nmaterial is in scope — this is not a conference only about art pipelines.\n\n**Why it matters more than any client.** CEDEC runs an **open session submission process**.\nA talk is simultaneously the missing track record, a credential a Japanese studio recognises,\nand direct access to the exact audience — obtained by writing a good proposal rather than by\nselling to anyone. Every other project in this repo lacked a channel like this.\n\n## Next action\n\nFind the submission window and requirements for the next edition, and the format and language\nexpectations (`task-game-cedec-talk`). Review the last two years of programmes for what gets\naccepted and what is already covered.", "path": "game-ml/entities/org/cedec.md"}, {"id": "org-cesa", "type": "org", "name": "CESA (Computer Entertainment Supplier's Association)", "name_ja": "一般社団法人コンピュータエンターテインメント協会", "role": "channel", "country": "JP", "industry": ["games"], "status": "researching", "priority": 1, "confidence": "high", "tags": ["game", "association", "channel", "target-list"], "rel": ["note-game-adoption", "note-game-regulation", "org-cedec", "org-joga", "stream-game-market", "task-game-cedec-talk", "task-game-gacha-verification", "task-game-survey-usecases"], "links": [{"label": "CEDEC (run by CESA)", "url": "https://cedec.cesa.or.jp/"}], "updated": "2026-09-23", "body": "The Japanese game industry's trade association. Publishes the **annual survey** behind\n`note-game-adoption` — the 85.8% generative-AI adoption figure and the 32% using AI for\nin-house engine development — and runs **CEDEC**, the country's largest game developers'\nconference.\n\nTwo uses. Its **membership list is the buyer universe** for this project, spanning major\npublishers and indies, and should be harvested into a pool the way the micro-insurer\nassociation list was in the other project. And with JOGA it sets the **gacha disclosure\nguidelines** that `note-game-regulation` is built on, which makes it the authority on the\ncompliance question as well as the audience.", "path": "game-ml/entities/org/cesa.md"}, {"id": "org-heroz", "type": "org", "name": "HEROZ", "name_ja": "HEROZ株式会社", "role": "seller", "country": "JP", "industry": ["games", "asset-mgmt", "consulting"], "status": "researching", "priority": 1, "confidence": "med", "tags": ["game", "competitor", "comparable", "finance-crossover"], "rel": ["note-game-business-model", "note-game-competitors", "note-game-edge", "stream-game-market", "task-game-approach-vendors"], "links": [{"label": "AI vendor guide listing", "url": "https://www.ai-vendor-guide.net/list/"}], "updated": "2026-09-23", "body": "**The closest thing to a proof and a warning at the same time.**\n\nJapanese listed AI company with origins in **shogi AI** — the team behind a program that beat\nprofessional players — which has since built a business spanning **game AI and finance AI**.\n\nThat is precisely the combination this project proposes: game domain plus quantitative\nfinance. It already exists, domestically, as a public company with Japanese client\nrelationships and a delivery organisation.\n\n**The proof:** the combination is commercially viable and a Japanese market pays for it.\n\n**The warning:** they got there first, they are local, and they are listed. Any positioning\nthat amounts to \"game AI meets finance AI\" runs straight into them.\n\n**What to establish:** what HEROZ actually sells to game companies — engine-level game AI,\nconsulting, or products — and whether the adversarial and economic work in\n`note-game-usecases` is inside or outside their scope. If it is inside, the differentiation\nargument here needs rebuilding.", "path": "game-ml/entities/org/heroz.md"}, {"id": "org-joga", "type": "org", "name": "JOGA (Japan Online Game Association)", "name_ja": "一般社団法人日本オンラインゲーム協会", "role": "regulator", "country": "JP", "industry": ["games"], "status": "researching", "priority": 2, "confidence": "med", "tags": ["game", "self-regulation", "gacha", "guidelines"], "rel": ["note-game-regulation", "org-cesa", "task-game-gacha-verification"], "links": [{"label": "JOGA online game safety declaration (PDF)", "url": "https://japanonlinegame.org/wp-content/uploads/2017/06/JOGA120801.pdf"}, {"label": "MCF・CESA・JOGA blockchain game guidelines", "url": "https://gamebiz.jp/news/298708"}], "updated": "2026-09-23", "body": "Industry body for online games, and with CESA the author of the **self-regulatory gacha\nguidelines** requiring disclosure of appearance rates for all items, with compliance routes\nincluding a ¥50,000 expected-spend ceiling or published probability bounds.\n\nAlso co-authored **blockchain game guidelines** with MCF and CESA, covering RMT prohibition\ncarve-outs and flagging exposure to gambling law and crypto-exchange regulation — an adjacent\narea where quantitative and regulatory reasoning overlap, and where the IPOR background is\nunexpectedly relevant.\n\n**The body to understand before proposing anything on gacha verification**, since its\nguidelines define what \"correct\" means.", "path": "game-ml/entities/org/joga.md"}, {"id": "org-laboro-ai", "type": "org", "name": "Laboro.AI", "name_ja": "株式会社Laboro.AI", "role": "channel", "country": "JP", "industry": ["consulting"], "status": "researching", "priority": 1, "confidence": "med", "tags": ["game", "competitor", "subcontract-route", "custom-ai"], "rel": ["note-game-business-model", "note-game-competitors", "task-game-approach-vendors"], "links": [{"label": "AI開発企業一覧", "url": "https://www.movin.co.jp/it/ai/firmlist/developer.html"}], "updated": "2026-09-23", "body": "Founded 2016, listed on the **TSE Growth market in July 2023**. Sells **カスタムAI** — bespoke\nAI designed per client problem — alongside AI consulting, and takes **small and mid-sized\nprojects** as well as large ones.\n\n**The most plausible subcontracting counterparty in this project.** A custom-AI house builds\nwhatever the client brief demands, which means it periodically receives briefs outside its own\nbench. Adversarial detection, virtual economy modelling and regulated-probability verification\nare exactly the sort of brief a generalist custom-AI firm would either decline or want help\nwith.\n\nAlso the best available source for the **price floor**: what they quote for a comparable scope\nis what a studio expects to pay.\n\nSame shape as Ridge-i, AVILEN and BrainPad, which should be carded alongside it once\n`task-game-approach-vendors` establishes whether the route exists at all.", "path": "game-ml/entities/org/laboro-ai.md"}, {"id": "org-preferred-networks", "type": "org", "name": "Preferred Networks", "name_ja": "株式会社Preferred Networks", "role": "seller", "country": "JP", "industry": ["consulting"], "status": "idea", "priority": 3, "confidence": "med", "tags": ["game", "competitor", "research-lab"], "rel": ["note-game-competitors"], "links": [{"label": "AI vendor profile", "url": "https://www.ai-vendor-guide.net/list/preferred-networks.html"}], "updated": "2026-09-23", "body": "Japan's most prominent deep-learning venture, with top-tier research strength and its own AI\nchip, **MN-Core**, built to accelerate deep learning workloads.\n\nCarded as the ceiling of the domestic competitive set rather than a likely competitor for the\nsame briefs. A firm designing its own silicon is not bidding for a gacha verification study.\nUseful mainly as a reference point for how deep Japan's AI bench actually goes.", "path": "game-ml/entities/org/preferred-networks.md"}, {"id": "org-square-enix", "type": "org", "name": "Square Enix", "name_ja": "株式会社スクウェア・エニックス", "role": "buyer", "country": "JP", "industry": ["games"], "size": "large", "status": "researching", "priority": 2, "confidence": "med", "pitch": "Proof that a major Japanese publisher will run a formal university AI research partnership.", "site": "https://www.hd.square-enix.com/", "tags": ["game", "publisher", "sangaku", "proof-point"], "rel": ["note-game-adoption", "note-game-edge", "note-game-usecases", "org-u-tokyo-game-ai", "stream-game-market"], "links": [{"label": "CEDEC 2026 — generative AI prototyping session (Nikkei xTECH)", "url": "https://xtech.nikkei.com/atcl/nxt/column/18/03696/072900007/"}, {"label": "ゲームQA・デバッグのAI活用 — スクエニ目標の整理", "url": "https://aiteller.jp/blog/game-debug-qa-ai"}], "updated": "2026-09-23", "body": "Carded not as a prospect but as **the proof point the whole distribution argument rests on**.\n\nSquare Enix has announced a target to automate **70% of QA and debugging work with generative\nAI by the end of 2027**, pursued through **joint research with the University of Tokyo's\nMatsuo-Iwasawa laboratory** — the country's most prominent academic AI group. They also\npresented at CEDEC 2026 on generative-AI prototyping for game designers.\n\n**Two conclusions follow.**\n\nA major Japanese publisher will enter a **formal research partnership with a university AI\nlab**, publicly. That is documented, repeated behaviour, and it is better evidence for the\nacademic route than anything found in the other two projects.\n\nAnd QA automation specifically is **taken** — the largest publisher in Japan is working on it\nwith the best-known lab in Japan. Do not enter there. `note-game-usecases` points elsewhere\nfor that reason.", "path": "game-ml/entities/org/square-enix.md"}, {"id": "org-u-tokyo-game-ai", "type": "org", "name": "University of Tokyo — game AI research group", "role": "channel", "country": "JP", "industry": ["academia", "games"], "status": "idea", "priority": 2, "confidence": "med", "tags": ["game", "academia", "sangaku", "channel"], "rel": ["note-game-business-model", "note-game-edge", "org-square-enix"], "links": [{"label": "Research group for Game AI, University of Tokyo", "url": "https://game.c.u-tokyo.ac.jp/"}], "updated": "2026-09-23", "body": "A dedicated game AI research group at the University of Tokyo, alongside the Matsuo-Iwasawa\nlaboratory that Square Enix partnered with for QA automation.\n\n**Relevant as the academic end of the industry's research channel.** If Japanese game companies\ncollaborate with university AI groups — and Square Enix demonstrates they do — then the people\nin those groups know which studios commission research, how the contracts are structured, and\nwhat they pay. One conversation there is worth a great deal of desk research.\n\nIt is also the natural home for a co-authored paper on the quantitative side of game AI, which\nwould serve as the track record this project lacks.", "path": "game-ml/entities/org/u-tokyo-game-ai.md"}, {"id": "note-game-adoption", "type": "note", "name": "Adoption — near-universal, one year old, and mostly generative", "status": "confirmed", "priority": 1, "confidence": "high", "tags": ["game", "market", "adoption", "evidence"], "rel": ["note-game-competitors", "note-game-risks", "note-game-usecases", "org-cesa", "org-square-enix", "stream-game-market", "task-game-survey-usecases"], "links": [{"label": "CESA survey — over 85% of Japanese developers use generative AI (Automaton)", "url": "https://automaton-media.com/en/news/over-85-of-japanese-game-developers-use-generative-ai-in-game-development-2026-cesa-survey-shows-an-increase-from-last-years-51/"}, {"label": "Earlier CESA survey — 51% (CGMagazine)", "url": "https://www.cgmagonline.com/news/cesa-japanese-game-companies-using-ai"}, {"label": "PocketGamer.biz coverage", "url": "https://www.pocketgamer.biz/report-more-than-half-of-japanese-firms-are-using-ai-in-game-dev/"}], "updated": "2026-09-23", "body": "## The numbers\n\nFrom CESA's own survey of Japanese game developers:\n\n- **85.8% use generative AI** at least occasionally — **63% daily**, 22.8% occasionally.\n- **Up from 51% the previous year.**\n- **32% of CESA member companies** use AI to help develop in-house game engines.\n- Most common applications, in order: **visual and image generation**, then story and text\n  generation, then programming support.\n\nFor contrast, a GDC 2026 survey put global industry use of generative AI tools at around 36%.\nThe definitions differ, so the gap is not directly comparable — but nothing suggests Japanese\nstudios are behind, and the CESA figure suggests the opposite.\n\n## What this means for a service business — and it is not what it looks like\n\n**The bull reading is wrong.** 85.8% adoption does not mean 85.8% of studios are shopping for\nAI help. It means the easy, visible work — image generation, text drafts, coding assistance —\nis already being done in-house with off-the-shelf tools. A consultant arriving to offer\ngenerative AI is arriving a year late to a market that solved it with a subscription.\n\n**The useful reading:** adoption this fast and this broad normalises the category. Budgets\nexist, internal advocates exist, and nobody has to be convinced that ML belongs in a studio.\nThe remaining question is **which problems are still open because they need a skill the studio\ndoes not have** — and those are unlikely to be generative.\n\nNote also what is *absent* from the list of common applications: nothing about cheat detection,\neconomy modelling, churn, LTV or matchmaking. Either those are handled elsewhere in the\norganisation and not counted as \"generative AI use\", or they are under-served. Worth\nestablishing which (`task-game-survey-usecases`).", "path": "game-ml/notes/game-adoption.md"}, {"id": "note-game-business-model", "type": "note", "name": "Business model and distribution", "status": "researching", "priority": 1, "confidence": "low", "tags": ["game", "businessmodel", "distribution", "pricing"], "rel": ["note-game-edge", "note-game-regulation", "note-game-risks", "org-cedec", "org-heroz", "org-laboro-ai", "org-u-tokyo-game-ai", "stream-game-offer", "task-game-approach-vendors", "task-game-cedec-talk"], "updated": "2026-09-23", "body": "## The product ladder\n\nThree things, ordered by how much trust each requires:\n\n1. **Diagnostic** — a fixed-scope, fixed-fee study of one system. Verify gacha disclosure\n   against implementation and logs; or assess an existing cheat-detection pipeline's false\n   positive and false negative behaviour. Weeks, bounded, low access requirement, produces a\n   document. **This is the wedge**: a studio can say yes without restructuring anything.\n2. **Build** — develop the detection or estimation system. Months, deep access, real fees, and\n   only available after a diagnostic has built trust.\n3. **Retained** — ongoing monitoring as the adversary adapts. Cheat detection decays by\n   definition, so this one is natural rather than invented, and it is the only shape that\n   produces recurring revenue.\n\n## Pricing\n\n**Not yet.** The lesson from the other projects is that a fee table invented before an effort\nmeasurement does not survive contact. What can be said: Japanese custom-AI contractors take\nsmall and mid-sized projects, so the market is not exclusively enterprise-scale — the price\nfloor is set by what Laboro.AI or Ridge-i would quote for a comparable scope, and that is\nfindable by asking them (`task-game-approach-vendors`).\n\n## Distribution — four routes, ranked by how much selling each requires\n\n**1. CEDEC, and it is the strongest route here.** Japan's largest game developers' conference,\nrun by CESA, held annually — 2026 was 22–24 July in Yokohama. It has an **open session\nsubmission process**, and the 2026 programme included mathematical optimisation and machine\nlearning for multi-player imperfect-information game AI, so quantitative material is in scope.\n\nA CEDEC talk is the track record, the credential and the discovery channel in one artefact,\nobtained by submitting rather than by selling. **It is the closest thing to a solved\ndistribution problem in any of the three projects** — and the same conclusion, again: publish\nsomething and let the audience come.\n\n**2. Subcontracting to domestic AI vendors.** Laboro.AI, Ridge-i, AVILEN, and the research\nventures. They own the client relationships and their benches are CV/NLP-shaped. Same route\nthat both other projects converged on.\n\n**3. University research collaboration.** Square Enix partnered with the University of Tokyo's\nMatsuo-Iwasawa lab on QA automation; the University of Tokyo runs a game AI research group.\nJapanese game companies demonstrably do 産学連携 with AI labs — a documented, repeated\nbehaviour, which is better evidence than any buyer thesis in the other projects. The TUJ\naffiliation is the entry, and the earlier work on 産学連携 contract mechanics applies directly.\n\n**4. Direct approach to studios.** Last. Slowest, most gated, and the thing that has failed\nthree times.\n\n## What would make this work when the others did not\n\nOne difference is real: **this industry has a public, open-submission conference whose audience\nis exactly the buyer.** Neither of the other projects had that. Model validation had JAFEE,\nwhich is academic and adjacent; alt data had a podcast, which required being interesting to a\nhost first.\n\nCEDEC accepts submissions on merit. That converts \"how do I get discovered\" from a\nrelationship problem into a writing problem — which is the one thing that has consistently\nbeen within reach.", "path": "game-ml/notes/game-business-model.md"}, {"id": "note-game-competitors", "type": "note", "name": "Competitors — a deep domestic AI vendor bench", "status": "researching", "priority": 1, "confidence": "med", "tags": ["game", "competition", "vendors"], "rel": ["note-game-adoption", "note-game-edge", "note-game-risks", "org-heroz", "org-laboro-ai", "org-preferred-networks", "stream-game-market", "stream-game-offer", "task-game-approach-vendors"], "links": [{"label": "AI受託開発ベンダーまとめ", "url": "https://www.ai-vendor-guide.net/list/"}, {"label": "AI開発・導入支援企業一覧", "url": "https://www.movin.co.jp/it/ai/firmlist/developer.html"}], "updated": "2026-09-23", "body": "Japan has a **mature, well-capitalised AI contracting sector**, and it is not a gap market.\n\n**Research-led ventures:** Preferred Networks (develops its own MN-Core AI chip), ABEJA,\nExawizards, PKSHA Technology, AI inside, FRONTEO, **HEROZ**.\n\n**Custom AI contractors:** Laboro.AI (founded 2016, listed on TSE Growth in 2023), Ridge-i,\nAVILEN, BrainPad. These sell \"custom AI\" — bespoke design and build against a client problem,\nincluding small and mid-sized projects.\n\n**The one to look at first is `org-heroz`**, whose origins are in shogi AI and which works in\nboth game AI and finance. That is the same combination this project proposes, already\nassembled in a domestic listed company with Japanese client relationships.\n\n## How to read this\n\n**Competing head-on is not viable.** They have Japanese-language sales, existing studio\nrelationships, delivery teams, and in Laboro's case public-company credibility. A solo\nforeign consultant does not win a competitive tender against them.\n\n**But contracting sectors this deep subcontract.** A bench organised around CV, NLP and\ngenerative work needs outside help when a brief is adversarial detection, economic modelling\nor regulated-probability verification. That is the same structural conclusion the other two\nprojects reached — Big 4 for validation, Neudata for data — arrived at a third time\nindependently.\n\n**The unresolved question:** do these firms even get asked for this kind of work by game\nstudios, or does it never reach them because studios handle it internally? That decides whether\nsubcontracting is a channel or a dead end (`task-game-approach-vendors`).", "path": "game-ml/notes/game-competitors.md"}, {"id": "note-game-edge", "type": "note", "name": "Strengths — what actually transfers, and what does not", "status": "researching", "priority": 1, "confidence": "med", "tags": ["game", "positioning", "strengths", "honesty"], "rel": ["note-game-business-model", "note-game-competitors", "note-game-regulation", "note-game-risks", "note-game-usecases", "org-heroz", "org-square-enix", "org-u-tokyo-game-ai", "stream-game-offer", "task-game-cedec-talk"], "updated": "2026-09-23", "body": "Written against the pattern from the other two projects, where \"edges\" turned out to be\nhypotheses. Marked accordingly.\n\n## Transfers well, and is genuinely scarce\n\n**Adversarial detection.** HFT and trading surveillance is the discipline of spotting an\nopponent who is deliberately hiding inside normal-looking activity, in sequence data, with\nasymmetric error costs. Cheat, bot and RMT detection is the same discipline. The Japanese\nmaterial notes cheaters now embed AI to **mimic the rhythm of real players** — an arms race\nagainst an adapting adversary, which is exactly what market manipulation detection is. Almost\nnobody selling ML to game studios has done this; almost everyone selling it to banks has.\n\n**Verification of stochastic claims.** `note-game-regulation`. The gacha disclosure regime is\nmodel validation with different vocabulary, and the `model-validation` project's entire\nmethodology transfers.\n\n**Estimation discipline under censoring and selection.** Churn and LTV are survival problems,\nand the published failure modes are survivorship bias and wrong cohort windows. A risk\nmodeller's instincts are the differentiator, not the algorithm choice.\n\n**Virtual economies.** A gacha game runs a closed economy with faucets, sinks, inflation and a\ngrey secondary market. It is macro plus microstructure with perfect observability. Very few ML\nconsultants think in those terms; it is a quant's native language.\n\n## Transfers weakly\n\nComputer vision, generative models, LLM application work. Competent but unremarkable, and\nthis is where every competitor and every in-house team is already strong.\n\n## Does not transfer at all, and this is the binding one\n\n**No game industry track record.** No shipped title, no studio reference, no CEDEC talk, no\nunderstanding of how a Japanese studio is organised or how a live-ops team actually works\nweek to week. Everything above is *why the skills should work*, not evidence that they have.\n\nThe other two projects died on precisely this. It should be assumed to be the deciding factor\nhere too until something disproves it.\n\n## The one asset that is not a hypothesis\n\nThe **academic affiliation**, and it matters more here than it did elsewhere — because this\nindustry demonstrably buys university research. Square Enix partnered with the University of\nTokyo's Matsuo-Iwasawa lab for QA automation; the University of Tokyo runs a game AI research\ngroup. **A Japanese game company accepting a university collaboration is a documented,\nrepeated behaviour**, which is more than could be said for any buyer in the other projects.\n\nThat suggests the entry is a **research collaboration or a CEDEC talk**, not a consulting\npitch — which is the same conclusion `note-research-as-product` reached in the other project,\narriving here with better evidence behind it.", "path": "game-ml/notes/game-edge.md"}, {"id": "note-game-regulation", "type": "note", "name": "Gacha disclosure — a regulated quantitative claim nobody independently checks", "status": "researching", "priority": 1, "confidence": "med", "tags": ["game", "regulation", "gacha", "opportunity", "differentiation"], "rel": ["note-game-business-model", "note-game-edge", "note-game-usecases", "org-cesa", "org-joga", "stream-game-offer", "task-game-gacha-verification"], "links": [{"label": "JOGA online game safety declaration (PDF)", "url": "https://japanonlinegame.org/wp-content/uploads/2017/06/JOGA120801.pdf"}, {"label": "CEDEC 2024 — 景品表示法 lessons from past enforcement (4Gamer report)", "url": "https://www.4gamer.net/games/999/G999905/20240827021/"}, {"label": "消費者庁 — オンラインゲームの動向整理 (PDF)", "url": "https://www.caa.go.jp/policies/policy/consumer_policy/caution/internet/assets/consumer_policy_cms106_220630_08.pdf"}, {"label": "MCF・CESA・JOGA blockchain game guidelines (gamebiz)", "url": "https://gamebiz.jp/news/298708"}], "updated": "2026-09-23", "body": "**The most interesting finding in this project, and the one nobody else is positioned for.**\n\n## The rule\n\nIndustry self-regulation through **JOGA** and **CESA** requires disclosure of **drop rates for\nevery item a gacha can produce**. Operators choose among several compliance routes, including\nkeeping the **expected spend to obtain a rare item within ¥50,000**, or publishing upper and\nlower bounds on appearance probabilities.\n\nBehind that sits the **景品表示法 (Act against Unjustifiable Premiums and Misleading\nRepresentations)**, enforced by the **消費者庁**, which has issued administrative guidance\nagainst gacha mechanics — most famously complete-gacha style designs where collecting items\nunlocks an advantageous exchange. CEDEC 2024 ran a session drawing lessons from past\nenforcement, so the industry treats this as a live compliance risk, not a theoretical one.\n\n## Why this is a model validation problem wearing different clothes\n\nA published drop rate is a **quantitative claim about a stochastic system, made to consumers,\nenforceable by a regulator.** Verifying it means asking exactly the questions asked of a risk\nmodel:\n\n- Does the implemented sampler actually produce the disclosed distribution? Pity timers,\n  ceilings, step-ups, duplicate-conversion and per-user state all distort the naive rate.\n- Is the **expected value** calculation correct under the real mechanic, including the ¥50,000\n  ceiling where that route is chosen?\n- Do the disclosed bounds hold across the live population, not just in theory?\n- Is there drift between the design document, the implementation and the disclosure?\n\nThat is verification of an implemented stochastic model against a stated specification. It is\nthe entire `model-validation` skillset, in an industry with more of these systems than finance\nhas, and — as far as this sweep found — **no independent verification practice at all**.\n\n## Why a studio would buy it\n\nNot enthusiasm for rigour. **Downside.** A 消費者庁 action over a misstated probability is a\nreputational event in a consumer business, and the disclosure is public and checkable by\nplayers, who do check and do publish their own counts. An independent verification is cheap\ninsurance against a discrepancy being found by a hostile audience first.\n\n## Open questions, and they are large\n\n- Has any studio ever been sanctioned specifically over a *wrong* probability, as opposed to\n  the mechanic itself? If not, the risk may be perceived as theoretical.\n- Do studios already verify internally, via QA or audit?\n- Would a studio let an outsider inspect gacha implementation code? This is commercially\n  sensitive, and the answer may simply be no — in which case the offer must be restructured\n  around outputs (sampled logs) rather than code.\n- Is there an existing auditor, law firm or QA vendor covering this?\n\n**`task-game-gacha-verification` exists to answer these before any of it is believed.**", "path": "game-ml/notes/game-regulation.md"}, {"id": "note-game-risks", "type": "note", "name": "Risks — including the one that killed the last two projects", "status": "confirmed", "priority": 1, "confidence": "high", "tags": ["game", "risk", "kill-criteria"], "rel": ["note-game-adoption", "note-game-business-model", "note-game-competitors", "note-game-edge", "stream-game-offer", "task-game-gacha-verification", "task-game-survey-usecases"], "updated": "2026-09-23", "body": "Stated at the start this time, not after a full research pass.\n\n## 1. No track record — the recurring one\n\nThree projects, same constraint: acquiring clients in a market where there is no reference\nand no appetite for business development. Nothing about game companies makes this easier;\nJapanese studios are relationship-driven and conservative about who touches live systems.\n\n**This is the deciding risk.** The only mitigations that have ever looked credible are\n(a) somebody else owning the client relationship, and (b) publishing something that makes the\napproach unnecessary. Both are in `note-game-business-model`.\n\n## 2. The window may already be closing on the obvious work\n\nAdoption went 51% → 85.8% in a year. Whatever is easy is being done. Arriving with generative\nAI services in 2026 is arriving late, which is why the offer is deliberately elsewhere.\n\n## 3. Access to the systems that matter\n\nCheat detection and gacha verification both require access to **live production data or\nimplementation code** — telemetry, ban decisions, sampler internals. These are commercially\nsensitive and security-relevant. A studio may simply refuse an outsider, and the whole offer\nthen has to be restructured around whatever can be shared.\n\n## 4. Language and organisational distance\n\nLive-ops, QA and security teams at Japanese studios work in Japanese. This is deliverable-heavy\nwork requiring sustained contact with engineers, not a report handed over at the end.\n\n## 5. The domestic vendors\n\n`note-game-competitors`. Deep, funded, domestic, and in HEROZ's case already spanning game and\nfinance AI.\n\n## 6. The regulatory idea may be a solution to a problem nobody feels\n\n`note-game-regulation` is the most differentiated idea here, and it rests on an assumption that\nstudios feel exposed on probability disclosure. If enforcement has only ever targeted mechanics\nrather than misstated rates, the perceived risk may be near zero. **Untested.**\n\n## 7. Reputational asymmetry\n\nBeing the person who audits gacha odds could read as adversarial to the industry it sells to.\nWorth thinking about how that is framed before it is built — the same tension as independent\nmodel validation, in a more consumer-visible setting.\n\n## Kill criteria, set in advance\n\nAbandon if, after `task-game-survey-usecases` and `task-game-approach-vendors`:\n\n- studios handle quantitative work entirely in-house and never outsource it; **or**\n- domestic AI vendors are not asked for this kind of brief; **or**\n- nobody will grant an outsider access to telemetry or sampler code.\n\nAny one of those makes the project unsellable regardless of skill fit.", "path": "game-ml/notes/game-risks.md"}, {"id": "note-game-usecases", "type": "note", "name": "Use cases — mapped against what a quant can actually do", "status": "researching", "priority": 1, "confidence": "med", "tags": ["game", "usecases", "ml", "positioning"], "rel": ["note-game-adoption", "note-game-edge", "note-game-regulation", "org-cedec", "org-square-enix", "stream-game-market", "stream-game-offer", "task-game-cedec-talk", "task-game-survey-usecases"], "links": [{"label": "CEDEC 2026 — game QA with video and generative AI", "url": "https://cedec.cesa.or.jp/2026/timetable/detail/s6985e6f038961/"}, {"label": "CEDEC 2026 — mathematical optimisation and ML for multi-player imperfect-information game AI", "url": "https://cedec.cesa.or.jp/2026/timetable/detail/s698912371e49f/"}, {"label": "AI活用事例 — NPC生成・自動デバッグ・不正検知", "url": "https://ai-revolution.co.jp/media/ai-in-gaming/"}, {"label": "AntiCheatPT — transformer-based cheat detection (arXiv)", "url": "https://arxiv.org/pdf/2508.06348"}], "updated": "2026-09-23", "body": "The industry's own reading is that the areas where AI is **most mature in production** are\n**QA automation, asset draft generation, customer-support automation and fraud/cheat\ndetection**. Sorting the full landscape by whether an outside quant has anything to add:\n\n## Strong fit — the adversarial and quantitative corner\n\n| use case | what it really is | why the background transfers |\n|---|---|---|\n| **Cheat / bot / RMT detection** | Adversarial sequence anomaly detection against an opponent who adapts | This is **market surveillance**. Spoofing, layering and wash-trade detection are the same problem class, and the false-positive economics are identical — banning a paying player wrongly costs more than missing a cheat |\n| **Gacha probability & expected-value verification** | Verifying a regulated quantitative claim | See `note-game-regulation`. Closest thing to model validation in a new industry |\n| **Virtual economy modelling** | Currency sinks and faucets, inflation, secondary markets | Market microstructure and monetary dynamics, applied to a closed economy with full observability |\n| **Churn and LTV** | Survival analysis with censoring and cohort bias | The literature explicitly warns about **survivorship bias in training data** and measuring the wrong cohort — a risk-modelling reflex, and a common failure for generalist ML teams |\n| **Matchmaking and rating** | Bayesian skill inference and balanced-pairing optimisation | Systems weigh 50+ variables to target ~50% win probability. Elo/TrueSkill are inference problems |\n| **Real-time inference at scale** | Low-latency serving | HFT is the most latency-critical production ML that exists |\n\n## Weak fit — crowded, and the incumbents are better placed\n\nImage and asset generation, story and dialogue generation, coding assistance, NPC behaviour\nauthoring, voice synthesis, upscaling. All generative, all where the 85.8% adoption already\nsits, all better served by studios' own teams or by vendors with deep CV/NLP benches.\n\n## Genuinely uncertain\n\n**QA and debugging automation** is the hottest area — Square Enix is targeting **70% automation\nof QA and debug work by end of 2027** through joint research with the University of Tokyo's\nMatsuo-Iwasawa lab, and CEDEC 2026 had sessions on video-plus-generative-AI QA. Video\nrecognition for bug detection is a real, live problem.\n\nBut it is a **vision and LLM problem**, not a quantitative one, and the largest publisher in\nJapan has already partnered with the country's most prominent AI lab to solve it. Entering\nthere means competing with that. The exception worth exploring: the *statistical* side of QA —\ntest coverage, defect prediction, deciding where to spend limited test capacity — which is an\nestimation problem rather than a perception one.\n\n## The synthesis\n\nLead with **cheat/RMT detection and gacha verification**. Both are adversarial or regulated,\nboth punish being wrong in ways a studio feels immediately, and both are closer to financial\nsurveillance than to anything a generative-AI vendor sells.", "path": "game-ml/notes/game-usecases.md"}, {"id": "task-game-approach-vendors", "type": "task", "name": "3 — Ask the domestic AI vendors whether these briefs reach them", "status": "idea", "priority": 2, "owner": "mau", "due": "2027-03-31", "confidence": "low", "tags": ["game", "channel", "subcontract", "pricing"], "rel": ["note-game-business-model", "note-game-competitors", "org-heroz", "org-laboro-ai"], "updated": "2026-09-23", "body": "Laboro.AI, Ridge-i, AVILEN and BrainPad sell custom AI and take small to mid-sized projects.\nThe question is whether game studios bring them adversarial-detection, economy-modelling or\nprobability-verification briefs — and what happens to those briefs.\n\nAsk: do game companies come to you, and with what? Do you subcontract specialist work? What\ndoes a comparable engagement cost? Also establish what **HEROZ** actually sells to game\nstudios, since they already combine game and finance AI.\n\nTwo outputs: whether subcontracting is a real channel, and the **price floor** — what a studio\nexpects to pay for a scope like this. The other projects both invented a fee before knowing\nthat; this one should not.\n\nSequence after `task-game-cedec-talk` has produced something, so the conversation is a\ndemonstration rather than a request.", "path": "game-ml/tasks/game-approach-vendors.md"}, {"id": "task-game-cedec-talk", "type": "task", "name": "1 — Submit a CEDEC session", "status": "idea", "priority": 1, "decides": "Whether the track record problem can be solved by writing rather than by selling.", "owner": "mau", "due": "2027-03-31", "confidence": "med", "tags": ["game", "distribution", "credential", "sequence"], "rel": ["note-game-business-model", "note-game-edge", "note-game-usecases", "org-cedec", "org-cesa"], "links": [{"label": "CEDEC", "url": "https://cedec.cesa.or.jp/"}], "updated": "2026-09-23", "body": "**The one route in this repo where discovery is decided on merit rather than relationships.**\n\nCEDEC is Japan's largest game developers' conference, run by CESA, with an open session\nsubmission process. The 2026 programme included mathematical optimisation and ML for\nmulti-player imperfect-information game AI, so quantitative material is accepted.\n\n1. Find the **submission window, format and language requirements** for the next edition.\n2. Read the last two programmes for what is already covered — avoid QA automation, which\n   Square Enix and the Matsuo lab own.\n3. Propose something only this background produces. Strongest candidates:\n   - **\"What market surveillance knows about cheat detection\"** — adversarial sequence\n     detection, false-positive economics, an adapting opponent. Directly transfers, and no\n     game-industry speaker will have this angle.\n   - **\"Verifying what your gacha actually does\"** — implemented stochastic systems against\n     disclosed probabilities, under the JOGA/CESA guidelines and 景表法.\n\nA talk is the missing track record, a credential Japanese studios recognise, and direct access\nto the buyer audience, obtained by writing well rather than by selling. If this fails twice,\nthat is real evidence the project has no entry.", "path": "game-ml/tasks/game-cedec-talk.md"}, {"id": "task-game-gacha-verification", "type": "task", "name": "4 — Test whether gacha verification is a felt problem", "status": "idea", "priority": 2, "owner": "claude", "due": "2027-02-28", "confidence": "low", "tags": ["game", "regulation", "falsification", "differentiation"], "rel": ["note-game-regulation", "note-game-risks", "org-cesa", "org-joga"], "updated": "2026-09-23", "body": "`note-game-regulation` is the most differentiated idea in this project and it rests on an\nuntested assumption: that studios feel exposed on the accuracy of disclosed drop rates.\n\nEstablish:\n\n- Has the **消費者庁** ever acted over a *misstated probability*, as opposed to the mechanic\n  itself? Review enforcement history and the CEDEC 2024 session on past cases.\n- Have players ever publicly demonstrated a discrepancy between disclosed and observed rates,\n  and what happened to the studio when they did? Player-run rate tracking is common — a\n  documented incident is the entire sales case.\n- What do the JOGA and CESA guidelines require operators to be able to **evidence**, rather\n  than merely display?\n- Does any law firm, auditor or QA vendor already offer this?\n\n**If enforcement has only ever targeted mechanics, the perceived risk is near zero and this\nidea is a solution to a problem nobody feels.** That verdict is worth reaching quickly, because\nit is the one idea here that no competitor is positioned to take.", "path": "game-ml/tasks/game-gacha-verification.md"}, {"id": "task-game-survey-usecases", "type": "task", "name": "2 — Find out whether studios outsource quantitative work at all", "status": "idea", "priority": 1, "decides": "Whether any of this is bought from outside, or handled in-house and never tendered.", "owner": "claude", "due": "2027-01-31", "confidence": "med", "tags": ["game", "market", "falsification"], "rel": ["note-game-adoption", "note-game-risks", "note-game-usecases", "org-cesa", "stream-game-market"], "updated": "2026-09-23", "body": "The CESA adoption data covers *generative* AI. Nothing is known about whether cheat detection,\nchurn and LTV modelling, economy design or gacha verification are outsourced, done in-house, or\nnot done at all — and `note-game-risks` names this as a kill criterion.\n\nEvidence to gather, cheapest first:\n\n1. **Job postings.** Japanese studios hiring \"データサイエンティスト\", \"不正検知\", \"機械学習\"\n   into live-ops or security teams tells you the work exists and is being staffed internally.\n   Volume and seniority indicate how well.\n2. **CEDEC programmes, last three years.** Sessions on cheat detection, economy balance, churn\n   or KPI modelling reveal which studios have these teams and who leads them — named people,\n   publicly sourced, and speakers are approachable.\n3. **Vendor case studies.** Whether any Japanese AI contractor lists a game client for\n   non-generative work.\n4. **CESA membership list** — harvest into a pool as the buyer universe.\n\n**If studios staff this internally and never tender it, the project stops here.** That is a\ncheap answer to get and it should be got before anything else is built.", "path": "game-ml/tasks/game-survey-usecases.md"}, {"id": "stream-game-market", "type": "stream", "name": "The market — who the buyers are and what they already do", "status": "researching", "priority": 1, "confidence": "med", "tags": ["game", "market", "japan"], "rel": ["note-game-adoption", "note-game-competitors", "note-game-usecases", "org-cesa", "org-heroz", "org-square-enix", "stream-game-offer", "task-game-survey-usecases"], "updated": "2026-09-23", "body": "## Question\n\nWhich Japanese game companies buy applied ML from outside, for what, and what have they\nalready built in-house?\n\n## What is established\n\nAdoption is close to universal and very recent — **85.8% of Japanese game developers now use\ngenerative AI**, up from 51% a year earlier (`note-game-adoption`). That cuts both ways: the\ncategory is legitimate and budgeted, and the obvious work is already being done in-house.\n\nThe question is therefore not \"do they use AI\" but **which problems remain unsolved because\nthey need a skill the studio and its AI vendor do not have.**\n\n## Structure\n\n- **Publishers with research capability** — Square Enix, Bandai Namco, Sega, Capcom, Konami,\n  Level-5. Large, slow, partly served by their own teams and by university partnerships.\n- **Mobile and live-service operators** — Cygames, DeNA, Mixi, Colopl, GungHo, Akatsuki. The\n  richest source of quantitative problems: live economies, gacha, churn, cheating, RMT.\n- **Middleware and tooling vendors** — sell to studios, and are a channel rather than a client.\n\n## Current state\n\nFirst sweep done: adoption data solid, use cases mapped, competitor set identified, buyer list\nstill generic. The named-company work has not been done.", "path": "game-ml/streams/market.md"}, {"id": "stream-game-offer", "type": "stream", "name": "The offer — the quantitative corner of game ML", "status": "researching", "priority": 1, "confidence": "low", "tags": ["game", "offer", "positioning"], "rel": ["note-game-business-model", "note-game-competitors", "note-game-edge", "note-game-regulation", "note-game-risks", "note-game-usecases", "stream-game-market"], "updated": "2026-09-23", "body": "## Question\n\nWhich ML services can be sold by a quant with no game-industry track record, and why would a\nstudio pick him over Preferred Networks, an in-house team, or a cheaper vendor?\n\n## The working answer\n\nNot generative AI. That is where the adoption is, where the bench is deep, and where an\noutsider adds nothing.\n\nThe opening is the **adversarial and quantitative corner**: cheat, bot and RMT detection;\ngacha probability and expected-value verification under 景表法; virtual economy modelling;\nsurvival-analysis-grade churn and LTV; and rating and matchmaking systems. See\n`note-game-usecases` for the mapping and `note-game-edge` for why the background transfers.\n\n## The honest caveat carried over from the other projects\n\nThe recurring failure has been needing to acquire clients in a market with no track record.\nThis project must be judged against that from the start, not after another full research\npass — which is what `note-game-risks` is for.", "path": "game-ml/streams/offer.md"}], "sources": [], "pool": []};
+const ITEMS = DATA.items;
+const BY_ID = Object.fromEntries(ITEMS.map(i => [i.id, i]));
+const TYPE_LABEL = {org:"Org", person:"Person", venue:"Venue", artifact:"Artifact", note:"Note", task:"Task", stream:"Stream"};
+const STATUS_ORDER = ["idea","researching","contacted","confirmed","active","parked","done"];
+
+const esc = s => String(s ?? "").replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+
+/* minimal markdown: headings, lists, bold/italic, links, inline code */
+function md(src){
+  const inline = t => esc(t)
+    .replace(/`([^`]+)`/g, (_,c) => `<code>${c}</code>`)
+    .replace(/\[([^\]]+)\]\(([^)\s]+)\)/g, (_,t2,u) => `<a href="${u}" target="_blank" rel="noopener">${t2}</a>`)
+    .replace(/\*\*([^*]+)\*\*/g, "<strong>$1</strong>")
+    .replace(/(^|[^*])\*([^*\n]+)\*/g, "$1<em>$2</em>");
+  const out = [];
+  let list = null, para = [];
+  const flushP = () => { if (para.length) { out.push(`<p>${inline(para.join(" "))}</p>`); para = []; } };
+  const flushL = () => { if (list) { out.push(`<ul>${list.map(x => `<li>${inline(x)}</li>`).join("")}</ul>`); list = null; } };
+  for (const raw of src.split("\n")) {
+    const line = raw.trimEnd();
+    const h = line.match(/^(#{2,3})\s+(.*)$/);
+    const li = line.match(/^[-*]\s+(.*)$/);
+    if (h) { flushP(); flushL(); out.push(`<h${h[1].length}>${inline(h[2])}</h${h[1].length}>`); }
+    else if (li) { flushP(); (list ??= []).push(li[1]); }
+    else if (!line.trim()) { flushP(); flushL(); }
+    else if (list) { list[list.length - 1] += " " + line.trim(); }
+    else { para.push(line.trim()); }
+  }
+  flushP(); flushL();
+  return out.join("\n");
+}
+
+const CONF_CLASS = {high:"good", med:"warn", low:"alert"};
+function badges(it){
+  const b = [];
+  b.push(`<span class="badge accent">${TYPE_LABEL[it.type] || it.type}</span>`);
+  if (it.decides) b.push(`<span class="badge good">decides something</span>`);
+  if (it.role) b.push(`<span class="badge">${esc(it.role)}</span>`);
+  b.push(`<span class="badge">${esc(it.status)}</span>`);
+  if (it.priority) b.push(`<span class="badge${it.priority === 1 ? " alert" : ""}">P${it.priority}</span>`);
+  if (it.confidence) b.push(`<span class="badge ${CONF_CLASS[it.confidence] || ""}">confidence: ${esc(it.confidence)}</span>`);
+  if (it.size) b.push(`<span class="badge accent">tier: ${esc(it.size)}</span>`);
+  if (it.country) b.push(`<span class="badge">${esc(it.country)}</span>`);
+  if (it.owner) b.push(`<span class="badge">owner: ${esc(it.owner)}</span>`);
+  if (it.due) b.push(`<span class="badge">due ${esc(it.due)}</span>`);
+  if (it.retired_on) b.push(`<span class="badge alert">retired ${esc(it.retired_on)}</span>`);
+  return b.join("");
+}
+
+/* ---------- detail ---------- */
+let selected = null;
+function select(id){
+  selected = id;
+  const it = BY_ID[id];
+  const d = document.getElementById("detail");
+  if (!it) { d.innerHTML = `<p class="prose">Select an entry to read it.</p>`; return; }
+  const links = (it.links || []).map(l => `<li><a href="${esc(l.url)}" target="_blank" rel="noopener">${esc(l.label || l.url)}</a></li>`).join("");
+  const rels = (it.rel || []).map(r => {
+    const t = BY_ID[r];
+    return `<button class="rel" type="button" data-goto="${esc(r)}"><b>${TYPE_LABEL[t?.type] || "?"}</b>${esc(t?.name || r)}</button>`;
+  }).join("");
+  const repo = DATA.repo ? `<a href="${esc(DATA.repo)}${esc(it.path)}" target="_blank" rel="noopener">${esc(it.path)}</a>` : esc(it.path);
+  d.innerHTML = `
+    <p class="eyebrow">${esc(it.id)} · updated ${esc(it.updated)}</p>
+    <h2>${esc(it.name)}</h2>
+    ${it.name_ja ? `<p class="ja">${esc(it.name_ja)}</p>` : ""}
+    <div class="badges">${badges(it)}</div>
+    <div class="prose">${md(it.body || "_No body yet._")}</div>
+    ${links ? `<h3 class="subhead">Links</h3><ul class="linklist">${links}</ul>` : ""}
+    ${rels ? `<h3 class="subhead">Connected</h3><div class="rels">${rels}</div>` : ""}
+    <p class="srcpath">
+      file · ${repo}${it.source ? `<br>harvested from · ${esc(it.source)}` : ""}${
+        it.first_seen ? ` · first seen ${esc(it.first_seen)}` : ""}${
+        it.site ? `<br>company · <a href="${esc(it.site)}" target="_blank" rel="noopener">${esc(it.site)}</a>` : ""}
+    </p>`;
+  d.scrollTop = 0;
+  document.querySelectorAll("#rows .row").forEach(r =>
+    r.setAttribute("aria-current", String(r.dataset.id === id)));
+}
+
+/* ---------- facets ---------- */
+const FACETS = [
+  {key:"type", label:"Type"},
+  {key:"status", label:"Status"},
+  {key:"country", label:"Geography"},
+  {key:"size", label:"Target tier"},
+  {key:"source", label:"Harvested from"},
+  {key:"priority", label:"Priority", fmt:v => "P" + v},
+  {key:"confidence", label:"Confidence"},
+  {key:"tags", label:"Tag", multi:true},
+];
+const active = {};
+let query = "";
+
+function values(key, multi){
+  const c = new Map();
+  for (const it of ITEMS) {
+    const vs = multi ? (it[key] || []) : (it[key] == null ? [] : [it[key]]);
+    for (const v of vs) c.set(v, (c.get(v) || 0) + 1);
+  }
+  return [...c.entries()].sort((a, b) => b[1] - a[1] || String(a[0]).localeCompare(String(b[0])));
+}
+
+function matches(it){
+  for (const f of FACETS) {
+    const sel = active[f.key];
+    if (!sel) continue;
+    const vs = f.multi ? (it[f.key] || []) : (it[f.key] == null ? [] : [it[f.key]]);
+    if (!vs.map(String).includes(String(sel))) return false;
+  }
+  if (query) {
+    const hay = [it.name, it.name_ja, it.id, it.body, (it.tags || []).join(" ")].join(" ").toLowerCase();
+    if (!hay.includes(query)) return false;
+  }
+  return true;
+}
+
+function renderFacets(){
+  document.getElementById("facets").innerHTML = FACETS.map(f => {
+    const opts = values(f.key, f.multi).slice(0, f.key === "tags" ? 18 : 99).map(([v, n]) =>
+      `<button class="chip" type="button" data-facet="${f.key}" data-value="${esc(v)}"
+        aria-pressed="${String(active[f.key]) === String(v)}">${esc(f.fmt ? f.fmt(v) : v)}<span class="n">${n}</span></button>`).join("");
+    return opts ? `<div class="facet"><h4>${f.label}</h4><div class="facet-opts">${opts}</div></div>` : "";
+  }).join("");
+}
+
+function renderRows(){
+  const list = ITEMS.filter(matches).sort((a, b) =>
+    (a.priority || 9) - (b.priority || 9) ||
+    a.type.localeCompare(b.type) ||
+    a.name.localeCompare(b.name));
+  document.getElementById("count").textContent = `${list.length} of ${ITEMS.length} entries`;
+  document.getElementById("rows").innerHTML = list.length ? list.map(it => `
+    <button class="row ${it.priority === 1 ? "p1" : ""}" type="button" data-id="${esc(it.id)}"
+      aria-current="${it.id === selected}">
+      <span class="rname">${esc(it.name)}</span>
+      <span class="rmeta"><span>${TYPE_LABEL[it.type] || it.type}</span>${it.country ? `<span>${esc(it.country)}</span>` : ""}<span>${esc(it.status)}</span>${it.priority ? `<span>P${it.priority}</span>` : ""}</span>
+    </button>`).join("") : `<p class="empty">Nothing matches. Clear a filter.</p>`;
+}
+
+function renderStreams(){
+  const streams = ITEMS.filter(i => i.type === "stream");
+  document.getElementById("streamGrid").innerHTML = streams.map(s => {
+    const q = (s.body.match(/##\s*Question\s*\n+([\s\S]*?)(\n##|$)/) || [, ""])[1].trim().split("\n").join(" ");
+    const linked = (s.rel || []).length;
+    const tasks = ITEMS.filter(i => i.type === "task" && (i.rel || []).includes(s.id)).length;
+    return `<button class="stream" type="button" data-goto="${esc(s.id)}">
+      <h3>${esc(s.name)}</h3>
+      <p class="q">${esc(q.slice(0, 210))}${q.length > 210 ? "…" : ""}</p>
+      <footer>
+        <span class="badge${s.priority === 1 ? " alert" : ""}">P${s.priority ?? "–"}</span>
+        <span class="badge ${CONF_CLASS[s.confidence] || ""}">confidence: ${esc(s.confidence || "–")}</span>
+        <span class="badge">${linked} linked</span>
+        ${tasks ? `<span class="badge">${tasks} tasks</span>` : ""}
+      </footer></button>`;
+  }).join("");
+}
+
+const TIERS = [
+  {key:"startup", label:"Startup", who:"founder / CTO decides",
+   why:"Not under the Principles, so the buyer is the <b>warehouse lender, the securitisation investor or the VC in diligence</b>. Sell cheaper capital and faster due diligence, not compliance. Smallest fees, fastest yes, and the first reference case."},
+  {key:"sme", label:"SME &amp; regulated small institutions", who:"president / compliance head decides",
+   why:"Licensed, model-dependent, and structurally unable to staff the function — the FSA's own internal-audit work says small institutions cannot resource it, and its suggested remedies (parent-group resources, peer cooperation) are unavailable to an independent firm. <b>Buy rather than build is the only option left.</b>"},
+  {key:"mid", label:"Mid — regional banks, mid insurers", who:"risk or audit function decides",
+   why:"AI moved into core customer-facing operations over the past year while governance and third-party risk management lagged. Real supervisory pressure, <b>no internal MRM bench</b>, and priced out of a Big 4 governance programme."},
+  {key:"large", label:"Large — HK authorized institutions, trust banks, major insurers", who:"procurement, with a sponsor",
+   why:"Internal models under supervision. In Hong Kong, <b>HKMA CA-G-4 explicitly permits external validators</b> — the strongest single sentence available to this business, and the reason HK is likely the first sale despite the tier."},
+  {key:"mega", label:"Mega — megabanks, global banks", who:"procurement, slowly",
+   why:"They built MRM teams after the 2021 Principles, so they do not need capability — only <b>independence and specialist depth at the margin</b>. Longest cycle, 顧問 non-optional. Year two, warmed by the publishing stream."},
+];
+
+const PIPE_STEPS = ["researching", "qualified", "contacted", "engaged", "client", "retired"];
+
+function renderPipe(companies){
+  const counts = Object.fromEntries(PIPE_STEPS.map(k => [k, 0]));
+  for (const c of companies) counts[c.status] = (counts[c.status] || 0) + 1;
+  document.getElementById("pipe").innerHTML = PIPE_STEPS.map(k =>
+    `<div class="pipe-step ${counts[k] ? "on" : "off"}"><span class="n">${counts[k] || 0}</span><span class="l">${k}</span></div>`
+  ).join("");
+}
+
+function renderTiers(){
+  if (!document.getElementById("tiers")) return;
+  const buyers = ITEMS.filter(i => i.role === "buyer" && i.scope !== "segment");
+  renderPipe(buyers);
+  const showRetired = document.getElementById("showRetired")?.checked;
+  document.getElementById("tiers").innerHTML = TIERS.map((t, idx) => {
+    const inTier = buyers.filter(b => b.size === t.key)
+      .filter(b => b.status !== "retired" || showRetired)
+      .sort((a, b) => PIPE_STEPS.indexOf(a.status) - PIPE_STEPS.indexOf(b.status)
+                   || (a.priority || 9) - (b.priority || 9)
+                   || a.name.localeCompare(b.name));
+    const hiddenCount = buyers.filter(b => b.size === t.key).length - inTier.length;
+    const cards = inTier.length ? inTier.map(b => {
+      const url = b.site || ((b.links || [])[0] || {}).url || "";
+      const host = url.replace(/^https?:\/\//, "").replace(/\/$/, "");
+      const state = b.status === "retired" ? " is-retired" : "";
+      return `
+      <div class="target p${b.priority || 3}${state}">
+        <button class="tname" type="button" data-goto="${esc(b.id)}">${esc(b.name)}</button>
+        ${b.name_ja ? `<span class="tja">${esc(b.name_ja)}</span>` : ""}
+        ${b.pitch ? `<span class="tpitch">${esc(b.pitch)}</span>` : ""}
+        ${b.retired_reason ? `<span class="treason">${esc(b.retired_reason)}</span>` : ""}
+        ${url ? `<a class="tsite" href="${esc(url)}" target="_blank" rel="noopener">${esc(host)}</a>` : ""}
+        <span class="tfoot">
+          <span class="badge${b.status === "retired" ? "" : b.priority === 1 ? " alert" : ""}">${
+            b.status === "retired" ? "retired" : "P" + (b.priority || "–")}</span>
+          ${b.country ? `<span class="badge">${esc(b.country)}</span>` : ""}
+          <span class="badge">${esc(b.status)}</span>
+        </span>
+      </div>`;
+    }).join("") : `<p class="tier-empty">No targets carded in this tier yet.</p>`;
+    return `<section class="tier">
+      <div class="tier-head">
+        <span class="tier-rank">${idx + 1}</span><h3>${t.label}</h3>
+        <span class="who">${t.who}</span><span class="who">· ${inTier.length} shown</span>
+      </div>
+      <p class="tier-why">${t.why}</p>
+      <div class="targets">${cards}</div>
+      ${hiddenCount > 0 ? `<p class="tier-empty">${hiddenCount} retired, hidden.</p>` : ""}
+    </section>`;
+  }).join("");
+}
+
+function renderSources(){
+  if (!document.getElementById("sourceList")) return;
+  const rows = DATA.sources.map(src => {
+    const harvested = src.harvested && src.harvested !== "None";
+    return `<div class="src${harvested ? "" : " unharvested"}">
+      <span class="kind ${esc(src.kind)}">${esc(src.kind)}</span>
+      <h4>${esc(src.name)}</h4>
+      ${src.purpose === "evidence" ? `<span class="meta">evidence source \u2014 not prospects</span>` : ""}
+      <span class="meta">${harvested
+        ? `${src.harvested_rows} rows · harvested ${esc(src.harvested)}`
+        : "not yet harvested"} · ${esc(src.jurisdiction || "")}</span>
+      <a class="tsite" href="${esc(src.url)}" target="_blank" rel="noopener">${
+        esc(src.url.replace(/^https?:\/\//, "").replace(/\/$/, "").slice(0, 48))}</a>
+    </div>`;
+  }).join("");
+  document.getElementById("sourceList").innerHTML = rows
+    ? `<div class="srcgrid">${rows}</div>`
+    : `<p class="tier-empty">No sources harvested for this venture yet.</p>`;
+}
+
+let poolQuery = "";
+function renderPool(){
+  if (!document.getElementById("poolTable")) return;
+  const showExcluded = document.getElementById("showExcluded")?.checked;
+  const rows = DATA.pool
+    .filter(r => showExcluded || r.state !== "excluded")
+    .filter(r => !poolQuery || (r.name + r.name_ja + r.url + r.note).toLowerCase().includes(poolQuery))
+    .sort((a, b) => (a.state || "pool").localeCompare(b.state || "pool") || a.name.localeCompare(b.name));
+  const body = rows.map(r => {
+    const state = r.state || "pool";
+    const host = (r.url || "").replace(/^https?:\/\//, "").replace(/\/$/, "");
+    return `<tr class="${esc(state)}">
+      <td class="pname">${esc(r.name)}${r.name_ja && r.name_ja !== r.name ? `<br><span class="meta">${esc(r.name_ja)}</span>` : ""}</td>
+      <td>${host ? `<a class="purl" href="${esc(r.url)}" target="_blank" rel="noopener">${esc(host)}</a>` : "—"}</td>
+      <td class="pstate ${esc(state)}">${esc(state)}</td>
+      <td class="preason">${state === "carded"
+        ? `<button class="rel" type="button" data-goto="${esc(r.card)}">${esc(r.card)}</button>`
+        : esc(r.reason || r.note || "")}</td>
+    </tr>`;
+  }).join("");
+  document.getElementById("poolTable").innerHTML =
+    `<thead><tr><th>Company</th><th>Site</th><th>State</th><th>Reason / card</th></tr></thead>` +
+    `<tbody>${body || `<tr><td colspan="4" class="tier-empty">Nothing matches.</td></tr>`}</tbody>`;
+}
+
+function renderNext(){
+  const tasks = ITEMS.filter(i => i.type === "task" && i.status !== "done" && i.status !== "parked");
+  const live = tasks.filter(t => t.priority === 1)
+    .sort((a, b) => String(a.name).localeCompare(String(b.name)));
+  const later = tasks.filter(t => t.priority === 2)
+    .sort((a, b) => String(a.due).localeCompare(String(b.due)));
+  document.getElementById("nextIntro").textContent = live.length
+    ? "Everything else in this space is background. These are the live threads, in order \u2014 each one states what it settles."
+    : "No live threads in this space. It is parked; the research stays valid but nothing here is active work.";
+  document.getElementById("nextList").innerHTML = live.concat(later).map(t => `
+    <li class="${t.priority === 1 ? "" : "later"}">
+      <span class="step">${t.priority === 1 ? "now" : "after"} \u00b7 ${esc(t.owner || "\u2014")}${t.due ? " \u00b7 by " + esc(t.due) : ""}</span>
+      <button class="nextact" type="button" data-goto="${esc(t.id)}">${esc(t.name)}</button>
+      ${t.decides ? `<p class="nextdec"><b>Settles:</b> ${esc(t.decides)}</p>` : ""}
+    </li>`).join("") || `<li class="later"><span class="step">nothing live</span></li>`;
+  const rest = ITEMS.length - live.length - later.length;
+  document.getElementById("nextRest").textContent =
+    `${rest} other items in this space \u2014 notes, organisations and parked tasks \u2014 are background for these decisions, not actions in themselves. Browse them only when one of the above needs them.`;
+}
+
+function renderBoard(){
+  const tasks = ITEMS.filter(i => i.type === "task");
+  const cols = STATUS_ORDER.filter(s => tasks.some(t => t.status === s));
+  document.getElementById("board").innerHTML = cols.map(s => {
+    const inCol = tasks.filter(t => t.status === s)
+      .sort((a, b) => (a.priority || 9) - (b.priority || 9) || String(a.due).localeCompare(String(b.due)));
+    return `<div class="col"><h3><span>${esc(s)}</span><span>${inCol.length}</span></h3><div class="cards">${
+      inCol.map(t => `<button class="card p${t.priority || 3}" type="button" data-goto="${esc(t.id)}">
+        <span class="cname">${esc(t.name)}</span>
+        <span class="cmeta">${t.owner ? `<span>${esc(t.owner)}</span>` : ""}${t.due ? `<span>due ${esc(t.due)}</span>` : ""}<span>P${t.priority || "–"}</span></span>
+      </button>`).join("")}</div></div>`;
+  }).join("");
+}
+
+/* ---------- wiring ---------- */
+
+
+function showTab(name){
+  // Tabs a project has no data for are removed from the DOM, so every lookup here is
+  // dynamic and must tolerate a miss.
+  for (const n of TABS) {
+    document.getElementById("tab-" + n)?.setAttribute("aria-selected", String(n === name));
+    const view = document.getElementById("view-" + n);
+    if (view) view.hidden = n !== name;
+  }
+}
+document.querySelectorAll(".tab").forEach(t =>
+  t.addEventListener("click", () => showTab(t.id.replace("tab-", ""))));
+
+document.getElementById("facets").addEventListener("click", e => {
+  const b = e.target.closest("[data-facet]");
+  if (!b) return;
+  const { facet, value } = b.dataset;
+  active[facet] = String(active[facet]) === value ? undefined : value;
+  renderFacets(); renderRows();
+});
+document.getElementById("rows").addEventListener("click", e => {
+  const r = e.target.closest("[data-id]");
+  if (r) select(r.dataset.id);
+});
+document.getElementById("search").addEventListener("input", e => {
+  query = e.target.value.trim().toLowerCase();
+  renderRows();
+});
+document.getElementById("clear").addEventListener("click", () => {
+  for (const k of Object.keys(active)) delete active[k];
+  query = ""; document.getElementById("search").value = "";
+  renderFacets(); renderRows();
+});
+document.body.addEventListener("click", e => {
+  const g = e.target.closest("[data-goto]");
+  if (!g) return;
+  showTab("browse");
+  select(g.dataset.goto);
+  document.querySelector(`#rows [data-id="${g.dataset.goto}"]`)?.scrollIntoView({block:"nearest"});
+});
+
+document.getElementById("showRetired")?.addEventListener("change", renderTiers);
+document.getElementById("built").textContent = "built " + DATA.built;
+document.getElementById("poolSearch")?.addEventListener("input", e => {
+  poolQuery = e.target.value.trim().toLowerCase();
+  renderPool();
+});
+document.getElementById("showExcluded")?.addEventListener("change", renderPool);
+const TABS = ["next", "streams", "browse", "targets", "pool", "board"];
+
+try {
+  document.getElementById("projTitle").innerHTML =
+    `J-job <span>${esc(DATA.project.title)}</span>`;
+  document.getElementById("projLede").textContent = DATA.project.lede;
+  document.title = `${DATA.project.title} \u00b7 J-job`;
+
+  // A tab with nothing behind it is clutter, so it is removed rather than left empty.
+  const has = {
+    next: true, streams: true, browse: true,
+    targets: ITEMS.some(i => i.role === "buyer"),
+    pool: DATA.pool.length > 0,
+    board: ITEMS.some(i => i.type === "task"),
+  };
+  for (const t of TABS) {
+    if (!has[t]) {
+      document.getElementById("tab-" + t)?.remove();
+      document.getElementById("view-" + t)?.remove();
+    }
+  }
+
+  renderNext(); renderStreams(); renderFacets(); renderRows(); renderBoard();
+  if (has.targets) renderTiers();
+  if (has.pool) { renderSources(); renderPool(); }
+  showTab("next");
+  const first = ITEMS.find(i => i.type === "stream") || ITEMS[0];
+  if (first) select(first.id);
+} catch (err) {
+  document.getElementById("nextList").innerHTML =
+    `<li class="later">This page failed to render: ${esc(err && err.message)}. ` +
+    `Rebuild with <code>python3 build.py</code>.</li>`;
+  throw err;
+}
+</script>

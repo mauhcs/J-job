@@ -32,6 +32,11 @@ PROJECTS = {
         "lede": "Scoping the trading value of a dataset for the people who own it, "
                 "so they can sell it.",
     },
+    "game-ml": {
+        "title": "Game ML Services",
+        "lede": "Applied machine learning for Japanese game companies \u2014 the "
+                "quantitative problems their AI vendors do not cover.",
+    },
 }
 MARKER = "/*__DATA__*/null"
 REPO_BLOB = "https://github.com/mauhcs/J-job/blob/main/"

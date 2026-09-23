@@ -1,12 +1,13 @@
-# J-job — two projects, two databases
+# J-job — separate projects, separate databases
 
-Two separate business ideas. They share a principal and nothing else: separate trees,
+Separate business ideas. They share a principal and nothing else: separate trees,
 separate intake, separate dashboards, separate published artifacts. Nothing crosses between
 them, by construction — `build.py` reads one project's directory at a time, and a `rel` edge
 pointing outside its own project is dropped.
 
     model-validation/    independent external verification of quantitative models (Japan, HK, East Asia)
     data-signal/         scoping the trading value of a dataset for the people who own it
+    game-ml/             applied machine learning for Japanese game companies
     tools/               intake, retirement, dashboard checks
     build.py             builds BOTH dashboards, one per project
     dashboard.template.html   shared template; the data decides which project it renders
@@ -35,5 +36,9 @@ fifteen priority-1 tasks is a reading list, not a plan, and `build.py` warns whe
 
 ## Current focus
 
-`data-signal`. `model-validation` is parked — its regulatory research and named target lists
-stay valid, but nothing in it is live work.
+`game-ml`, newest. `data-signal` is reduced to a time-boxed credential project after its
+business case failed. `model-validation` is parked — its regulatory research and named target
+lists stay valid, but nothing in it is live work.
+
+Adding a project means adding a directory and an entry in `PROJECTS` in `build.py`. Nothing
+else.

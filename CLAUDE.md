@@ -1,11 +1,14 @@
 # J-job — working instructions
 
-**Two separate projects live in this repo, as two separate databases.** Principal for both:
+**Separate projects live in this repo, as separate databases.** Principal for both:
 Chief Scientist at IPOR Labs, Adjunct Assistant Professor at Temple University Japan;
 background in HFT, quant trading and risk modelling.
 
     model-validation/    independent external verification of quantitative models
     data-signal/         scoping the trading value of a dataset for its owner
+    game-ml/             applied machine learning for Japanese game companies
+
+To add a project: create the directory tree and add an entry to `PROJECTS` in `build.py`.
 
 **They never mix.** Each has its own `entities/`, `notes/`, `tasks/`, `streams/`, `intake/`
 and its own generated `dashboard.html`, published as its own artifact. A card lives in exactly
@@ -90,7 +93,13 @@ the captive filter) belong at the pool level and must never touch a card a human
 
 ## Current focus
 
-`data-signal`, which runs a four-step sequence: build the evaluation harness on free data,
+`game-ml` is newest. `data-signal` was reduced to a time-boxed credential project after its
+business case failed on funded incumbents, small buyer budgets and no track record — see
+`data-signal/notes/do-i-have-an-edge.md`, which also records the pattern across all three:
+every idea so far has died on needing to acquire clients without a track record. Weigh any new
+idea against that first.
+
+`data-signal` previously ran a four-step sequence: build the evaluation harness on free data,
 publish one worked example, take it to three vendors, then decide the unit of sale. The first
 two steps need no client, introduction, entity or permission — deliberately.
 
