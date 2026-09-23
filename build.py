@@ -33,8 +33,10 @@ PROJECTS = {
                 "so they can sell it.",
     },
     "jobs": {
-        "title": "Job Opportunities",
-        "lede": "Roles that fit the profile \u2014 filterable by industry, role track and country.",
+        "title": "Job Explorer",
+        "lede": "Every role found, filterable, with the full write-up on click.",
+        # A job hunt is not a workstream board: this project gets its own page.
+        "template": "explorer.template.html",
     },
     "game-ml": {
         "title": "Game ML Services",
@@ -201,7 +203,8 @@ def build(slug, meta):
         "pool": pool_rows,
     }
     blob = json.dumps(payload, ensure_ascii=False).replace("</", "<\\/")
-    html = TEMPLATE.read_text(encoding="utf-8")
+    template = ROOT / meta.get("template", TEMPLATE.name)
+    html = template.read_text(encoding="utf-8")
     if MARKER not in html or TITLE_MARKER not in html:
         sys.exit(f"template needs both {MARKER} and {TITLE_MARKER} markers")
     # The artifact gallery reads the <title> tag from the file, so it has to be baked

@@ -23,7 +23,8 @@ across them is dropped at build time.
 | `company` `track` `country` `fit` | jobs | required on `type: job`. `track`: quant-research · model-risk · ml-engineering · defi · academic · advisory · data-science · leadership. `fit`: strong · plausible · stretch · mismatch |
 | `verified` | jobs | `jd-read` or `listing-confirmed`. Required |
 | `links` | jobs | required — a job with no link cannot be acted on |
-| `location` `seniority` `work_mode` `salary` `seen` | jobs | optional; `seen` is the date observed, since postings go stale |
+| `location` `seniority` `work_mode` `salary` `seen` `posted` | jobs | optional; `seen` is the date observed, since postings go stale |
+| `japanese` | Japan jobs | `not required` · `conversational` · `business` · `fluent` — the biggest filter on the Tokyo market |
 | `decides` | P1 tasks | one sentence on what answering this settles. Required on priority-1 tasks |
 | `name` | yes | display name |
 | `name_ja` | no | Japanese name |

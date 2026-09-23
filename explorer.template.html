@@ -1,0 +1,306 @@
+<title>__TITLE__</title>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Zen+Kaku+Gothic+New:wght@400;500;700&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+  :root{
+    --ground:#F4F6F9; --surface:#FFFFFF; --surface-2:#EDF0F5; --sunken:#E5E9F0;
+    --ink:#141820; --ink-2:#4A5361; --ink-3:#78818F;
+    --line:#DCE1E9; --line-2:#C6CDD9;
+    --accent:#1F3A6E; --accent-soft:#E7ECF6; --accent-ink:#1F3A6E;
+    --alert:#B03A2E; --alert-soft:#FAEAE7;
+    --warn:#8A6516; --warn-soft:#FAF1DE;
+    --good:#1F6B4D; --good-soft:#E4F1EA;
+    --ui:"Zen Kaku Gothic New",-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+    --prose:"Source Serif 4",Georgia,"Times New Roman",serif;
+    --mono:"IBM Plex Mono",ui-monospace,SFMono-Regular,Menlo,monospace;
+    --radius:6px;
+  }
+  @media (prefers-color-scheme:dark){
+    :root:not([data-theme="light"]){
+      --ground:#0E1116; --surface:#161B23; --surface-2:#1D232D; --sunken:#11151B;
+      --ink:#E6EAF1; --ink-2:#A3ACBA; --ink-3:#737D8C;
+      --line:#262E3A; --line-2:#36404F;
+      --accent:#8AA9E0; --accent-soft:#1A2335; --accent-ink:#A8C0EC;
+      --alert:#E0776A; --alert-soft:#2C1A18;
+      --warn:#D6A94E; --warn-soft:#2A2214;
+      --good:#67B893; --good-soft:#132620;
+    }
+  }
+  :root[data-theme="dark"]{
+    --ground:#0E1116; --surface:#161B23; --surface-2:#1D232D; --sunken:#11151B;
+    --ink:#E6EAF1; --ink-2:#A3ACBA; --ink-3:#737D8C;
+    --line:#262E3A; --line-2:#36404F;
+    --accent:#8AA9E0; --accent-soft:#1A2335; --accent-ink:#A8C0EC;
+    --alert:#E0776A; --alert-soft:#2C1A18;
+    --warn:#D6A94E; --warn-soft:#2A2214;
+    --good:#67B893; --good-soft:#132620;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--ground);color:var(--ink);font-family:var(--ui);font-size:14px;line-height:1.5}
+  a{color:var(--accent-ink)}
+  button{font:inherit;color:inherit}
+  :focus-visible{outline:2px solid var(--accent);outline-offset:2px;border-radius:3px}
+  @media (prefers-reduced-motion:reduce){*{transition:none!important}}
+
+  .bar{display:flex;align-items:baseline;gap:14px;flex-wrap:wrap;
+    padding:14px 20px;background:var(--surface);border-bottom:1px solid var(--line);
+    position:sticky;top:0;z-index:5}
+  .bar h1{margin:0;font-size:16px;font-weight:700;letter-spacing:-.01em;white-space:nowrap}
+  .bar h1 span{color:var(--accent-ink)}
+  .bar .sub{color:var(--ink-3);font-size:12.5px}
+  .bar .built{margin-left:auto;font-family:var(--mono);font-size:11px;color:var(--ink-3)}
+  .search{flex:1 1 220px;min-width:180px;padding:7px 11px;border:1px solid var(--line-2);
+    border-radius:var(--radius);background:var(--ground);color:var(--ink);font:inherit;font-size:13.5px}
+
+  .shell{display:grid;grid-template-columns:210px minmax(300px,0.95fr) minmax(0,1.35fr);
+    gap:0;align-items:start;height:calc(100vh - 53px)}
+  .rail,.list,.detail{height:100%;overflow-y:auto}
+  .rail{padding:16px 14px 40px;border-right:1px solid var(--line)}
+  .list{border-right:1px solid var(--line);background:var(--surface)}
+  .detail{padding:24px 28px 60px;background:var(--surface)}
+
+  .facet{margin-bottom:15px}
+  .facet h3{margin:0 0 6px;font-family:var(--mono);font-size:10px;text-transform:uppercase;
+    letter-spacing:.09em;color:var(--ink-3);font-weight:500}
+  .opts{display:flex;flex-direction:column;gap:1px}
+  .opt{appearance:none;border:0;background:none;padding:3px 6px;border-radius:4px;cursor:pointer;
+    display:flex;justify-content:space-between;gap:8px;font-size:12.5px;color:var(--ink-2);text-align:left}
+  .opt:hover{background:var(--surface-2);color:var(--ink)}
+  .opt[aria-pressed="true"]{background:var(--accent);color:#fff}
+  .opt .c{font-family:var(--mono);font-size:10.5px;opacity:.65}
+  .clear{appearance:none;background:none;border:1px solid var(--line-2);border-radius:var(--radius);
+    padding:4px 9px;font-size:11.5px;cursor:pointer;color:var(--ink-2);width:100%;margin-bottom:14px}
+  .clear:hover{border-color:var(--accent);color:var(--accent-ink)}
+
+  .count{font-family:var(--mono);font-size:11px;color:var(--ink-3);
+    padding:9px 14px;border-bottom:1px solid var(--line);position:sticky;top:0;background:var(--surface);z-index:2}
+  .row{display:block;width:100%;appearance:none;background:none;border:0;
+    border-bottom:1px solid var(--line);border-left:3px solid transparent;
+    padding:10px 14px;text-align:left;cursor:pointer;display:grid;gap:4px}
+  .row:hover{background:var(--surface-2)}
+  .row[aria-current="true"]{background:var(--accent-soft);border-left-color:var(--accent)}
+  .row.f-strong{border-left-color:var(--good)}
+  .row.f-stretch{border-left-color:var(--warn)}
+  .row.f-mismatch{border-left-color:var(--alert);opacity:.6}
+  .row[aria-current="true"].f-strong,.row[aria-current="true"].f-stretch,
+  .row[aria-current="true"].f-mismatch{border-left-color:var(--accent)}
+  .row .t{font-size:13.5px;font-weight:500;line-height:1.35}
+  .row .c{font-family:var(--prose);font-size:12.5px;color:var(--ink-2)}
+  .row .m{font-family:var(--mono);font-size:10px;color:var(--ink-3);display:flex;gap:7px;flex-wrap:wrap}
+  .row .m .pay{color:var(--good)}
+
+  .badge{font-family:var(--mono);font-size:10.5px;padding:2px 7px;border-radius:3px;
+    background:var(--surface-2);color:var(--ink-2);border:1px solid var(--line)}
+  .badge.good{background:var(--good-soft);color:var(--good);border-color:transparent}
+  .badge.warn{background:var(--warn-soft);color:var(--warn);border-color:transparent}
+  .badge.alert{background:var(--alert-soft);color:var(--alert);border-color:transparent}
+  .badge.accent{background:var(--accent-soft);color:var(--accent-ink);border-color:transparent}
+
+  .detail h2{margin:0 0 2px;font-size:21px;line-height:1.25;text-wrap:balance}
+  .detail .co{margin:0 0 12px;font-family:var(--prose);font-size:15px;color:var(--ink-2)}
+  .badges{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:18px}
+  .open{display:inline-flex;align-items:center;gap:7px;background:var(--accent);color:#fff;
+    text-decoration:none;padding:8px 14px;border-radius:var(--radius);font-size:13px;font-weight:500;
+    margin-bottom:18px}
+  .open:hover{opacity:.9}
+  .srcline{font-family:var(--mono);font-size:11px;color:var(--ink-3);margin:0 0 18px;
+    display:flex;gap:10px;flex-wrap:wrap}
+  .prose{font-family:var(--prose);font-size:15px;line-height:1.66;color:var(--ink-2);max-width:66ch}
+  .prose p{margin:0 0 .85em}
+  .prose strong{color:var(--ink);font-weight:600}
+  .prose em{font-style:italic}
+  .prose h2{font-family:var(--ui);font-size:12px;text-transform:uppercase;letter-spacing:.09em;
+    color:var(--ink-3);font-weight:500;margin:1.7em 0 .6em;padding-top:.8em;border-top:1px solid var(--line)}
+  .prose h3{font-family:var(--ui);font-size:14px;font-weight:700;color:var(--ink);margin:1.4em 0 .4em}
+  .prose ul{margin:0 0 .9em;padding-left:1.15em}
+  .prose li{margin-bottom:.32em}
+  .prose code{font-family:var(--mono);font-size:.85em;background:var(--sunken);padding:1px 4px;border-radius:3px;color:var(--ink)}
+  .prose table{border-collapse:collapse;margin:0 0 1em;font-family:var(--ui);font-size:13px}
+  .prose th,.prose td{border:1px solid var(--line);padding:5px 9px;text-align:left;vertical-align:top}
+  .prose th{background:var(--surface-2);font-weight:500;font-size:11px;text-transform:uppercase;letter-spacing:.06em;color:var(--ink-3)}
+  .empty{padding:40px 20px;color:var(--ink-3);font-size:13px;text-align:center}
+
+  @media (max-width:980px){
+    .shell{grid-template-columns:1fr;height:auto}
+    .rail,.list,.detail{height:auto;overflow:visible;border-right:0}
+    .rail{border-bottom:1px solid var(--line)}
+    .opts{flex-direction:row;flex-wrap:wrap}
+    .opt{border:1px solid var(--line);border-radius:100px;padding:2px 9px}
+    .list{border-bottom:1px solid var(--line);max-height:420px;overflow-y:auto}
+    .detail{padding:20px 16px 50px}
+  }
+</style>
+
+<header class="bar">
+  <h1 id="ttl"></h1>
+  <input class="search" id="q" type="search" placeholder="Search title, company, description…" aria-label="Search roles">
+  <span class="sub" id="sub"></span>
+  <span class="built" id="built"></span>
+</header>
+
+<div class="shell">
+  <aside class="rail"><button class="clear" id="clear" type="button">clear all filters</button><div id="facets"></div></aside>
+  <div class="list"><div class="count" id="count"></div><div id="rows"></div></div>
+  <article class="detail" id="detail"></article>
+</div>
+
+<script>
+const DATA = /*__DATA__*/null;
+const JOBS = DATA.items.filter(i => i.type === "job");
+const NOTES = DATA.items.filter(i => i.type !== "job");
+const esc = s => String(s ?? "").replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const FIT_ORDER = ["strong","plausible","stretch","mismatch"];
+const FIT_CLASS = {strong:"good", plausible:"accent", stretch:"warn", mismatch:"alert"};
+
+function md(src){
+  const inline = t => esc(t)
+    .replace(/`([^`]+)`/g, (_,c) => `<code>${c}</code>`)
+    .replace(/\[([^\]]+)\]\(([^)\s]+)\)/g, (_,t2,u) => `<a href="${u}" target="_blank" rel="noopener">${t2}</a>`)
+    .replace(/\*\*([^*]+)\*\*/g, "<strong>$1</strong>")
+    .replace(/(^|[^*])\*([^*\n]+)\*/g, "$1<em>$2</em>");
+  const out = []; let list = null, para = [], tbl = null;
+  const fp = () => { if (para.length) { out.push(`<p>${inline(para.join(" "))}</p>`); para = []; } };
+  const fl = () => { if (list) { out.push(`<ul>${list.map(x => `<li>${inline(x)}</li>`).join("")}</ul>`); list = null; } };
+  const ft = () => { if (tbl) { out.push(`<table>${tbl}</table>`); tbl = null; } };
+  const cells = l => l.trim().replace(/^\||\|$/g, "").split("|").map(c => c.trim());
+  for (const raw of src.split("\n")) {
+    const line = raw.trimEnd();
+    const h = line.match(/^(#{2,3})\s+(.*)$/);
+    const li = line.match(/^[-*]\s+(.*)$/);
+    const isRow = /^\s*\|.*\|\s*$/.test(line);
+    if (isRow) {
+      fp(); fl();
+      if (/^\s*\|[\s:|-]+\|\s*$/.test(line)) continue;
+      const tag = tbl === null ? "th" : "td";
+      tbl = (tbl || "") + `<tr>${cells(line).map(c => `<${tag}>${inline(c)}</${tag}>`).join("")}</tr>`;
+    }
+    else if (h) { fp(); fl(); ft(); out.push(`<h${h[1].length}>${inline(h[2])}</h${h[1].length}>`); }
+    else if (li) { fp(); ft(); (list ??= []).push(li[1]); }
+    else if (!line.trim()) { fp(); fl(); ft(); }
+    else if (list) { list[list.length - 1] += " " + line.trim(); }
+    else { ft(); para.push(line.trim()); }
+  }
+  fp(); fl(); ft();
+  return out.join("\n");
+}
+
+const FACETS = [
+  {k:"fit", label:"Fit", order:FIT_ORDER},
+  {k:"track", label:"Role"},
+  {k:"industry", label:"Industry"},
+  {k:"country", label:"Country"},
+  {k:"location", label:"City"},
+  {k:"japanese", label:"Japanese"},
+  {k:"seniority", label:"Seniority"},
+  {k:"work_mode", label:"Work mode"},
+  {k:"company", label:"Company"},
+  {k:"verified", label:"Verified"},
+];
+const on = {};
+let q = "", current = null;
+
+const matches = j => FACETS.every(f => !on[f.k] || j[f.k] === on[f.k])
+  && (!q || [j.name, j.company, j.location, j.body, (j.tags||[]).join(" ")].join(" ").toLowerCase().includes(q));
+
+function visible(){
+  return JOBS.filter(matches).sort((a,b) =>
+    FIT_ORDER.indexOf(a.fit) - FIT_ORDER.indexOf(b.fit)
+    || (a.priority||9) - (b.priority||9)
+    || String(a.company).localeCompare(String(b.company)));
+}
+
+function renderFacets(){
+  const pool = JOBS.filter(matches);
+  document.getElementById("facets").innerHTML = FACETS.map(f => {
+    const c = new Map();
+    for (const j of (on[f.k] ? JOBS : pool)) if (j[f.k]) c.set(j[f.k], (c.get(j[f.k])||0) + 1);
+    if (c.size < 2 && !on[f.k]) return "";
+    const entries = [...c.entries()].sort((a,b) => f.order
+      ? f.order.indexOf(a[0]) - f.order.indexOf(b[0])
+      : b[1]-a[1] || String(a[0]).localeCompare(String(b[0])));
+    return `<div class="facet"><h3>${f.label}</h3><div class="opts">${entries.map(([v,n]) =>
+      `<button class="opt" type="button" data-k="${f.k}" data-v="${esc(v)}"
+        aria-pressed="${on[f.k] === v}"><span>${esc(v)}</span><span class="c">${n}</span></button>`
+    ).join("")}</div></div>`;
+  }).join("");
+}
+
+function renderRows(){
+  const list = visible();
+  document.getElementById("count").textContent =
+    `${list.length} of ${JOBS.length} roles` + (Object.values(on).filter(Boolean).length || q ? " · filtered" : "");
+  document.getElementById("rows").innerHTML = list.length ? list.map(j => `
+    <button class="row f-${esc(j.fit)}" type="button" data-id="${esc(j.id)}" aria-current="${j.id === current}">
+      <span class="t">${esc(j.name)}</span>
+      <span class="c">${esc(j.company)}</span>
+      <span class="m">
+        <span>${esc(j.location || j.country)}</span>
+        <span>${esc(j.track)}</span>
+        ${j.salary ? `<span class="pay">${esc(j.salary)}</span>` : ""}
+        ${j.japanese ? `<span>JP: ${esc(j.japanese)}</span>` : ""}
+      </span>
+    </button>`).join("") : `<p class="empty">No roles match. Clear a filter.</p>`;
+}
+
+function select(id){
+  current = id;
+  const j = JOBS.find(x => x.id === id);
+  const d = document.getElementById("detail");
+  if (!j) { d.innerHTML = `<p class="empty">Select a role to read it in full.</p>`; return; }
+  const b = [];
+  b.push(`<span class="badge ${FIT_CLASS[j.fit]||""}">${esc(j.fit)} fit</span>`);
+  b.push(`<span class="badge ${j.verified === "jd-read" ? "good" : "warn"}">${esc(j.verified)}</span>`);
+  for (const [k,v] of [["track",j.track],["industry",j.industry],["seniority",j.seniority],
+                       ["work mode",j.work_mode],["Japanese",j.japanese]])
+    if (v && v !== "unstated") b.push(`<span class="badge">${k}: ${esc(v)}</span>`);
+  if (j.salary) b.push(`<span class="badge good">${esc(j.salary)}</span>`);
+  const primary = (j.links || [])[0];
+  d.innerHTML = `
+    <h2>${esc(j.name)}</h2>
+    <p class="co">${esc(j.company)} · ${esc(j.location || j.country)}</p>
+    <div class="badges">${b.join("")}</div>
+    ${primary ? `<a class="open" href="${esc(primary.url)}" target="_blank" rel="noopener">Open original listing ↗</a>` : ""}
+    <p class="srcline">
+      <span>source: ${esc(j.source || "—")}</span><span>seen: ${esc(j.seen || j.updated)}</span>
+      ${j.posted ? `<span>posted: ${esc(j.posted)}</span>` : ""}
+      <span>listings go stale — verify before acting</span>
+    </p>
+    <div class="prose">${md(j.body || "")}</div>
+    ${(j.links || []).length > 1 ? `<h3 class="prose" style="font-size:12px;text-transform:uppercase;letter-spacing:.09em;color:var(--ink-3);margin-top:22px">More links</h3>
+      <div class="prose"><ul>${j.links.slice(1).map(l => `<li><a href="${esc(l.url)}" target="_blank" rel="noopener">${esc(l.label)}</a></li>`).join("")}</ul></div>` : ""}
+    ${NOTES.length ? `<p class="srcline" style="margin-top:26px;padding-top:14px;border-top:1px solid var(--line)">
+      background: ${NOTES.filter(n => n.type === "note").map(n => esc(n.name)).slice(0,4).join(" · ")}</p>` : ""}`;
+  d.scrollTop = 0;
+  document.querySelectorAll("#rows .row").forEach(r =>
+    r.setAttribute("aria-current", String(r.dataset.id === id)));
+}
+
+document.getElementById("facets").addEventListener("click", e => {
+  const b = e.target.closest("[data-k]"); if (!b) return;
+  on[b.dataset.k] = on[b.dataset.k] === b.dataset.v ? undefined : b.dataset.v;
+  renderFacets(); renderRows();
+});
+document.getElementById("rows").addEventListener("click", e => {
+  const r = e.target.closest("[data-id]"); if (r) select(r.dataset.id);
+});
+document.getElementById("q").addEventListener("input", e => {
+  q = e.target.value.trim().toLowerCase(); renderFacets(); renderRows();
+});
+document.getElementById("clear").addEventListener("click", () => {
+  for (const k of Object.keys(on)) delete on[k];
+  q = ""; document.getElementById("q").value = "";
+  renderFacets(); renderRows();
+});
+
+try {
+  document.getElementById("ttl").innerHTML = `J-job <span>${esc(DATA.project.title)}</span>`;
+  document.getElementById("sub").textContent = DATA.project.lede;
+  document.getElementById("built").textContent = "built " + DATA.built;
+  renderFacets(); renderRows();
+  select(visible()[0]?.id);
+} catch (err) {
+  document.getElementById("rows").innerHTML =
+    `<p class="empty">This page failed to render: ${esc(err && err.message)}</p>`;
+  throw err;
+}
+</script>

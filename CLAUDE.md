@@ -85,6 +85,11 @@ the captive filter) belong at the pool level and must never touch a card a human
 
 ## Job cards (`jobs/`)
 
+`jobs/` uses its own page — `explorer.template.html`, wired via a `template` key in
+`PROJECTS`. A job hunt is not a workstream board: no streams, targets or task tabs, just a
+filter rail, a dense list, and the full write-up on click with a link to the original posting.
+Add a project template the same way when a project needs a different shape.
+
 A listing on an aggregator is not a job. A card requires a **named employer**, a **direct
 link**, and a `verified` value — `jd-read` (description opened, requirements and pay quoted) or
 `listing-confirmed` (seen on the employer's own site or a board naming the employer, but the
@@ -94,6 +99,10 @@ description is unread). `build.py` fails without a link.
 `job-boards.greenhouse.io/<co>`, `jobs.ashbyhq.com/<co>` — and employer career sites carry
 roles the aggregators never surface. The best role in the jobs project was found on IMC's own
 site after aggregators had been scraped for two passes.
+
+**Record `japanese` on every Japan role.** Business-Japanese requirements are the single
+largest filter on the Tokyo market, and a role that states "not required" is worth more than a
+better-titled one that demands fluency.
 
 **Open the description before rating fit.** Gauntlet was rated a strong fit twice on what the
 firm does; the posting says remote is US and Canada only, and the role wants structured credit,

@@ -8,10 +8,11 @@ pointing outside its own project is dropped.
     model-validation/    independent external verification of quantitative models (Japan, HK, East Asia)
     data-signal/         scoping the trading value of a dataset for the people who own it
     game-ml/             applied machine learning for Japanese game companies
-    jobs/                roles that fit the profile, filterable by industry, role and country
+    jobs/                roles that fit the profile — uses its own explorer page
     tools/               intake, retirement, dashboard checks
     build.py             builds BOTH dashboards, one per project
-    dashboard.template.html   shared template; the data decides which project it renders
+    dashboard.template.html   shared template for workstream projects
+    explorer.template.html    purpose-built job explorer, used by jobs/
 
 Each project directory holds its own complete database:
 
