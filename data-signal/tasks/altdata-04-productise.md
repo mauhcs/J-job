@@ -3,7 +3,7 @@ id: task-altdata-04-productise
 type: task
 name: 4 — Decide the unit of sale, only after the first three
 status: idea
-priority: 2
+priority: 3
 owner: mau
 due: 2027-03-31
 confidence: low

@@ -1,10 +1,10 @@
 ---
 id: task-altdata-01-build-harness
 type: task
-name: 1 — Build the evaluation harness once, on free data
+name: 1 — Build the harness, time-boxed to six weekends
 status: idea
 priority: 1
-decides: Whether you can produce, at a quality a desk respects, the one artefact this whole venture sells.
+decides: Whether you can and want to do this work at all — at a cost of weekends, not a business.
 owner: mau
 due: 2026-11-30
 confidence: high
@@ -16,8 +16,10 @@ links:
 updated: 2026-09-22
 ---
 
-**Start here, before talking to anyone.** The product is a report. You do not have one, and
-nothing else in this space can happen until you do.
+**Reframed 2026-09-23** (`note-do-i-have-an-edge`): this is no longer step one of a business.
+It is a credential project with a hard limit — **six weekends, one artefact, then stop.** If it
+runs past that, the work is too heavy to be worth doing on this basis and it gets abandoned
+without regret.
 
 Build the pipeline once, properly, against **free data** — J-Quants for Japanese prices and
 fundamentals, plus any public alternative dataset. The point is not the finding; it is the

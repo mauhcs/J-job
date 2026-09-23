@@ -3,7 +3,7 @@ id: task-altdata-attend-discovery-day
 type: task
 name: Attend a BattleFin Discovery Day — meet both sides in one room
 status: idea
-priority: 2
+priority: 3
 owner: mau
 due: 2026-12-31
 confidence: med

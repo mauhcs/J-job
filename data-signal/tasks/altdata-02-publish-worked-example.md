@@ -1,10 +1,10 @@
 ---
 id: task-altdata-02-publish-worked-example
 type: task
-name: 2 — Publish one worked example as the calling card
+name: 2 — Publish one teardown, then stop and reassess
 status: idea
 priority: 1
-decides: Whether the work stands up in public, and whether it brings anyone to you without outbound.
+decides: Whether the work stands up in public — the portfolio piece for the expert roles, not the launch of a firm.
 owner: mau
 due: 2026-12-31
 confidence: high

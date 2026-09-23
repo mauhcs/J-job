@@ -3,8 +3,8 @@ id: task-altdata-03-vendor-interviews
 type: task
 name: 3 — Take it to three vendors and ask the killer question
 status: idea
-priority: 1
-decides: Whether vendors pay for this, what they pay, and whether a desk discounts a report the vendor commissioned.
+priority: 3
+
 owner: mau
 due: 2027-01-31
 confidence: high

@@ -3,7 +3,7 @@ id: task-altdata-approach-the-sellers
 type: task
 name: Ask the firms that already sell this whether they use specialists
 status: idea
-priority: 2
+priority: 3
 owner: mau
 due: 2027-01-31
 confidence: med

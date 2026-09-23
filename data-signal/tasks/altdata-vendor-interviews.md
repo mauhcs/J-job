@@ -3,8 +3,8 @@ id: task-altdata-vendor-interviews
 type: task
 name: The five questions to ask a data vendor
 status: idea
-priority: 2
-decides: Whether data vendors pay outsiders to prove their data works, and whether a desk discounts a vendor-paid report.
+priority: 3
+
 owner: mau
 due: 2026-10-31
 confidence: high

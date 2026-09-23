@@ -3,8 +3,8 @@ id: task-altdata-get-discovered
 type: task
 name: 2b — Get the worked example in front of the three channels that matter
 status: idea
-priority: 1
-decides: Whether publishing produces inbound, or whether this market has to be worked contact by contact.
+priority: 3
+
 owner: mau
 due: 2027-01-15
 confidence: med
