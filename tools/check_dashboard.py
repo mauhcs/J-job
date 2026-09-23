@@ -35,7 +35,24 @@ def check(path):
         if f'id="{el}"' not in html:
             problems.append(f'script looks up #{el} but no element has that id')
 
-    # 3. top-level let/const used before declaration (temporal dead zone)
+    # 3. a dynamic getElementById may miss (tabs are removed per project), so any
+    #    non-literal lookup must be null-safe before it is dereferenced.
+    for m in re.finditer(r'getElementById\(([^)]*)\)(\??\.)', js):
+        arg, deref = m.group(1), m.group(2)
+        literal = re.fullmatch(r'"[^"]*"', arg.strip())
+        if not literal and deref == ".":
+            line = js[: m.start()].count("\n") + 1
+            problems.append(f"line {line}: dynamic getElementById({arg.strip()}) "
+                            f"dereferenced without ?. — throws when the element is absent")
+
+    # 4. a render function that is never called is a view that stays empty
+    for m in re.finditer(r"^function (render\w+)\(", js, re.M):
+        name = m.group(1)
+        calls = [c for c in re.finditer(rf"\b{name}\(", js) if c.start() != m.start() + 9]
+        if not calls:
+            problems.append(f"{name}() is defined but never called — its view renders empty")
+
+    # 5. top-level let/const used before declaration (temporal dead zone)
     body = js.split("\nfunction ")[0]
     for m in re.finditer(r"^(?:const|let) (\w+)", body, re.M):
         name, pos = m.group(1), m.start()
