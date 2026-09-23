@@ -9,7 +9,7 @@ owner: mau
 due: 2026-11-15
 confidence: high
 tags: [jobs, recruiters, intelligence]
-rel: [org-morgan-mckinley, org-robert-walters, org-selby-jennings, note-job-seniority-problem, job-model-validation-quant-tokyo]
+rel: [org-morgan-mckinley, org-robert-walters, org-selby-jennings, note-job-seniority-problem, note-job-staleness]
 updated: 2026-09-23
 ---
 
@@ -17,8 +17,9 @@ The advertised market samples the wrong end (`note-job-seniority-problem`). Seni
 through search, so the fastest way to see the real market is to ask the people running it.
 It costs nothing — they are paid by employers.
 
-**Morgan McKinley** — start with the consultant handling
-`job-model-validation-quant-tokyo`, the closest-fitting role found.
+**Morgan McKinley** — the model validation role that prompted this is now closed
+(`note-job-staleness`), which makes the call more useful rather than less: ask what replaced
+it, and who else is building the function.
 **Robert Walters** — they run a named Risk & Quantitative desk, so they have standing mandate
 flow rather than occasional roles.
 **Selby Jennings** — for the buy-side quant track.

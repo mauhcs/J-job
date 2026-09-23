@@ -6,29 +6,34 @@ company: IMC Trading
 track: ml-engineering
 industry: hedge-fund
 country: HK
-location: Hong Kong
+location: Hong Kong / Sydney
 seniority: experienced
 work_mode: onsite
-fit: plausible
-verified: listing-confirmed
+fit: mismatch
+verified: jd-read
 source: imc-careers
-status: idea
-priority: 2
-confidence: med
-tags: [jobs, ml, hongkong, trading]
-rel: [note-job-profile-fit]
+status: researching
+priority: 3
+confidence: high
+tags: [jobs, ml, hongkong, infrastructure]
+rel: [note-job-verification-standard]
 links:
-  - label: IMC Asia-Pacific careers
-    url: https://www.imc.com/ap/search-careers
+  - label: Listing (IMC)
+    url: https://www.imc.com/ap/careers/jobs/4908869101
 seen: 2026-09-23
 updated: 2026-09-23
 ---
 
-Machine learning engineering at a global market maker's Hong Kong office.
+**Downgraded to mismatch after reading it.** This is ML *infrastructure* engineering, not
+applied ML research.
 
-Applied ML inside a trading firm — the one context where the ML interest and the trading
-background are the same job rather than two separate stories. Engineering-leaning, which is
-why it is plausible rather than strong.
+Required: 3+ years on ML training or inference systems; strong **Python, CUDA or C++**;
+PyTorch, TensorFlow or JAX; **GPU programming** with CuDNN and TensorRT; **distributed training**
+with Horovod and NCCL; cloud and orchestration. The work is distributed training pipelines,
+low-latency inference, GPU optimisation and HPC collaboration.
 
-Carded alongside the HFT researcher role as evidence IMC is actively building in Hong Kong;
-two open seats in one office is worth one conversation covering both.
+That is a specialist systems engineer. The overlap with a quant research background is the
+low-latency instinct and nothing else.
+
+Kept as a card because it corrects an earlier rating and because it shows IMC is building in
+Hong Kong — but it is not a target.

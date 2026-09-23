@@ -6,36 +6,38 @@ company: IMC Trading
 track: quant-research
 industry: hedge-fund
 country: HK
-location: Hong Kong
+location: Hong Kong / Sydney
 seniority: experienced
 work_mode: onsite
-fit: strong
-verified: listing-confirmed
+fit: stretch
+verified: jd-read
 source: imc-careers
 status: researching
-priority: 1
+priority: 2
 confidence: high
-tags: [jobs, hft, hongkong, best-match]
-rel: [note-job-profile-fit, note-job-verification-standard]
+tags: [jobs, hft, hongkong, hard-requirement]
+rel: [note-job-profile-fit, note-job-verification-standard, job-imc-quant-researcher-futures-chicago]
 links:
-  - label: IMC Asia-Pacific careers
-    url: https://www.imc.com/ap/search-careers
+  - label: Apply (IMC)
+    url: https://www.imc.com/ap/careers/jobs/4785808101
 seen: 2026-09-23
 updated: 2026-09-23
 ---
 
-**The closest match to the CV found anywhere in this search — and it exists because I finally
-looked at proprietary trading firms directly instead of aggregators.**
+**Downgraded from strong to stretch on reading the description — I called this "the closest
+match to the CV found anywhere" before opening it.**
 
-IMC is a global market maker. This is **HFT quantitative research**, on commodity futures, in
-Hong Kong, at experienced level. Not HFT-adjacent, not risk-of-HFT — the thing itself, in Asia.
+The work is right: high-frequency delta-one strategies in China's commodity futures and options
+markets, large-scale data analysis for statistically profitable predictions, alpha signal
+generation, market microstructure and order book dynamics, ML with a focus on robustness,
+production deployment with trading and engineering teams.
 
-The same title is also open in **Sydney**, and IMC's Hong Kong office additionally lists a
-**Machine Learning Engineer** role.
+**The requirement is the problem.** *"3+ years of high-frequency alpha research experience in
+**China commodity futures** with proven track record."* Not HFT generally — that specific market.
+It is a hard, checkable requirement and unlikely to be met.
 
-**The gap is asset class, not discipline.** Commodity futures rather than rates or crypto —
-but HFT research methodology transfers across futures markets far more readily than it
-transfers between industries.
+Everything else fits: probability and statistics, a mainstream ML approach, large high-frequency
+datasets, Python, and "a practical mindset focused on deployable, real-world edge."
 
-**Next action:** open the full posting from IMC's APAC careers page for the requirements. The
-listing was confirmed from IMC's own site; the description has not yet been read.
+**Better target at the same firm:** `job-imc-quant-researcher-futures-chicago` — same discipline,
+no China-specific requirement, and it publishes $250k–300k.
