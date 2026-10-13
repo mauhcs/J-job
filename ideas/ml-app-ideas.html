@@ -1,0 +1,762 @@
+<title>Phone-Sized ML Projects</title>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Spectral:ital,wght@0,400;0,600;0,700;1,400&family=Archivo:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+  :root{
+    --paper:#F6F8F9; --surface:#FFFFFF; --surface-2:#EDF1F3; --sunken:#E4E9EC;
+    --ink:#15191D; --ink-2:#4C565F; --ink-3:#7C8791;
+    --line:#DFE5E9; --line-2:#C5CED4;
+    --accent:#1D4E6B; --accent-soft:#E6EEF3; --accent-ink:#1D4E6B;
+    --ok:#2C6E49; --ok-soft:#E4F0E9;
+    --warn:#8A5A14; --warn-soft:#F8F0DF;
+    --no:#9C3D2E; --no-soft:#F8EBE8;
+    --display:"Spectral",Georgia,"Times New Roman",serif;
+    --body:"Archivo",-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+    --mono:"JetBrains Mono",ui-monospace,SFMono-Regular,Menlo,monospace;
+    --r:5px;
+  }
+  @media (prefers-color-scheme:dark){
+    :root:not([data-theme="light"]){
+      --paper:#0D1115; --surface:#151A1F; --surface-2:#1C2328; --sunken:#10151A;
+      --ink:#E8ECEF; --ink-2:#A5AFB7; --ink-3:#77828A;
+      --line:#252D34; --line-2:#36414A;
+      --accent:#7FB3D1; --accent-soft:#17242D; --accent-ink:#9CC6DE;
+      --ok:#6FB58C; --ok-soft:#13241B;
+      --warn:#D4A657; --warn-soft:#271F11;
+      --no:#DE8878; --no-soft:#281713;
+    }
+  }
+  :root[data-theme="dark"]{
+    --paper:#0D1115; --surface:#151A1F; --surface-2:#1C2328; --sunken:#10151A;
+    --ink:#E8ECEF; --ink-2:#A5AFB7; --ink-3:#77828A;
+    --line:#252D34; --line-2:#36414A;
+    --accent:#7FB3D1; --accent-soft:#17242D; --accent-ink:#9CC6DE;
+    --ok:#6FB58C; --ok-soft:#13241B;
+    --warn:#D4A657; --warn-soft:#271F11;
+    --no:#DE8878; --no-soft:#281713;
+  }
+
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--paper);color:var(--ink);
+    font-family:var(--body);font-size:15px;line-height:1.6;-webkit-font-smoothing:antialiased}
+  a{color:var(--accent-ink);text-decoration:none;border-bottom:1px solid var(--line-2)}
+  a:hover{border-bottom-color:var(--accent)}
+  code{font-family:var(--mono);font-size:.86em;background:var(--sunken);
+    padding:1.5px 5px;border-radius:3px;color:var(--ink);overflow-wrap:anywhere}
+  button{font:inherit;color:inherit}
+  :focus-visible{outline:2px solid var(--accent);outline-offset:2px;border-radius:3px}
+  @media (prefers-reduced-motion:reduce){*{transition:none!important}}
+
+  .wrap{max-width:1180px;margin:0 auto;padding-inline:20px;padding-block:0 80px}
+
+  /* ---- masthead ---- */
+  header.top{border-bottom:1px solid var(--line);background:var(--surface);
+    padding-block:38px 30px;padding-inline:20px;margin-bottom:0}
+  .top-in{max-width:1180px;margin:0 auto}
+  .eyebrow{font-family:var(--mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;
+    color:var(--accent-ink);margin:0 0 12px}
+  h1{font-family:var(--display);font-weight:700;font-size:clamp(30px,5.4vw,46px);
+    line-height:1.08;letter-spacing:-.015em;margin:0 0 14px;text-wrap:balance;max-width:24ch}
+  .dek{font-family:var(--display);font-size:clamp(16px,2.2vw,19px);line-height:1.55;
+    color:var(--ink-2);max-width:62ch;margin:0 0 22px}
+  .dek em{font-style:italic;color:var(--ink)}
+  .stats{display:flex;gap:26px;flex-wrap:wrap;font-family:var(--mono);font-size:11.5px;color:var(--ink-3)}
+  .stats b{display:block;font-family:var(--body);font-size:21px;font-weight:700;color:var(--ink);
+    line-height:1.2;font-variant-numeric:tabular-nums}
+
+  /* ---- layout ---- */
+  .cols{display:grid;grid-template-columns:186px minmax(0,1fr);gap:46px;align-items:start;padding-top:36px}
+  nav.jump{position:sticky;top:22px}
+  nav.jump h4{font-family:var(--mono);font-size:10px;letter-spacing:.12em;text-transform:uppercase;
+    color:var(--ink-3);margin:0 0 9px;font-weight:500}
+  nav.jump ol{list-style:none;margin:0 0 22px;padding:0;display:grid;gap:1px;counter-reset:n}
+  nav.jump li{counter-increment:n}
+  nav.jump a{display:block;padding:3px 0 3px 22px;font-size:13px;color:var(--ink-2);
+    border:0;position:relative;line-height:1.35}
+  nav.jump a::before{content:counter(n);position:absolute;left:0;font-family:var(--mono);
+    font-size:10px;color:var(--ink-3);top:5px}
+  nav.jump a:hover{color:var(--accent-ink)}
+
+  /* ---- prose ---- */
+  main h2{font-family:var(--display);font-weight:600;font-size:26px;line-height:1.2;
+    margin:0 0 6px;letter-spacing:-.01em;text-wrap:balance}
+  main h2 .num{font-family:var(--mono);font-size:13px;color:var(--accent-ink);
+    letter-spacing:.06em;display:block;margin-bottom:7px;font-weight:500}
+  section.band{padding-top:40px;margin-top:40px;border-top:1px solid var(--line)}
+  section.band:first-child{border-top:0;margin-top:0;padding-top:0}
+  p{margin:0 0 1em;max-width:68ch}
+  .lede{font-family:var(--display);font-size:17px;line-height:1.6;color:var(--ink-2);max-width:64ch}
+
+  /* ---- task catalog ---- */
+  .modality{margin-bottom:20px}
+  .modality h3{font-family:var(--body);font-size:12px;font-weight:700;letter-spacing:.1em;
+    text-transform:uppercase;color:var(--ink-3);margin:0 0 9px}
+  .tags{display:flex;flex-wrap:wrap;gap:5px}
+  .tag{font-family:var(--mono);font-size:11.5px;padding:3px 8px;border-radius:3px;
+    background:var(--surface);border:1px solid var(--line);color:var(--ink-2)}
+  .tag.flag{background:var(--accent-soft);border-color:transparent;color:var(--accent-ink);font-weight:500}
+  .notes{background:var(--surface);border:1px solid var(--line);border-left:3px solid var(--accent);
+    border-radius:var(--r);padding:18px 20px;margin-top:24px}
+  .notes h3{font-family:var(--body);font-size:12px;font-weight:700;letter-spacing:.1em;
+    text-transform:uppercase;color:var(--ink-3);margin:0 0 11px}
+  .notes ul{margin:0;padding-left:1.15em;display:grid;gap:9px}
+  .notes li{font-size:14.5px;line-height:1.55;color:var(--ink-2);max-width:72ch}
+  .notes strong{color:var(--ink);font-weight:600}
+
+  /* ---- filters ---- */
+  .filters{display:flex;gap:6px;flex-wrap:wrap;align-items:center;margin:0 0 26px;
+    padding:13px 15px;background:var(--surface);border:1px solid var(--line);border-radius:var(--r)}
+  .filters span.lab{font-family:var(--mono);font-size:10.5px;letter-spacing:.1em;
+    text-transform:uppercase;color:var(--ink-3);margin-right:4px}
+  .chip{appearance:none;border:1px solid var(--line-2);background:none;border-radius:100px;
+    padding:4px 11px;font-size:12.5px;cursor:pointer;color:var(--ink-2);font-family:var(--mono)}
+  .chip:hover{border-color:var(--accent);color:var(--accent-ink)}
+  .chip[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:#fff}
+
+  /* ---- idea cards ---- */
+  .idea{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);
+    padding:24px 26px;margin-bottom:16px}
+  .idea[hidden]{display:none!important}
+  .idea-head{display:flex;gap:14px;align-items:baseline;flex-wrap:wrap;margin-bottom:3px}
+  .idea h3{font-family:var(--display);font-weight:600;font-size:23px;line-height:1.2;margin:0;letter-spacing:-.01em}
+  .idea h3 .no{font-family:var(--mono);font-size:12px;color:var(--ink-3);margin-right:9px;letter-spacing:.05em}
+  .idea .tagline{font-family:var(--display);font-style:italic;font-size:16px;color:var(--ink-2);margin:0 0 16px}
+  .spec{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:18px;
+    padding-bottom:16px;border-bottom:1px solid var(--line)}
+  .pill{font-family:var(--mono);font-size:10.5px;padding:3px 8px;border-radius:3px;
+    background:var(--surface-2);border:1px solid var(--line);color:var(--ink-2)}
+  .pill.ok{background:var(--ok-soft);color:var(--ok);border-color:transparent}
+  .pill.warn{background:var(--warn-soft);color:var(--warn);border-color:transparent}
+  .pill.no{background:var(--no-soft);color:var(--no);border-color:transparent}
+  .dots{display:inline-flex;gap:3px;align-items:center;margin-left:2px}
+  .dots i{width:7px;height:7px;border-radius:50%;background:var(--line-2);display:block}
+  .dots i.on{background:var(--accent)}
+  .dots .lbl{font-family:var(--mono);font-size:10.5px;color:var(--ink-3);margin-left:5px}
+
+  .idea h4{font-family:var(--body);font-size:11px;font-weight:700;letter-spacing:.11em;
+    text-transform:uppercase;color:var(--ink-3);margin:20px 0 7px}
+  .idea p{font-size:14.5px;margin:0 0 .85em}
+  .idea strong{font-weight:600;color:var(--ink)}
+  .idea em{font-style:italic}
+  .tbl-wrap{overflow-x:auto;border:1px solid var(--line);border-radius:4px;margin-bottom:4px}
+  table{border-collapse:collapse;width:100%;font-size:13px;background:var(--surface)}
+  th,td{text-align:left;padding:7px 11px;border-bottom:1px solid var(--line);vertical-align:top}
+  tr:last-child td{border-bottom:0}
+  th{font-family:var(--mono);font-size:10px;letter-spacing:.09em;text-transform:uppercase;
+    color:var(--ink-3);font-weight:500;background:var(--surface-2);white-space:nowrap}
+  td.id{font-family:var(--mono);font-size:12px;overflow-wrap:anywhere}
+  td.num{font-family:var(--mono);font-variant-numeric:tabular-nums;white-space:nowrap}
+  td.lic{font-family:var(--mono);font-size:11.5px;color:var(--ink-2);white-space:nowrap}
+  .weekend{background:var(--sunken);border-radius:4px;padding:13px 16px;margin-top:18px}
+  .weekend b{font-family:var(--mono);font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;
+    color:var(--accent-ink);display:block;margin-bottom:5px}
+  .weekend p{margin:0;font-size:14px;color:var(--ink-2)}
+
+  /* ---- picks ---- */
+  .picks{display:grid;gap:14px;grid-template-columns:repeat(auto-fit,minmax(260px,1fr))}
+  .pick{background:var(--surface);border:1px solid var(--line);border-top:3px solid var(--accent);
+    border-radius:var(--r);padding:20px 22px}
+  .pick .rank{font-family:var(--mono);font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;
+    color:var(--accent-ink);margin:0 0 7px}
+  .pick h3{font-family:var(--display);font-size:20px;font-weight:600;margin:0 0 9px;line-height:1.2}
+  .pick p{font-size:14px;margin:0;color:var(--ink-2);max-width:none}
+  .hm{margin-top:16px;font-size:14px;color:var(--ink-2);max-width:72ch}
+
+  .caveat{background:var(--warn-soft);border-radius:var(--r);padding:19px 22px}
+  .caveat ul{margin:0;padding-left:1.15em;display:grid;gap:9px}
+  .caveat li{font-size:14.5px;line-height:1.55;color:var(--ink-2);max-width:72ch}
+  .caveat strong{color:var(--ink);font-weight:600}
+  .caveat code{background:rgba(0,0,0,.06)}
+  :root[data-theme="dark"] .caveat code{background:rgba(255,255,255,.08)}
+
+  footer.end{margin-top:44px;padding-top:20px;border-top:1px solid var(--line);
+    font-family:var(--mono);font-size:11px;color:var(--ink-3)}
+
+  @media (max-width:860px){
+    .cols{grid-template-columns:1fr;gap:0}
+    nav.jump{position:static;margin-bottom:28px;padding-bottom:22px;border-bottom:1px solid var(--line)}
+    nav.jump ol{grid-template-columns:repeat(auto-fit,minmax(150px,1fr));display:grid}
+    .idea{padding:20px 17px}
+  }
+</style>
+
+<header class="top">
+  <div class="top-in">
+    <p class="eyebrow">Hugging Face task catalog · 13 Oct 2026</p>
+    <h1>Phone-Sized ML Projects</h1>
+    <p class="dek">Eight app ideas in finance, crypto and games, picked from the task families
+      a quant's instincts don't already cover. Every model ID checked against the Hub API for
+      existence, parameter count and licence — <em>and where something doesn't exist, it says so.</em></p>
+    <div class="stats">
+      <span><b>8</b>ideas</span>
+      <span><b>19</b>models verified</span>
+      <span><b>82</b>links checked, all 200</span>
+      <span><b>4</b>datasets that don't exist</span>
+    </div>
+  </div>
+</header>
+
+<div class="wrap">
+<div class="cols">
+  <nav class="jump" aria-label="Contents">
+    <h4>Contents</h4>
+    <ol>
+      <li><a href="#catalog">The task catalog</a></li>
+      <li><a href="#why">Why these eight</a></li>
+      <li><a href="#ideas">The ideas</a></li>
+      <li><a href="#picks">Top three</a></li>
+      <li><a href="#caveats">Caveats</a></li>
+    </ol>
+    <h4>Source</h4>
+    <ol style="counter-reset:none">
+      <li><a href="https://huggingface.co/tasks" target="_blank" rel="noopener" style="padding-left:0">huggingface.co/tasks</a></li>
+      <li><a href="https://huggingface.co/models" target="_blank" rel="noopener" style="padding-left:0">model filters</a></li>
+    </ol>
+  </nav>
+
+  <main>
+    <!-- ======================= CATALOG ======================= -->
+    <section class="band" id="catalog">
+      <h2><span class="num">01</span>The task catalog, as it stands</h2>
+      <p class="lede">Grouped as the site groups them. Tags in blue are new, unusual, or
+        inconsistent with the model filters.</p>
+
+      <div class="modality"><h3>Natural Language Processing</h3><div class="tags">
+        <span class="tag">Feature Extraction</span><span class="tag">Fill-Mask</span>
+        <span class="tag">Question Answering</span><span class="tag">Sentence Similarity</span>
+        <span class="tag">Summarization</span><span class="tag">Table Question Answering</span>
+        <span class="tag">Text Classification</span><span class="tag">Text Generation</span>
+        <span class="tag flag">Text Ranking</span><span class="tag">Token Classification</span>
+        <span class="tag">Translation</span><span class="tag">Zero-Shot Classification</span>
+      </div></div>
+
+      <div class="modality"><h3>Computer Vision</h3><div class="tags">
+        <span class="tag">Depth Estimation</span><span class="tag">Image Classification</span>
+        <span class="tag">Image Feature Extraction</span><span class="tag">Image Segmentation</span>
+        <span class="tag">Image-to-Image</span><span class="tag">Image-to-Text</span>
+        <span class="tag">Image-to-Video</span><span class="tag flag">Keypoint Detection</span>
+        <span class="tag">Mask Generation</span><span class="tag">Object Detection</span>
+        <span class="tag">Video Classification</span><span class="tag">Text-to-Image</span>
+        <span class="tag">Text-to-Video</span><span class="tag">Unconditional Image Generation</span>
+        <span class="tag">Video-to-Video</span><span class="tag">Zero-Shot Image Classification</span>
+        <span class="tag">Zero-Shot Object Detection</span>
+        <span class="tag flag">Text-to-3D</span><span class="tag flag">Image-to-3D</span>
+      </div></div>
+
+      <div class="modality"><h3>Audio</h3><div class="tags">
+        <span class="tag">Audio Classification</span><span class="tag">Audio-to-Audio</span>
+        <span class="tag">Automatic Speech Recognition</span><span class="tag">Text-to-Speech</span>
+      </div></div>
+
+      <div class="modality"><h3>Tabular</h3><div class="tags">
+        <span class="tag">Tabular Classification</span><span class="tag">Tabular Regression</span>
+        <span class="tag flag">Time-Series Forecasting — model filter only, not on /tasks</span>
+      </div></div>
+
+      <div class="modality"><h3>Multimodal</h3><div class="tags">
+        <span class="tag flag">Any-to-Any</span><span class="tag">Audio-Text-to-Text</span>
+        <span class="tag">Document Question Answering</span>
+        <span class="tag flag">Visual Document Retrieval</span>
+        <span class="tag">Image-Text-to-Text</span><span class="tag flag">Image-Text-to-Image</span>
+        <span class="tag flag">Image-Text-to-Video</span><span class="tag">Video-Text-to-Text</span>
+        <span class="tag">Visual Question Answering</span>
+      </div></div>
+
+      <div class="modality"><h3>Reinforcement Learning</h3><div class="tags">
+        <span class="tag">Reinforcement Learning</span>
+      </div></div>
+
+      <div class="notes">
+        <h3>New, unusual, or worth knowing</h3>
+        <ul>
+          <li><strong>Text-to-3D (~140 models) and Image-to-3D (~783)</strong> are the thinnest
+            categories on the site — early enough that a working mobile pipeline would be unusual.</li>
+          <li><strong>Any-to-Any (~11,700 models)</strong> is now one of the largest tags and is
+            where omni-modal models land. A grab-bag rather than a well-defined task.</li>
+          <li><strong>Visual Document Retrieval</strong> is the ColPali idea — embed page
+            <em>images</em> instead of extracted text. Directly useful for anything ingesting
+            statements or filings.</li>
+          <li><strong>Time-series forecasting is not on the <code>/tasks</code> page at all</strong>,
+            but <a href="https://huggingface.co/models?pipeline_tag=time-series-forecasting" target="_blank" rel="noopener"><code>?pipeline_tag=time-series-forecasting</code></a>
+            is a live model filter with Chronos, TimesFM and Granite TTM under it. The catalog
+            page and the model filters do not fully agree.</li>
+          <li><strong>Graph neural networks have no task tag.</strong> For the wallet-scam idea on
+            your list you are on PyTorch Geometric or DGL, not the Hub.</li>
+          <li><a href="https://huggingface.co/ibm-granite/granite-timeseries-ttm-r2" target="_blank" rel="noopener"><code>granite-timeseries-ttm-r2</code></a>
+            is <strong>~1M parameters</strong> — genuinely phone-sized forecasting, which matters
+            for the funding-rate app already on your list.</li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- ======================= WHY ======================= -->
+    <section class="band" id="why">
+      <h2><span class="num">02</span>Why these eight</h2>
+      <p>Your existing list already covers time-series forecasting, VLM document scanning,
+        Whisper voice logging, RL market-making, LLM negotiation, object detection on a poker
+        table, and GNNs for wallet risk. So these deliberately use the task families you have
+        <strong>not</strong> touched: audio classification, sentence similarity and ranking,
+        video classification, summarization, mask generation, keypoint detection, zero-shot
+        detection and tabular inference — plus one RL idea that is a different game from
+        market-making.</p>
+    </section>
+
+    <!-- ======================= IDEAS ======================= -->
+    <section class="band" id="ideas">
+      <h2><span class="num">03</span>The ideas</h2>
+
+      <div class="filters" id="filters">
+        <span class="lab">Show</span>
+        <button class="chip" type="button" data-f="all" aria-pressed="true">all 8</button>
+        <button class="chip" type="button" data-f="fin" aria-pressed="false">finance / crypto</button>
+        <button class="chip" type="button" data-f="game" aria-pressed="false">games</button>
+        <button class="chip" type="button" data-f="device" aria-pressed="false">runs on phone</button>
+        <button class="chip" type="button" data-f="easy" aria-pressed="false">difficulty ≤ 3</button>
+      </div>
+
+      <!-- 1 VoiceGuard -->
+      <article class="idea" data-dom="fin" data-device="1" data-diff="4">
+        <div class="idea-head"><h3><span class="no">3.1</span>VoiceGuard</h3></div>
+        <p class="tagline">Live scam-call screener.</p>
+        <div class="spec">
+          <span class="pill">audio-classification</span><span class="pill">ASR</span>
+          <span class="pill">text-classification</span>
+          <span class="pill ok">on-device — and must be</span>
+          <span class="dots" title="Difficulty 4 of 5"><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i></i><span class="lbl">difficulty 4</span></span>
+        </div>
+        <p>Started when an unknown caller claims to be from a bank or exchange. The app streams
+          the call through two models at once: one asks <em>is this voice synthetic?</em>, the
+          other transcribes and asks <em>is this a known scam script?</em> A bar fills as
+          evidence accumulates, and it surfaces the phrases that triggered it — "remote access",
+          "transfer to a safe account", "read me the seed phrase".</p>
+        <h4>Models</h4>
+        <div class="tbl-wrap"><table>
+          <thead><tr><th>Model</th><th>Size</th><th>Licence</th></tr></thead>
+          <tbody>
+            <tr><td class="id"><a href="https://huggingface.co/MelodyMachine/Deepfake-audio-detection-V2" target="_blank" rel="noopener">MelodyMachine/Deepfake-audio-detection-V2</a></td><td class="num">95M</td><td class="lic">apache-2.0</td></tr>
+            <tr><td class="id"><a href="https://huggingface.co/WpythonW/ast-fakeaudio-detector" target="_blank" rel="noopener">WpythonW/ast-fakeaudio-detector</a></td><td class="num">86M</td><td class="lic">apache-2.0</td></tr>
+            <tr><td class="id"><a href="https://huggingface.co/openai/whisper-small" target="_blank" rel="noopener">openai/whisper-small</a></td><td class="num">242M</td><td class="lic">apache-2.0</td></tr>
+          </tbody>
+        </table></div>
+        <h4>Data</h4>
+        <p><a href="https://huggingface.co/datasets/SpeechAntiSpoofingBenchmarks/ASVspoof2019_LA" target="_blank" rel="noopener">ASVspoof2019_LA</a>
+          and <a href="https://huggingface.co/datasets/SpeechAntiSpoofingBenchmarks/ASVspoof2021_DF" target="_blank" rel="noopener">ASVspoof2021_DF</a>
+          are the standard anti-spoofing corpora, both with real download traffic.
+          <a href="https://huggingface.co/datasets/garystafford/deepfake-audio-detection" target="_blank" rel="noopener">garystafford/deepfake-audio-detection</a>
+          is a smaller convenience set. The scam-script classifier you build: scrape published
+          警察庁 / FCA / FTC transcripts, then synthesise variants with a small LLM.</p>
+        <h4>Runs where</h4>
+        <p>On-device, and it <strong>has to be</strong> — streaming call audio to a server is the
+          wrong design for a privacy-sensitive fraud tool. A 95M audio classifier quantises
+          under 100 MB; Whisper runs via Core ML (whisper.cpp) or ONNX Runtime Mobile, starting
+          from <a href="https://huggingface.co/onnx-community/whisper-tiny.en" target="_blank" rel="noopener">onnx-community/whisper-tiny.en</a>.</p>
+        <h4>Skills practised</h4>
+        <p>Fine-tuning an audio spectrogram transformer; streaming inference with hysteresis so
+          the score doesn't flicker; <strong>calibration</strong> — accusing a real bank is the
+          costly error; int8 quantization; two models under one latency budget.</p>
+        <div class="weekend"><b>Weekend one</b><p>Drop live calls entirely. Ten fake and ten real
+          clips, fine-tune the AST spoof detector on ASVspoof, one screen that plays a clip and
+          shows a score. Audio capture is the hard half — defer it.</p></div>
+      </article>
+
+      <!-- 2 Déjà Vu -->
+      <article class="idea" data-dom="fin" data-device="1" data-diff="2">
+        <div class="idea-head"><h3><span class="no">3.2</span>Déjà Vu</h3></div>
+        <p class="tagline">Token whitepaper plagiarism detector.</p>
+        <div class="spec">
+          <span class="pill">sentence-similarity</span><span class="pill">text-ranking</span>
+          <span class="pill">zero-shot-classification</span>
+          <span class="pill ok">fully on-device</span>
+          <span class="dots" title="Difficulty 2 of 5"><i class="on"></i><i class="on"></i><i></i><i></i><i></i><span class="lbl">difficulty 2</span></span>
+        </div>
+        <p>Paste a URL or PDF for a token you're considering. The app embeds it section by
+          section, compares against a local index of known rug-pull and template whitepapers,
+          and returns nearest neighbours with matching passages side by side — "this tokenomics
+          section is 0.94 cosine to three 2021 rugs."</p>
+        <h4>Models</h4>
+        <div class="tbl-wrap"><table>
+          <thead><tr><th>Model</th><th>Size</th><th>Licence</th></tr></thead>
+          <tbody>
+            <tr><td class="id"><a href="https://huggingface.co/sentence-transformers/all-MiniLM-L6-v2" target="_blank" rel="noopener">sentence-transformers/all-MiniLM-L6-v2</a></td><td class="num">~22M</td><td class="lic">apache-2.0</td></tr>
+            <tr><td class="id"><a href="https://huggingface.co/BAAI/bge-small-en-v1.5" target="_blank" rel="noopener">BAAI/bge-small-en-v1.5</a></td><td class="num">33M</td><td class="lic">mit</td></tr>
+            <tr><td class="id"><a href="https://huggingface.co/MoritzLaurer/deberta-v3-base-zeroshot-v2.0" target="_blank" rel="noopener">MoritzLaurer/deberta-v3-base-zeroshot-v2.0</a></td><td class="num">184M</td><td class="lic">mit</td></tr>
+          </tbody>
+        </table></div>
+        <h4>Data</h4>
+        <p><strong>No whitepaper corpus exists on the Hub</strong> — I searched and found nothing
+          usable. You build it: scrape whitepapers for tokens flagged on rug-pull trackers, plus
+          a control set of survivors. A few hundred documents is enough for retrieval, and
+          labelling is coarse (<code>rugged</code> / <code>alive</code>) and comes free from the tracker.</p>
+        <h4>Runs where</h4>
+        <p>Entirely on-device. 22M embeddings run via
+          <a href="https://huggingface.co/Xenova/all-MiniLM-L6-v2" target="_blank" rel="noopener">Xenova/all-MiniLM-L6-v2</a>
+          (ONNX) or a Core ML export; the index is a few megabytes of float16.</p>
+        <h4>Skills practised</h4>
+        <p>Embedding models and vector search; <strong>contrastive fine-tuning</strong> with
+          <code>MultipleNegativesRankingLoss</code> to pull template clones together; two-stage
+          retrieval — bi-encoder recall then cross-encoder rerank; evaluating retrieval honestly
+          with recall@k rather than accuracy.</p>
+        <div class="weekend"><b>Weekend one</b><p>50 whitepapers, MiniLM embeddings, plain numpy
+          cosine, one screen showing top-5 neighbours with matched paragraphs. No fine-tuning yet.</p></div>
+      </article>
+
+      <!-- 3 Grade It -->
+      <article class="idea" data-dom="fin game" data-device="1" data-diff="4">
+        <div class="idea-head"><h3><span class="no">3.3</span>Grade It</h3></div>
+        <p class="tagline">Trading-card condition grader.</p>
+        <div class="spec">
+          <span class="pill">mask-generation</span><span class="pill">segmentation</span>
+          <span class="pill">keypoint-detection</span><span class="pill">depth-estimation</span>
+          <span class="pill">image-classification</span>
+          <span class="pill ok">mostly on-device</span>
+          <span class="dots" title="Difficulty 4 of 5"><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i></i><span class="lbl">difficulty 4</span></span>
+        </div>
+        <p>Lay a card on a table; the app guides you to a square-on shot, identifies the card,
+          then measures what graders measure: <strong>centering</strong> from border widths off
+          segmentation masks, <strong>corners and edges</strong> from classified crops, and
+          <strong>surface</strong> scratches with a depth map as a side channel. Output is a
+          predicted grade with the per-criterion measurements behind it.</p>
+        <h4>Models</h4>
+        <div class="tbl-wrap"><table>
+          <thead><tr><th>Model</th><th>Size</th><th>Licence</th></tr></thead>
+          <tbody>
+            <tr><td class="id"><a href="https://huggingface.co/facebook/sam-vit-base" target="_blank" rel="noopener">facebook/sam-vit-base</a></td><td class="num">94M</td><td class="lic">apache-2.0</td></tr>
+            <tr><td class="id"><a href="https://huggingface.co/google/vit-base-patch16-224" target="_blank" rel="noopener">google/vit-base-patch16-224</a> <span style="color:var(--ink-3)">— fine-tune for corner wear</span></td><td class="num">86M</td><td class="lic">apache-2.0</td></tr>
+            <tr><td class="id"><a href="https://huggingface.co/openai/clip-vit-base-patch32" target="_blank" rel="noopener">openai/clip-vit-base-patch32</a> <span style="color:var(--ink-3)">— zero-shot card ID</span></td><td class="num">~151M</td><td class="lic" style="color:var(--warn)">not stated</td></tr>
+            <tr><td class="id"><a href="https://huggingface.co/depth-anything/Depth-Anything-V2-Small-hf" target="_blank" rel="noopener">depth-anything/Depth-Anything-V2-Small-hf</a></td><td class="num">25M</td><td class="lic">apache-2.0</td></tr>
+          </tbody>
+        </table></div>
+        <h4>Data</h4>
+        <p><strong>There is no card-grading dataset on the Hub</strong> — I searched
+          <code>card grading</code> and got nothing. Card <em>images</em> exist in small community
+          sets like <a href="https://huggingface.co/datasets/netprtony/pokemon-cards-image-and-annotations" target="_blank" rel="noopener">netprtony/pokemon-cards-image-and-annotations</a>
+          and <a href="https://huggingface.co/datasets/tooni/pokemoncards" target="_blank" rel="noopener">tooni/pokemoncards</a>,
+          but none carry condition labels. You create it, and that's the interesting part:
+          photograph your own cards, and get labels free by scraping completed listings of
+          <strong>already-graded slabs</strong>, where the grade is printed on the label.</p>
+        <h4>Runs where</h4>
+        <p>Mostly on-device. SAM-base is borderline but mobile variants exist; depth has a
+          verified Core ML export at
+          <a href="https://huggingface.co/apple/coreml-depth-anything-small" target="_blank" rel="noopener">apple/coreml-depth-anything-small</a>
+          and ONNX at <a href="https://huggingface.co/onnx-community/depth-anything-v2-small" target="_blank" rel="noopener">onnx-community/depth-anything-v2-small</a>.
+          The classifier heads are tiny.</p>
+        <h4>Skills practised</h4>
+        <p>Multi-task learning (four criteria, one backbone); turning a mask into a
+          <strong>geometric measurement</strong> rather than a label, a different discipline from
+          classification; <strong>ordinal regression</strong> — grades 1–10 are ordered, and
+          treating them as unordered classes throws away structure; capture-quality gating, since
+          a bad photo should be rejected rather than scored.</p>
+        <div class="weekend"><b>Weekend one</b><p>Centering only. SAM to mask the card and the
+          inner border, compute left/right and top/bottom ratios, show the numbers. No grade
+          prediction, no learning — just the measurement, which is already useful.</p></div>
+      </article>
+
+      <!-- 4 Pull Audit -->
+      <article class="idea" data-dom="game" data-device="1" data-diff="3">
+        <div class="idea-head"><h3><span class="no">3.4</span>Pull Audit</h3></div>
+        <p class="tagline">Gacha odds auditor.</p>
+        <div class="spec">
+          <span class="pill">document-QA</span><span class="pill">image-text-to-text</span>
+          <span class="pill">table-QA</span><span class="pill">tabular</span>
+          <span class="pill ok">on-device with SmolVLM</span>
+          <span class="dots" title="Difficulty 3 of 5"><i class="on"></i><i class="on"></i><i class="on"></i><i></i><i></i><span class="lbl">difficulty 3</span></span>
+        </div>
+        <p>Photograph a game's published drop-rate table; a VLM parses it into structured rates.
+          Then log pulls — or screenshot results and let the model read them. The app maintains a
+          <strong>Bayesian posterior</strong> over the true rate and tells you when your observed
+          pulls are genuinely inconsistent with the disclosure, with a sequential test that
+          doesn't lie about multiple looks at the data.</p>
+        <h4>Models</h4>
+        <div class="tbl-wrap"><table>
+          <thead><tr><th>Model</th><th>Size</th><th>Licence</th></tr></thead>
+          <tbody>
+            <tr><td class="id"><a href="https://huggingface.co/HuggingFaceTB/SmolVLM-256M-Instruct" target="_blank" rel="noopener">HuggingFaceTB/SmolVLM-256M-Instruct</a></td><td class="num">256M</td><td class="lic">apache-2.0</td></tr>
+            <tr><td class="id"><a href="https://huggingface.co/Qwen/Qwen2.5-VL-3B-Instruct" target="_blank" rel="noopener">Qwen/Qwen2.5-VL-3B-Instruct</a></td><td class="num">3.75B</td><td class="lic" style="color:var(--warn)">not stated</td></tr>
+            <tr><td class="id"><a href="https://huggingface.co/impira/layoutlm-document-qa" target="_blank" rel="noopener">impira/layoutlm-document-qa</a></td><td class="num">~128M</td><td class="lic">mit</td></tr>
+            <tr><td class="id"><a href="https://huggingface.co/microsoft/tapex-base-finetuned-wtq" target="_blank" rel="noopener">microsoft/tapex-base-finetuned-wtq</a></td><td class="num">139M</td><td class="lic">mit</td></tr>
+          </tbody>
+        </table></div>
+        <h4>Data</h4>
+        <p>Your own, and easy: screenshot real gacha rate tables — they're published because
+          JOGA/CESA guidelines require it — and hand-label fifty into JSON. For the statistics you
+          need no data at all: simulate pulls with pity timers and ceilings and check your test's
+          false-positive rate against ground truth you control.</p>
+        <h4>Runs where</h4>
+        <p>SmolVLM-256M is genuinely phone-sized. Qwen2.5-VL-3B needs a server or a high-end
+          device with aggressive quantization. The statistics are arithmetic.</p>
+        <h4>Skills practised</h4>
+        <p>Structured extraction from a VLM — constrained decoding into JSON, badly underrated as
+          a skill; evaluating extraction by field-level accuracy, not BLEU; and the honest
+          statistics of <strong>sequential testing</strong>, where the fun is proving to yourself
+          that "80 pulls and nothing, the rates must be fake" usually isn't significant.</p>
+        <div class="weekend"><b>Weekend one</b><p>Skip the camera. Type a rate and your results,
+          show the posterior with a credible interval and a sequential-test verdict. The
+          interesting part is the statistics, and it needs no ML to start.</p></div>
+      </article>
+
+      <!-- 5 Tell -->
+      <article class="idea" data-dom="game" data-device="0" data-diff="4">
+        <div class="idea-head"><h3><span class="no">3.5</span>Tell</h3></div>
+        <p class="tagline">Gameplay cheat spotter.</p>
+        <div class="spec">
+          <span class="pill">video-classification</span><span class="pill">keypoint-detection</span>
+          <span class="pill">object-detection</span>
+          <span class="pill no">needs a server</span>
+          <span class="pill warn">non-commercial models</span>
+          <span class="dots" title="Difficulty 4 of 5"><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i></i><span class="lbl">difficulty 4</span></span>
+        </div>
+        <p>Share a suspicious clip from a match. The app classifies short windows for inhuman aim
+          behaviour — snap-to-target, zero overshoot, inhuman reaction latency — and returns a
+          timeline of flagged moments with the motion traces drawn over the frames, rather than a
+          bare verdict.</p>
+        <h4>Models</h4>
+        <div class="tbl-wrap"><table>
+          <thead><tr><th>Model</th><th>Size</th><th>Licence</th></tr></thead>
+          <tbody>
+            <tr><td class="id"><a href="https://huggingface.co/MCG-NJU/videomae-base-finetuned-kinetics" target="_blank" rel="noopener">MCG-NJU/videomae-base-finetuned-kinetics</a></td><td class="num">87M</td><td class="lic" style="color:var(--warn)">cc-by-nc-4.0</td></tr>
+            <tr><td class="id"><a href="https://huggingface.co/facebook/timesformer-base-finetuned-k400" target="_blank" rel="noopener">facebook/timesformer-base-finetuned-k400</a></td><td class="num">not reported</td><td class="lic" style="color:var(--warn)">cc-by-nc-4.0</td></tr>
+            <tr><td class="id"><a href="https://huggingface.co/hustvl/yolos-tiny" target="_blank" rel="noopener">hustvl/yolos-tiny</a> <span style="color:var(--ink-3)">— crosshair tracking</span></td><td class="num">6M</td><td class="lic">apache-2.0</td></tr>
+          </tbody>
+        </table></div>
+        <h4>Data</h4>
+        <p>Yours, and you can generate the positives: play with a legitimate assist setting
+          cranked up, or script mouse input to produce synthetic aimbot traces, against your own
+          normal play as negatives.
+          <a href="https://huggingface.co/datasets/taesiri/GameplayVideoSplits" target="_blank" rel="noopener">taesiri/GameplayVideoSplits</a>
+          exists but is tiny.</p>
+        <h4>Runs where</h4>
+        <p>Server, realistically — video transformers over a clip aren't a phone workload. The
+          phone records and uploads. A tracking-only version with YOLOS-tiny could run locally.</p>
+        <h4>Skills practised</h4>
+        <p>Temporal modelling and clip sampling; <strong>the derivative trick</strong> — the signal
+          isn't in the pixels but in the <em>trajectory</em> of the crosshair, so extracting motion
+          first and classifying that is cheaper and more accurate than a video transformer; extreme
+          class imbalance; adversarial thinking, since cheats now deliberately add human-like jitter.</p>
+        <div class="weekend"><b>Weekend one</b><p>No video model. Track the crosshair with
+          YOLOS-tiny, extract angular velocity and acceleration, plot your own traces next to a
+          scripted snap. If those separate visually the project is viable; if not, you've saved
+          weeks.</p></div>
+      </article>
+
+      <!-- 6 Proposal Pulse -->
+      <article class="idea" data-dom="fin" data-device="0" data-diff="3">
+        <div class="idea-head"><h3><span class="no">3.6</span>Proposal Pulse</h3></div>
+        <p class="tagline">DAO governance reader and vote predictor.</p>
+        <div class="spec">
+          <span class="pill">summarization</span><span class="pill">zero-shot-classification</span>
+          <span class="pill">token-classification</span><span class="pill">tabular</span>
+          <span class="pill warn">summariser needs a server</span>
+          <span class="dots" title="Difficulty 3 of 5"><i class="on"></i><i class="on"></i><i class="on"></i><i></i><i></i><span class="lbl">difficulty 3</span></span>
+        </div>
+        <p>A feed of live governance proposals across the DAOs you hold tokens in. Each gets a
+          three-line summary, a classification of what it actually does — treasury spend,
+          parameter change, upgrade, social — a flag for anything touching your position, and a
+          <strong>predicted outcome</strong> from how the large delegates have voted historically.</p>
+        <h4>Models</h4>
+        <div class="tbl-wrap"><table>
+          <thead><tr><th>Model</th><th>Size</th><th>Licence</th></tr></thead>
+          <tbody>
+            <tr><td class="id"><a href="https://huggingface.co/facebook/bart-large-cnn" target="_blank" rel="noopener">facebook/bart-large-cnn</a></td><td class="num">406M</td><td class="lic">mit</td></tr>
+            <tr><td class="id"><a href="https://huggingface.co/sshleifer/distilbart-cnn-12-6" target="_blank" rel="noopener">sshleifer/distilbart-cnn-12-6</a></td><td class="num">not reported</td><td class="lic">apache-2.0</td></tr>
+            <tr><td class="id"><a href="https://huggingface.co/facebook/bart-large-mnli" target="_blank" rel="noopener">facebook/bart-large-mnli</a></td><td class="num">407M</td><td class="lic">mit</td></tr>
+            <tr><td class="id"><a href="https://huggingface.co/Qwen/Qwen2.5-0.5B-Instruct" target="_blank" rel="noopener">Qwen/Qwen2.5-0.5B-Instruct</a> <span style="color:var(--ink-3)">— LoRA for on-device</span></td><td class="num">494M</td><td class="lic">apache-2.0</td></tr>
+          </tbody>
+        </table></div>
+        <h4>Data</h4>
+        <p>No usable governance corpus on the Hub — the only hit was
+          <a href="https://huggingface.co/datasets/achiepatricia/han-governance-proposal-dataset-v1" target="_blank" rel="noopener">achiepatricia/han-governance-proposal-dataset-v1</a>
+          with 17 downloads, which isn't something to build on. Pull it from the Snapshot and
+          Tally public APIs: proposal text, choices, final tallies, per-delegate votes.
+          <strong>The labels are free and already in the data</strong> — outcomes are recorded —
+          which makes this the cleanest supervised setup on the list.</p>
+        <h4>Runs where</h4>
+        <p>The vote predictor is a small tabular model and runs anywhere. BART-large
+          summarization needs a server; a LoRA-tuned Qwen2.5-0.5B is the on-device route and a
+          good exercise in itself.</p>
+        <h4>Skills practised</h4>
+        <p><strong>LoRA / PEFT</strong> fine-tuning for domain summarization — the single most
+          transferable skill here; measuring summarization honestly (humans or an LLM judge, not
+          ROUGE alone); combining a text model with a tabular one; and the forecasting discipline
+          you already like, since a vote predictor is a calibrated binary forecaster and deserves
+          a Brier score.</p>
+        <div class="weekend"><b>Weekend one</b><p>Vote prediction only, no NLP. 500 closed
+          Snapshot proposals, features = top-10 delegate voting history plus quorum and proposal
+          type, gradient boosting, report Brier against the base rate. That tells you whether
+          governance is predictable before you touch summaries.</p></div>
+      </article>
+
+      <!-- 7 Last Look -->
+      <article class="idea" data-dom="fin game" data-device="1" data-diff="3">
+        <div class="idea-head"><h3><span class="no">3.7</span>Last Look</h3></div>
+        <p class="tagline">RL auction trainer.</p>
+        <div class="spec">
+          <span class="pill">reinforcement-learning</span>
+          <span class="pill ok">policy is tens of KB — fully on-device</span>
+          <span class="dots" title="Difficulty 3 of 5"><i class="on"></i><i class="on"></i><i class="on"></i><i></i><i></i><span class="lbl">difficulty 3</span></span>
+        </div>
+        <p>Bid against trained agents across a sequence of auctions — NFT drops, collectible lots,
+          liquidations — with the format switching between English, sealed-bid and Dutch.
+          Afterwards the app decomposes your loss: how much from the winner's curse, how much from
+          bidding into a thin book, how much from simply overpaying. Agents are labelled by policy
+          so you learn which behaviour beat you.</p>
+        <h4>Models</h4>
+        <p><strong>Nothing off-the-shelf fits</strong> — auction environments aren't a standard Hub
+          benchmark and I won't pretend otherwise. You train your own with
+          <a href="https://huggingface.co/sb3" target="_blank" rel="noopener">Stable-Baselines3</a>
+          as reference; <a href="https://huggingface.co/sb3/ppo-LunarLander-v2" target="_blank" rel="noopener">sb3/ppo-LunarLander-v2</a>
+          exists and is useful only as a template for packaging a trained policy to the Hub.</p>
+        <h4>Data</h4>
+        <p>None needed — the environment <em>is</em> the data, which is the appeal. Write a
+          Gymnasium env with configurable private-value distributions and bidder counts.
+          Optionally calibrate the value distribution to real OpenSea or Blur sale histories so
+          it feels like the market rather than a textbook.</p>
+        <h4>Runs where</h4>
+        <p>Entirely on-device. A trained PPO policy for a low-dimensional auction is tens of
+          kilobytes as ONNX or Core ML, with no server at all.</p>
+        <h4>Skills practised</h4>
+        <p>The full RL loop: environment design — the hard part, and the part tutorials skip —
+          reward shaping, PPO, self-play. And the thing that makes this finance rather than games:
+          checking your agent against the <strong>known analytic equilibrium</strong>. First-price
+          sealed-bid with uniform private values has a closed-form optimal bid, so you can verify
+          your agent actually converged instead of merely looking busy. A rare luxury in RL.</p>
+        <div class="weekend"><b>Weekend one</b><p>One format — second-price sealed bid, three
+          bidders, uniform values. Train PPO, plot the learned bid function against the analytic
+          one. If they coincide, the scaffolding works.</p></div>
+      </article>
+
+      <!-- 8 Level Up -->
+      <article class="idea" data-dom="game" data-device="1" data-diff="2">
+        <div class="idea-head"><h3><span class="no">3.8</span>Level Up</h3></div>
+        <p class="tagline">Photo to playable level.</p>
+        <div class="spec">
+          <span class="pill">mask-generation</span><span class="pill">segmentation</span>
+          <span class="pill">depth-estimation</span><span class="pill">zero-shot-detection</span>
+          <span class="pill ok">on-device, and should be</span>
+          <span class="pill ok">zero training data</span>
+          <span class="dots" title="Difficulty 2 of 5"><i class="on"></i><i class="on"></i><i></i><i></i><i></i><span class="lbl">difficulty 2</span></span>
+        </div>
+        <p>Photograph anything — a desk, a street, a bookshelf. The app segments it into solid
+          regions, turns the masks into collision geometry, and drops a character in. You play a
+          platformer built out of your own surroundings, then share the level as a photo plus a seed.</p>
+        <h4>Models</h4>
+        <div class="tbl-wrap"><table>
+          <thead><tr><th>Model</th><th>Size</th><th>Licence</th></tr></thead>
+          <tbody>
+            <tr><td class="id"><a href="https://huggingface.co/facebook/sam-vit-base" target="_blank" rel="noopener">facebook/sam-vit-base</a></td><td class="num">94M</td><td class="lic">apache-2.0</td></tr>
+            <tr><td class="id"><a href="https://huggingface.co/depth-anything/Depth-Anything-V2-Small-hf" target="_blank" rel="noopener">depth-anything/Depth-Anything-V2-Small-hf</a></td><td class="num">25M</td><td class="lic">apache-2.0</td></tr>
+            <tr><td class="id"><a href="https://huggingface.co/IDEA-Research/grounding-dino-tiny" target="_blank" rel="noopener">IDEA-Research/grounding-dino-tiny</a> <span style="color:var(--ink-3)">— label regions by text</span></td><td class="num">~172M</td><td class="lic">apache-2.0</td></tr>
+          </tbody>
+        </table></div>
+        <h4>Data</h4>
+        <p>None. Every model here is used zero-shot — which is the point, and makes this the
+          lowest-friction project on the list.</p>
+        <h4>Runs where</h4>
+        <p>On-device, and it should be: verified Core ML
+          (<a href="https://huggingface.co/apple/coreml-depth-anything-small" target="_blank" rel="noopener">apple/coreml-depth-anything-small</a>)
+          and ONNX (<a href="https://huggingface.co/onnx-community/depth-anything-v2-small" target="_blank" rel="noopener">onnx-community/depth-anything-v2-small</a>)
+          exports exist for depth, and SAM has mobile variants. Grounding DINO is the heaviest
+          piece and is optional.</p>
+        <h4>Skills practised</h4>
+        <p>Model <em>export and deployment</em> rather than training — Core ML / ONNX conversion,
+          quantization, measuring latency and memory on a real device, two models in one frame
+          budget. Plus the engineering skill nobody teaches: converting a soft probabilistic mask
+          into hard geometry a physics engine will accept.</p>
+        <div class="weekend"><b>Weekend one</b><p>Still images, no game. Tap a photo, SAM segments
+          the region, draw the mask outline as a polygon. If the polygons look like level geometry,
+          continue; if they look like noise, you've learned something cheap.</p></div>
+      </article>
+    </section>
+
+    <!-- ======================= PICKS ======================= -->
+    <section class="band" id="picks">
+      <h2><span class="num">04</span>Top three</h2>
+      <div class="picks">
+        <div class="pick">
+          <p class="rank">First</p>
+          <h3>Grade It</h3>
+          <p>Because the <em>data</em> is the exercise. Getting labels by scraping already-graded
+            slabs is a weak-supervision trick you'll reuse for the rest of your career, and the
+            problem forces three things finance people are usually weak at: measurement from masks
+            rather than classification, ordinal targets, and input-quality gating. Graded cards
+            also have public comps, so your model output has a verifiable dollar value — that
+            closes the loop in a way a game doesn't.</p>
+        </div>
+        <div class="pick">
+          <p class="rank">Second</p>
+          <h3>VoiceGuard</h3>
+          <p>The hardest and the most worth doing. Genuinely useful, has to be on-device for
+            reasons you can articulate, and the only idea here where <strong>calibration is the
+            whole product</strong> — a scam detector that cries wolf gets uninstalled. Same
+            discipline as model risk: the costs of a false positive and a false negative differ
+            and you must say so. It also runs three modalities under a latency budget, which is
+            the most realistic engineering on the list.</p>
+        </div>
+        <div class="pick">
+          <p class="rank">Third</p>
+          <h3>Last Look</h3>
+          <p>Pick it precisely because there's no dataset and no pretrained model — you build the
+            environment, train the agent, then <strong>check it against a closed-form answer</strong>.
+            Almost nothing in deep learning lets you verify convergence against known truth, and
+            an auction game does. It'll also teach you something real about bidding that the
+            deep-hedging game won't: hedging is about variance, auctions are about adverse selection.</p>
+        </div>
+      </div>
+      <p class="hm"><strong>Honourable mention: Déjà Vu</strong> is the easiest thing here and the
+        fastest route to something you'd actually show someone. If you want a win this weekend
+        rather than a project, start there.</p>
+    </section>
+
+    <!-- ======================= CAVEATS ======================= -->
+    <section class="band" id="caveats">
+      <h2><span class="num">05</span>Caveats</h2>
+      <div class="caveat">
+        <ul>
+          <li><strong>Sizes and download counts</strong> were read from the Hub API on
+            2026-10-13. Sizes come from <code>safetensors.total</code>; where the API didn't
+            report one I've said so rather than guessed.</li>
+          <li><strong>Three licence situations to settle before shipping anything.</strong>
+            <code>Qwen/Qwen2.5-VL-3B-Instruct</code> and <code>openai/clip-vit-base-patch32</code>
+            state no licence in their card metadata, and both video backbones in 3.5 are
+            <strong>cc-by-nc-4.0</strong> — non-commercial.</li>
+          <li><code>ProsusAI/finbert</code> is <strong>cc-by-nc-sa-4.0</strong>, which is why it
+            isn't recommended above despite being the obvious finance sentiment model.</li>
+          <li><strong>Datasets I could not find, stated plainly:</strong> no card-grading corpus,
+            no token-whitepaper corpus, no usable DAO-governance corpus, no aimbot corpus. In all
+            four cases building the dataset is the most valuable part of the project.</li>
+        </ul>
+      </div>
+      <footer class="end">Compiled 13 October 2026 · 19 models and 8 datasets verified against the
+        Hugging Face API · all 82 links returned HTTP 200 at time of writing</footer>
+    </section>
+  </main>
+</div>
+</div>
+
+<script>
+  const ideas = [...document.querySelectorAll(".idea")];
+  const chips = [...document.querySelectorAll("#filters .chip")];
+  const test = {
+    all:  () => true,
+    fin:  i => i.dataset.dom.includes("fin"),
+    game: i => i.dataset.dom.includes("game"),
+    device: i => i.dataset.device === "1",
+    easy: i => Number(i.dataset.diff) <= 3,
+  };
+  let active = "all";
+  function apply(){
+    for (const i of ideas) i.hidden = !test[active](i);
+    for (const c of chips) c.setAttribute("aria-pressed", String(c.dataset.f === active));
+    const n = ideas.filter(i => !i.hidden).length;
+    const all = chips.find(c => c.dataset.f === "all");
+    if (all) all.textContent = active === "all" ? `all ${ideas.length}` : `all ${ideas.length}`;
+    const lab = document.querySelector("#filters .lab");
+    if (lab) lab.textContent = active === "all" ? "Show" : `${n} shown`;
+  }
+  document.getElementById("filters").addEventListener("click", e => {
+    const c = e.target.closest("[data-f]");
+    if (!c) return;
+    active = c.dataset.f === active ? "all" : c.dataset.f;
+    apply();
+  });
+  apply();
+</script>
